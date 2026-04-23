@@ -3,18 +3,18 @@
 import React from 'react';
 import Link from 'next/link';
 import { Clock, BookOpen, ChevronRight } from 'lucide-react';
-import { Subject } from '@/lib/subjects';
+import { SubjectContent } from '@/lib/types/content';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
 import { Button } from '../ui/Button';
 
 interface SubjectCardProps {
-  subject: Subject;
+  subject: SubjectContent;
   progress?: number;
 }
 
 export const SubjectCard: React.FC<SubjectCardProps> = ({ subject, progress = 0 }) => {
-  const Icon = subject.icon;
+  const Icon = subject.icon as any;
 
   return (
     <Card className="flex flex-col h-full group">
@@ -37,10 +37,10 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({ subject, progress = 0 
 
       <div className="space-y-4 mb-8">
         <div className="flex items-center justify-between text-xs font-bold uppercase tracking-tighter">
-          <div className="flex items-center gap-2 text-text-secondary">
-            <BookOpen className="w-4 h-4" />
-            {subject.topicCount} Topics
-          </div>
+            <div className="flex items-center gap-1.5">
+              <BookOpen className="w-3.5 h-3.5 text-text-secondary" />
+              <span>{subject.topics.length} Topics</span>
+            </div>
           <div className="flex items-center gap-2 text-text-secondary">
             <Clock className="w-4 h-4" />
             {subject.estimatedHours}h

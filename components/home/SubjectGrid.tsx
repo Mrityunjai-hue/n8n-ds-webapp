@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { subjects } from '@/lib/subjects';
+import { subjects } from '@/lib/content/subjects';
 import { SubjectCard } from './SubjectCard';
 
 export const SubjectGrid = () => {

@@ -1,12 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { TopicSidebar } from '@/components/learn/TopicSidebar';
-import { Button } from '@/components/ui/Button';
+import { useParams, useRouter, notFound } from 'next/navigation';
 import { Badge } from '@/components/ui/Badge';
-import { sections, mockTopics } from '@/lib/mock-data';
-import { ChevronLeft, ChevronRight, Menu, LayoutPanelLeft, Star, Info } from 'lucide-react';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  Menu, 
+  Star, 
+  Info 
+} from 'lucide-react';
 import { InteractiveEditor } from '@/components/learn/InteractiveEditor';
 import { SqlEditor } from '@/components/learn/SqlEditor';
 import { LineByLineBreakdown } from '@/components/learn/LineByLineBreakdown';
@@ -16,6 +19,23 @@ import { MarkCompleteButton } from '@/components/learn/MarkCompleteButton';
 import { ELI5Toggle } from '@/components/learn/ELI5Toggle';
 import { TopicNotes } from '@/components/learn/TopicNotes';
 import { ContentSection, ProTip, Warning, KeyPoints } from '@/components/learn/LessonContent';
+import { TopicSidebar } from '@/components/learn/TopicSidebar';
+import { getTopicBySlug } from '@/lib/content';
+
+// Standard 11-section lesson structure
+const LESSON_SECTIONS = [
+  { id: 'what', title: '1. What is this?' },
+  { id: 'why', title: '2. Why does it exist?' },
+  { id: 'how', title: '3. How it works?' },
+  { id: 'diagram', title: '4. Visual Flow Diagram' },
+  { id: 'breakdown', title: '5. Components Breakdown' },
+  { id: 'code', title: '6. Interactive Lab' },
+  { id: 'mistakes', title: '7. Common Mistakes' },
+  { id: 'interview', title: '8. Interview Questions' },
+  { id: 'summary', title: '9. Quick Summary' },
+  { id: 'complete', title: '10. Mark Complete' },
+  { id: 'notes', title: '11. Personal Notes' },
+];
 
 export default function TopicPage() {
   const params = useParams();
@@ -23,241 +43,214 @@ export default function TopicPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isELI5, setIsELI5] = useState(false);
   
-  const currentSubject = params.subject as string;
-  const currentTopicSlug = params.topic as string;
-  
-  const currentTopicIndex = mockTopics.findIndex(t => t.slug === currentTopicSlug);
-  const currentTopic = mockTopics[currentTopicIndex] || mockTopics[0];
+  const subjectSlug = params.subject as string;
+  const topicSlug = params.topic as string;
 
-  // Keyboard shortcuts
+  const resolved = getTopicBySlug(subjectSlug, topicSlug);
+  
+  if (!resolved) {
+    notFound();
+  }
+
+  const { subject, topic } = resolved;
+  const currentTopicIndex = subject.topics.findIndex(t => t.id === topic.id);
+  const nextTopic = subject.topics[currentTopicIndex + 1];
+  const prevTopic = subject.topics[currentTopicIndex - 1];
+
+  // Shortcut keys
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === 'n') {
-        const next = mockTopics[currentTopicIndex + 1];
-        if (next) router.push(`/learn/${currentSubject}/${next.slug}`);
-      } else if (e.key.toLowerCase() === 'p') {
-        const prev = mockTopics[currentTopicIndex - 1];
-        if (prev) router.push(`/learn/${currentSubject}/${prev.slug}`);
-      } else if (e.ctrlKey && e.key === '/') {
-        e.preventDefault();
-        setSidebarOpen(!sidebarOpen);
+      if (e.ctrlKey && e.key === '/') {
+        setSidebarOpen(prev => !prev);
+      }
+      if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement) return;
+      
+      if (e.key === 'n' && nextTopic) {
+        router.push(`/learn/${subjectSlug}/${nextTopic.slug}`);
+      }
+      if (e.key === 'p' && prevTopic) {
+        router.push(`/learn/${subjectSlug}/${prevTopic.slug}`);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentTopicIndex, currentSubject, router, sidebarOpen]);
+  }, [sidebarOpen, nextTopic, prevTopic, router, subjectSlug]);
 
   return (
-    <div className="flex min-h-screen bg-bg-primary">
-      <TopicSidebar 
-        subjectName={currentSubject.toUpperCase()} 
-        isOpen={sidebarOpen} 
-        setIsOpen={setSidebarOpen} 
-      />
-
-      <main className={`
-        flex-grow transition-all duration-300 min-w-0
-        ${sidebarOpen ? 'lg:pl-72' : 'pl-0'}
+    <div className="flex min-h-[calc(100vh-64px)] bg-bg-primary text-text-primary">
+      {/* Sidebar - Desktop */}
+      <div className={`
+        fixed inset-y-16 left-0 z-40 w-72 transform border-r border-border bg-bg-primary transition-transform duration-300 ease-in-out lg:static lg:translate-x-0
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:hidden'}
       `}>
-        {/* Topic Header / Breadcrumbs */}
-        <div className="sticky top-20 z-20 bg-bg-primary/80 backdrop-blur-md border-b border-border px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 hover:bg-bg-surface rounded-lg text-text-secondary lg:hidden"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            <button 
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className={`p-2 hover:bg-bg-surface rounded-lg text-text-secondary hidden lg:block ${!sidebarOpen ? 'bg-bg-surface text-accent-teal' : ''}`}
-              title="Toggle Sidebar (Ctrl+/)"
-            >
-              <LayoutPanelLeft className="w-5 h-5" />
-            </button>
-            <div className="flex items-center gap-2 text-xs font-bold text-text-secondary">
-              <span className="uppercase tracking-widest">{currentSubject}</span>
-              <ChevronRight className="w-3 h-3" />
-              <span className="text-text-primary">{currentTopic.title}</span>
+        <TopicSidebar 
+          subjectName={subject.name} 
+          topics={subject.topics.map(t => ({ id: t.id, title: t.title, slug: t.slug, isCompleted: false }))} 
+          currentTopicId={topic.id}
+          subjectSlug={subjectSlug}
+        />
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-grow">
+        {/* Sticky Header */}
+        <header className="sticky top-16 z-30 border-b border-border bg-bg-primary/80 backdrop-blur-md">
+          <div className="flex h-16 items-center justify-between px-6">
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="p-2 hover:bg-bg-surface rounded-lg text-text-secondary lg:hidden"
+              >
+                <Menu className="w-6 h-6" />
+              </button>
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-text-secondary">
+                <span>{subject.name}</span>
+                <ChevronRight className="w-4 h-4" />
+                <span className="text-text-primary">{topic.title}</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <ELI5Toggle isELI5={isELI5} setIsELI5={setIsELI5} />
+              <button className="p-2 hover:bg-bg-surface rounded-lg text-text-secondary">
+                <Star className="w-5 h-5" />
+              </button>
             </div>
           </div>
+        </header>
 
-          <div className="flex items-center gap-3">
-            <ELI5Toggle isELI5={isELI5} setIsELI5={setIsELI5} />
-            <button className="p-2 hover:bg-bg-surface rounded-lg text-text-secondary">
-              <Star className="w-5 h-5" />
-            </button>
+        {/* Content Container */}
+        <main className="mx-auto max-w-4xl px-6 py-12">
+          {/* Hero/Intro Section */}
+          <div className="mb-20">
+            <h1 className="mb-4 text-4xl lg:text-5xl font-display font-bold tracking-tight bg-gradient-to-r from-text-primary to-text-secondary bg-clip-text text-transparent">
+              {topic.title}
+            </h1>
+            <p className="text-xl text-text-secondary leading-relaxed max-w-2xl">
+              {topic.description}
+            </p>
           </div>
-        </div>
-
-        {/* Content Area */}
-        <div className="max-w-4xl mx-auto px-6 py-12 lg:py-20">
-          <h1 className="text-4xl lg:text-6xl font-display font-bold mb-12">
-            {currentTopic.title}
-          </h1>
 
           <div className="space-y-24">
-            {sections.map((section) => (
-              <section key={section.id} id={section.id} className="scroll-mt-40">
-                <h2 className="text-2xl font-display font-bold mb-6 flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-lg bg-bg-surface border border-border flex items-center justify-center text-sm text-accent-teal font-mono">
-                    {section.id === 'diagram' ? '4' : section.id === 'code' ? '6' : section.title.split('.')[0]}
-                  </span>
-                  {section.title.split('. ')[1] || section.title}
-                </h2>
-                
-                {/* Section Rendering Logic */}
-                {section.id === 'what' && (
-                  <ContentSection title={section.title}>
-                    <p>
-                      {isELI5 
-                        ? "Imagine you have a huge box of LEGOs. You need a special way to ask for exactly the blue bricks. That's what this is!"
-                        : "SQL (Structured Query Language) is the standard language for managing and manipulating databases. It allows you to retrieve, insert, update, and delete data with precision."}
-                    </p>
-                    <KeyPoints points={[
-                      "Declarative language structure",
-                      "Industry standard for 40+ years",
-                      "Foundation for all data science work"
-                    ]} />
-                  </ContentSection>
-                )}
+            {LESSON_SECTIONS.map((section) => {
+              const content = topic.sections[section.id];
+              
+              return (
+                <section key={section.id} id={section.id} className="scroll-mt-40">
+                  <h2 className="text-2xl font-display font-bold mb-6 flex items-center gap-3">
+                    <span className="w-8 h-8 rounded-lg bg-bg-surface border border-border flex items-center justify-center text-sm text-accent-teal font-mono">
+                      {section.title.split('.')[0]}
+                    </span>
+                    {section.title.split('. ')[1]}
+                  </h2>
+                  
+                  {/* Section Rendering Logic */}
+                  {section.id === 'what' && content && (
+                    <ContentSection title={section.title}>
+                      <p>
+                        {isELI5 ? content.eli5 : content.text}
+                      </p>
+                      {content.points && <KeyPoints points={content.points} />}
+                    </ContentSection>
+                  )}
 
-                {section.id === 'why' && (
-                  <ContentSection title={section.title}>
-                    <p>
-                      In modern data environments, data is rarely stored in simple files. It lives in complex relational systems that require a high-performance way to filter millions of rows in milliseconds.
-                    </p>
-                    <ProTip>
-                      Always think about performance. A poorly written query can slow down an entire application!
-                    </ProTip>
-                  </ContentSection>
-                )}
+                  {section.id === 'why' && content && (
+                    <ContentSection title={section.title}>
+                      <p>{content.text}</p>
+                      {content.tip && <ProTip>{content.tip}</ProTip>}
+                    </ContentSection>
+                  )}
 
-                {section.id === 'diagram' && (
-                  <MermaidDiagram 
-                    chart={currentSubject === 'sql' 
-                      ? `graph TD\n  A[Client App] -->|SELECT| B(SQL Database)\n  B -->|Result Set| C{Data Filter}\n  C -->|Matched| D[User View]\n  C -->|Unmatched| E[Empty State]`
-                      : `graph LR\n  A[Input Data] --> B(Process)\n  B --> C{Decision}\n  C -->|Yes| D[Result A]\n  C -->|No| E[Result B]`
-                    } 
-                  />
-                )}
+                  {section.id === 'diagram' && content?.chart && (
+                    <MermaidDiagram chart={content.chart} />
+                  )}
 
-                {section.id === 'code' && (
-                  <div className="space-y-8">
-                    {currentSubject === 'sql' ? (
-                      <>
-                        <SqlEditor 
-                          initialQuery={`SELECT * FROM sales\nWHERE amount > 600\nORDER BY date DESC;`} 
-                        />
-                        <LineByLineBreakdown 
-                          items={[
-                            { line: 'SELECT * FROM sales', explanation: 'This fetches all columns from the sales table.' },
-                            { line: 'WHERE amount > 600', explanation: 'Filters the results to only show products more expensive than $600.' },
-                          ]}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <InteractiveEditor 
-                          initialCode={`# Python Basics\nname = "N8N Community"\nprint(f"Hello from {name}!")\n\n# Try changing the code and clicking Run!`} 
-                        />
-                        <LineByLineBreakdown 
-                          items={[
-                            { line: 'name = "N8N Community"', explanation: 'We define a variable called "name" and assign it a string value.' },
-                            { line: 'print(f"Hello from {name}!")', explanation: 'We use an f-string to print a greeting that includes our variable.' },
-                          ]}
-                        />
-                      </>
-                    )}
-                  </div>
-                )}
-
-                {section.id === 'mistakes' && (
-                  <Warning>
-                    Don't forget the semicolon at the end of your queries, and always double-check your table names for typos!
-                  </Warning>
-                )}
-
-                {section.id === 'interview' && (
-                  <div className="space-y-6">
-                    <InterviewQuestionCard 
-                      question="What is the difference between WHERE and HAVING in SQL?"
-                      answer="WHERE is used to filter rows before any groupings are made, while HAVING is used to filter groups after the GROUP BY clause has been applied."
-                      difficulty="Mid"
-                      category="Conceptual"
-                    />
-                    <InterviewQuestionCard 
-                      question="How do you handle NULL values in a SELECT statement?"
-                      answer="You can use the IS NULL or IS NOT NULL operators, or functions like COALESCE to provide a default value."
-                      difficulty="Fresher"
-                      category="Scenario"
-                    />
-                  </div>
-                )}
-
-                {section.id === 'complete' && (
-                  <MarkCompleteButton 
-                    topicId={currentTopic.id}
-                    nextTopicHref={mockTopics[currentTopicIndex + 1]?.slug ? `/learn/${currentSubject}/${mockTopics[currentTopicIndex + 1].slug}` : undefined}
-                    nextTopicTitle={mockTopics[currentTopicIndex + 1]?.title}
-                  />
-                )}
-
-                {section.id === 'notes' && (
-                  <TopicNotes />
-                )}
-
-                {/* Default placeholder for other sections */}
-                {!['what', 'why', 'diagram', 'code', 'mistakes', 'interview', 'complete', 'notes'].includes(section.id) && (
-                  <div className="p-8 bg-bg-surface border border-border rounded-modal border-dashed flex flex-col items-center justify-center text-center group hover:border-accent-teal transition-colors">
-                    <div className="w-12 h-12 rounded-full bg-bg-primary border border-border flex items-center justify-center text-text-secondary mb-4 group-hover:text-accent-teal transition-colors">
-                      <Info className="w-6 h-6" />
+                  {section.id === 'code' && content && (
+                    <div className="space-y-8">
+                      {subjectSlug === 'sql' ? (
+                        <SqlEditor initialQuery={content.code || ''} />
+                      ) : (
+                        <InteractiveEditor initialCode={content.code || ''} />
+                      )}
+                      {content.breakdown && <LineByLineBreakdown items={content.breakdown} />}
                     </div>
-                    <p className="text-text-secondary italic">
-                      [Placeholder for {section.title.split('. ')[1] || section.title} content]
-                    </p>
-                  </div>
-                )}
-              </section>
-            ))}
+                  )}
+
+                  {section.id === 'mistakes' && content?.warning && (
+                    <Warning>{content.warning}</Warning>
+                  )}
+
+                  {section.id === 'interview' && (
+                    <div className="space-y-6">
+                      {topic.interviewQuestions.map((q, i) => (
+                        <InterviewQuestionCard key={i} {...q} />
+                      ))}
+                    </div>
+                  )}
+
+                  {section.id === 'complete' && (
+                    <MarkCompleteButton 
+                      topicId={topic.id}
+                      nextTopicHref={nextTopic ? `/learn/${subjectSlug}/${nextTopic.slug}` : undefined}
+                      nextTopicTitle={nextTopic?.title}
+                    />
+                  )}
+
+                  {section.id === 'notes' && (
+                    <TopicNotes />
+                  )}
+
+                  {/* Placeholder for missing content in sections */}
+                  {!content && !['interview', 'complete', 'notes'].includes(section.id) && (
+                    <div className="p-8 bg-bg-surface border border-border rounded-modal border-dashed flex flex-col items-center justify-center text-center group hover:border-accent-teal transition-colors">
+                      <div className="w-12 h-12 rounded-full bg-bg-primary border border-border flex items-center justify-center text-text-secondary mb-4 group-hover:text-accent-teal transition-colors">
+                        <Info className="w-6 h-6" />
+                      </div>
+                      <p className="text-text-secondary italic">
+                        Visualizing data for this section... Stay tuned.
+                      </p>
+                    </div>
+                  )}
+                </section>
+              );
+            })}
           </div>
 
-          {/* Pagination */}
-          <div className="mt-32 pt-12 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-8">
-            <div className="w-full sm:w-auto">
-              {currentTopicIndex > 0 && (
-                <Link href={`/learn/${currentSubject}/${mockTopics[currentTopicIndex - 1].slug}`}>
-                  <button className="group flex flex-col items-start gap-1 p-4 rounded-xl border border-border hover:border-accent-teal transition-all w-full sm:w-64">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-text-secondary flex items-center gap-1">
-                      <ChevronLeft className="w-3 h-3" /> Previous
-                    </span>
-                    <span className="font-bold text-sm truncate w-full text-left">{mockTopics[currentTopicIndex - 1].title}</span>
-                  </button>
-                </Link>
-              )}
-            </div>
+          {/* Footer Navigation */}
+          <footer className="mt-32 pt-8 border-t border-border flex items-center justify-between gap-4">
+            <button 
+              onClick={() => prevTopic && router.push(`/learn/${subjectSlug}/${prevTopic.slug}`)}
+              disabled={!prevTopic}
+              className={`
+                flex items-center gap-3 px-6 py-3 rounded-xl border border-border font-bold transition-all
+                ${!prevTopic ? 'opacity-30 cursor-not-allowed' : 'hover:bg-bg-surface hover:border-accent-teal'}
+              `}
+            >
+              <ChevronLeft className="w-5 h-5" />
+              <div className="text-left hidden sm:block">
+                <div className="text-[10px] uppercase tracking-widest text-text-secondary">Previous</div>
+                <div className="text-sm truncate max-w-[150px]">{prevTopic?.title}</div>
+              </div>
+            </button>
 
-            <div className="w-full sm:w-auto">
-              {currentTopicIndex < mockTopics.length - 1 && (
-                <Link href={`/learn/${currentSubject}/${mockTopics[currentTopicIndex + 1].slug}`}>
-                  <button className="group flex flex-col items-end gap-1 p-4 rounded-xl border border-border hover:border-accent-teal transition-all w-full sm:w-64 text-right">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-text-secondary flex items-center gap-1">
-                      Next <ChevronRight className="w-3 h-3" />
-                    </span>
-                    <span className="font-bold text-sm truncate w-full">{mockTopics[currentTopicIndex + 1].title}</span>
-                  </button>
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      </main>
+            <button 
+              onClick={() => nextTopic && router.push(`/learn/${subjectSlug}/${nextTopic.slug}`)}
+              disabled={!nextTopic}
+              className={`
+                flex items-center gap-3 px-6 py-3 rounded-xl border border-border font-bold transition-all
+                ${!nextTopic ? 'opacity-30 cursor-not-allowed' : 'hover:bg-bg-surface hover:border-accent-teal'}
+              `}
+            >
+              <div className="text-right hidden sm:block">
+                <div className="text-[10px] uppercase tracking-widest text-text-secondary">Next</div>
+                <div className="text-sm truncate max-w-[150px]">{nextTopic?.title}</div>
+              </div>
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </footer>
+        </main>
+      </div>
     </div>
   );
-}
-
-// Simple Link helper for internal pagination
-function Link({ href, children }: { href: string, children: React.ReactNode }) {
-  return <a href={href} className="w-full sm:w-auto block">{children}</a>;
 }

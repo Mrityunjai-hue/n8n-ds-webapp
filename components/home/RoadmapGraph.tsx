@@ -3,15 +3,18 @@
 import React from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import { subjects, Subject } from '@/lib/subjects';
+import { subjects } from '@/lib/content/subjects';
+import { SubjectContent } from '@/lib/types/content';
 
 interface RoadmapNodeProps {
-  subject: Subject;
+  subject: SubjectContent;
   status: 'not-started' | 'in-progress' | 'completed';
   isLast?: boolean;
 }
 
 const RoadmapNode: React.FC<RoadmapNodeProps> = ({ subject, status, isLast }) => {
+  const Icon = subject.icon as any;
+
   const statusColors = {
     'not-started': 'bg-bg-elevated text-text-secondary border-border grayscale opacity-50',
     'in-progress': 'bg-accent-amber/10 text-accent-amber border-accent-amber/50 shadow-[0_0_15px_rgba(245,158,11,0.1)]',
@@ -24,7 +27,6 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({ subject, status, isLast }) =>
     'completed': 'bg-accent-teal',
   };
 
-  const Icon = subject.icon;
 
   return (
     <div className="flex flex-col items-center relative group">
@@ -44,7 +46,7 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({ subject, status, isLast }) =>
 
       {/* Label (Desktop) */}
       <div className="mt-4 absolute -bottom-12 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap bg-bg-surface px-3 py-1 rounded-full border border-border text-[10px] font-bold z-20">
-        {subject.topicCount} Topics • {subject.estimatedHours}h
+        {subject.topics.length} Topics • {subject.estimatedHours}h
       </div>
 
       {/* Connection Line */}

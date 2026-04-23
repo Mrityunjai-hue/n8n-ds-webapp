@@ -1,5 +1,6 @@
-import { subjects } from '@/lib/subjects';
+import { subjects } from '@/lib/content/subjects';
 import { RoadmapGraph } from '@/components/home/RoadmapGraph';
+import { SubjectContent } from '@/lib/types/content';
 
 export default function RoadmapPage() {
   return (
@@ -33,7 +34,7 @@ export default function RoadmapPage() {
                 </div>
               </div>
               <div className="text-right hidden sm:block">
-                <div className="text-sm font-bold">{subject.topicCount} Topics</div>
+                <div className="text-sm font-bold">{subject.topics.length} Topics</div>
                 <div className="text-xs text-text-secondary">{subject.estimatedHours} Hours</div>
               </div>
             </div>
