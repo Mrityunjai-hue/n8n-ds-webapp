@@ -7,15 +7,15 @@
 
 ## Active Context
 
-- **Phase**: 9 (completed)
-- **Task**: Monaco Editor + sql.js (SQL) complete
+- **Phase**: 10 (completed)
+- **Task**: Mermaid.js Diagrams complete
 - **Status**: Verified
 
 ## Last Session Summary
-Phase 9 executed successfully. sql.js integrated for in-browser SQL execution. SqlEditor built with table result rendering and integrated into the topic page.
+Phase 10 executed successfully. Mermaid.js integrated for rendering flow diagrams in lessons. Custom-styled MermaidDiagram component built and integrated into the topic page.
 
 ## Next Steps
-1. Proceed to Phase 10: Mermaid.js Diagrams
+1. Proceed to Phase 11: Topic Sections — Content Components
 
 ---
 

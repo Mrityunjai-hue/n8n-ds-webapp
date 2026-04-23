@@ -11,11 +11,17 @@ import { InteractiveEditor } from '@/components/learn/InteractiveEditor';
 import { SqlEditor } from '@/components/learn/SqlEditor';
 import { LineByLineBreakdown } from '@/components/learn/LineByLineBreakdown';
 import { MermaidDiagram } from '@/components/learn/MermaidDiagram';
+import { InterviewQuestionCard } from '@/components/learn/InterviewQuestionCard';
+import { MarkCompleteButton } from '@/components/learn/MarkCompleteButton';
+import { ELI5Toggle } from '@/components/learn/ELI5Toggle';
+import { TopicNotes } from '@/components/learn/TopicNotes';
+import { ContentSection, ProTip, Warning, KeyPoints } from '@/components/learn/LessonContent';
 
 export default function TopicPage() {
   const params = useParams();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isELI5, setIsELI5] = useState(false);
   
   const currentSubject = params.subject as string;
   const currentTopicSlug = params.topic as string;
@@ -78,7 +84,7 @@ export default function TopicPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Badge variant="teal">ELI5 Active</Badge>
+            <ELI5Toggle isELI5={isELI5} setIsELI5={setIsELI5} />
             <button className="p-2 hover:bg-bg-surface rounded-lg text-text-secondary">
               <Star className="w-5 h-5" />
             </button>
@@ -101,14 +107,43 @@ export default function TopicPage() {
                   {section.title.split('. ')[1] || section.title}
                 </h2>
                 
-                {section.id === 'diagram' ? (
+                {/* Section Rendering Logic */}
+                {section.id === 'what' && (
+                  <ContentSection title={section.title}>
+                    <p>
+                      {isELI5 
+                        ? "Imagine you have a huge box of LEGOs. You need a special way to ask for exactly the blue bricks. That's what this is!"
+                        : "SQL (Structured Query Language) is the standard language for managing and manipulating databases. It allows you to retrieve, insert, update, and delete data with precision."}
+                    </p>
+                    <KeyPoints points={[
+                      "Declarative language structure",
+                      "Industry standard for 40+ years",
+                      "Foundation for all data science work"
+                    ]} />
+                  </ContentSection>
+                )}
+
+                {section.id === 'why' && (
+                  <ContentSection title={section.title}>
+                    <p>
+                      In modern data environments, data is rarely stored in simple files. It lives in complex relational systems that require a high-performance way to filter millions of rows in milliseconds.
+                    </p>
+                    <ProTip>
+                      Always think about performance. A poorly written query can slow down an entire application!
+                    </ProTip>
+                  </ContentSection>
+                )}
+
+                {section.id === 'diagram' && (
                   <MermaidDiagram 
                     chart={currentSubject === 'sql' 
                       ? `graph TD\n  A[Client App] -->|SELECT| B(SQL Database)\n  B -->|Result Set| C{Data Filter}\n  C -->|Matched| D[User View]\n  C -->|Unmatched| E[Empty State]`
                       : `graph LR\n  A[Input Data] --> B(Process)\n  B --> C{Decision}\n  C -->|Yes| D[Result A]\n  C -->|No| E[Result B]`
                     } 
                   />
-                ) : section.id === 'code' ? (
+                )}
+
+                {section.id === 'code' && (
                   <div className="space-y-8">
                     {currentSubject === 'sql' ? (
                       <>
@@ -136,16 +171,51 @@ export default function TopicPage() {
                       </>
                     )}
                   </div>
-                ) : (
+                )}
+
+                {section.id === 'mistakes' && (
+                  <Warning>
+                    Don't forget the semicolon at the end of your queries, and always double-check your table names for typos!
+                  </Warning>
+                )}
+
+                {section.id === 'interview' && (
+                  <div className="space-y-6">
+                    <InterviewQuestionCard 
+                      question="What is the difference between WHERE and HAVING in SQL?"
+                      answer="WHERE is used to filter rows before any groupings are made, while HAVING is used to filter groups after the GROUP BY clause has been applied."
+                      difficulty="Mid"
+                      category="Conceptual"
+                    />
+                    <InterviewQuestionCard 
+                      question="How do you handle NULL values in a SELECT statement?"
+                      answer="You can use the IS NULL or IS NOT NULL operators, or functions like COALESCE to provide a default value."
+                      difficulty="Fresher"
+                      category="Scenario"
+                    />
+                  </div>
+                )}
+
+                {section.id === 'complete' && (
+                  <MarkCompleteButton 
+                    topicId={currentTopic.id}
+                    nextTopicHref={mockTopics[currentTopicIndex + 1]?.slug ? `/learn/${currentSubject}/${mockTopics[currentTopicIndex + 1].slug}` : undefined}
+                    nextTopicTitle={mockTopics[currentTopicIndex + 1]?.title}
+                  />
+                )}
+
+                {section.id === 'notes' && (
+                  <TopicNotes />
+                )}
+
+                {/* Default placeholder for other sections */}
+                {!['what', 'why', 'diagram', 'code', 'mistakes', 'interview', 'complete', 'notes'].includes(section.id) && (
                   <div className="p-8 bg-bg-surface border border-border rounded-modal border-dashed flex flex-col items-center justify-center text-center group hover:border-accent-teal transition-colors">
                     <div className="w-12 h-12 rounded-full bg-bg-primary border border-border flex items-center justify-center text-text-secondary mb-4 group-hover:text-accent-teal transition-colors">
                       <Info className="w-6 h-6" />
                     </div>
                     <p className="text-text-secondary italic">
                       [Placeholder for {section.title.split('. ')[1] || section.title} content]
-                    </p>
-                    <p className="text-xs text-text-secondary mt-4 opacity-50">
-                      Component: {section.id.toUpperCase()}_SECTION
                     </p>
                   </div>
                 )}

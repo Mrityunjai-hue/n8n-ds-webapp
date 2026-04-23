@@ -120,7 +120,7 @@
 ---
 
 ### Phase 10: Mermaid.js Diagrams
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Integrate Mermaid.js to render flow diagrams for every topic (Section 4 of the 11-section structure). Diagrams defined as plain Mermaid syntax strings in topic data files. Rendered client-side. Horizontally scrollable on mobile. Simple, English-labeled, color-coded.
 **Deliverables**:
 - `MermaidDiagram` component (client-side render, SSR-safe)
