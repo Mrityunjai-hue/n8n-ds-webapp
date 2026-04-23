@@ -7,16 +7,16 @@
 
 ## Active Context
 
-- **Phase**: 15 (completed)
-- **Task**: Bookmarks & Dashboard complete
+- **Phase**: 16 (completed)
+- **Task**: Content Wave 1 — SQL & Python Basics complete
 - **Status**: Verified
 
 ## Last Session Summary
-Phase 15 executed successfully. Bookmark system and Personal Dashboard implemented. Milestone 3 (Community & Persistence) is now complete. Platform features full multi-device sync, cloud journaling, and a personalized mission control.
+Phase 16 executed successfully. First content wave launched with 10 comprehensive topics for SQL Mastery and Python Basics. Types refined to support richer lesson data. Milestone 4 is underway.
 
 ## Next Steps
-1. Proceed to Milestone 4: Content Waves
-2. Phase 16: Content Wave 1 — SQL & Python Basics
+1. Proceed to Phase 17: Content Wave 2 — Power BI & Data Viz
+2. Populate visualization modules with projects and case studies
 
 ---
 

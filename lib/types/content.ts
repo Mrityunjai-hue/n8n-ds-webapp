@@ -21,6 +21,7 @@ export interface SectionContent {
   chart?: string; // Mermaid syntax
   code?: string; // Initial code for editor
   breakdown?: { line: string; explanation: string }[];
+  components?: { title: string; description: string }[]; // For specialized breakdowns
 }
 
 export interface Topic {

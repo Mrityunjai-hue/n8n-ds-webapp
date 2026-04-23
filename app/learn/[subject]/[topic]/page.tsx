@@ -20,6 +20,7 @@ import { ELI5Toggle } from '@/components/learn/ELI5Toggle';
 import { BookmarkButton } from '@/components/learn/BookmarkButton';
 import { TopicNotes } from '@/components/learn/TopicNotes';
 import { ContentSection, ProTip, Warning, KeyPoints } from '@/components/learn/LessonContent';
+import { ComponentsBreakdown } from '@/components/learn/ComponentsBreakdown';
 import { TopicSidebar } from '@/components/learn/TopicSidebar';
 import { getTopicBySlug } from '@/lib/content';
 import { useRecentStore } from '@/lib/store/useRecentStore';
@@ -175,6 +176,10 @@ export default function TopicPage() {
                       <p>{content.text}</p>
                       {content.tip && <ProTip>{content.tip}</ProTip>}
                     </ContentSection>
+                  )}
+
+                  {section.id === 'components' && content?.components && (
+                    <ComponentsBreakdown items={content.components} />
                   )}
 
                   {section.id === 'diagram' && content?.chart && (

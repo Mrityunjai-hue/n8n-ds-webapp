@@ -353,10 +353,149 @@ export const subjects: SubjectContent[] = [
   },
   // Add other subjects as placeholders for now
   { id: 'bi', slug: 'power-bi', name: 'Power BI', description: 'Data visualization.', icon: Layout, level: 3, estimatedHours: 10, topics: [] },
-  { id: 'numpy', slug: 'numpy', name: 'NumPy', description: 'Numerical computing.', icon: Binary, level: 4, estimatedHours: 8, topics: [] },
-  { id: 'pandas', slug: 'pandas', name: 'Pandas', description: 'Data manipulation.', icon: Table, level: 5, estimatedHours: 12, topics: [] },
-  { id: 'viz', slug: 'data-viz', name: 'Data Visualization', description: 'Matplotlib & Seaborn.', icon: BarChart3, level: 6, estimatedHours: 10, topics: [] },
-  { id: 'ml', slug: 'ml-basics', name: 'ML Basics', description: 'Machine Learning.', icon: Cpu, level: 7, estimatedHours: 20, topics: [] },
+  {
+    id: 'numpy',
+    slug: 'numpy',
+    name: 'NumPy Mastery',
+    description: 'Numerical computing for Data Science. Master arrays and vectorization.',
+    icon: Binary,
+    level: 3,
+    estimatedHours: 8,
+    topics: [
+      {
+        id: 'np-intro',
+        slug: 'intro',
+        title: 'The NumPy Array',
+        description: 'Why NumPy is faster than Python lists.',
+        sections: {
+          what: { text: 'NumPy is the fundamental package for scientific computing in Python.' },
+          code: { code: 'import numpy as np\narr = np.array([1, 2, 3])' }
+        },
+        interviewQuestions: []
+      }
+    ]
+  },
+  {
+    id: 'pandas',
+    slug: 'pandas',
+    name: 'Pandas for Data',
+    description: 'Data manipulation and analysis with DataFrames.',
+    icon: Table,
+    level: 4,
+    estimatedHours: 12,
+    topics: [
+      {
+        id: 'pd-intro',
+        slug: 'intro',
+        title: 'DataFrames & Series',
+        description: 'Introduction to the core structures of Pandas.',
+        sections: {
+          what: { text: 'Pandas provides high-performance data structures like the DataFrame.' },
+          code: { code: 'import pandas as pd\ndf = pd.read_csv("data.csv")' }
+        },
+        interviewQuestions: []
+      }
+    ]
+  },
+  {
+    id: 'ml',
+    slug: 'ml-basics',
+    name: 'ML Foundations',
+    description: 'From Linear Regression to Logistic Regression. The math and the code.',
+    icon: Cpu,
+    level: 5,
+    estimatedHours: 20,
+    topics: [
+      {
+        id: 'ml-intro',
+        slug: 'intro',
+        title: 'What is Machine Learning?',
+        description: 'The paradigm shift from explicit programming to data-driven learning.',
+        sections: {
+          what: { 
+            text: 'Machine Learning (ML) is a branch of AI that enables systems to learn from data and improve from experience without being explicitly programmed.',
+            eli5: 'Instead of giving a computer a list of rules, we give it a million examples and let it figure out the rules itself.'
+          },
+          components: {
+            components: [
+              { title: 'Training Data', description: 'The examples the model learns from.' },
+              { title: 'Model', description: 'The mathematical algorithm that represents the patterns.' },
+              { title: 'Inference', description: 'Using the model to make predictions on new data.' }
+            ]
+          },
+          diagram: { chart: 'graph LR\n  D[Data] -->|Train| M[Model]\n  N[New Data] --> M\n  M -->|Predict| P[Result]' }
+        },
+        interviewQuestions: [
+          { question: 'What is Overfitting?', answer: 'When a model learns the noise in the training data too well, failing to generalize to new data.', difficulty: 'Fresher', category: 'Conceptual' },
+          { question: 'Supervised vs Unsupervised?', answer: 'Supervised uses labeled data; Unsupervised looks for hidden patterns in unlabeled data.', difficulty: 'Fresher', category: 'Conceptual' },
+          { question: 'What is a Loss Function?', answer: 'A measure of how far off the model\'s predictions are from the actual values.', difficulty: 'Mid', category: 'Conceptual' },
+          { question: 'What is Gradient Descent?', answer: 'An optimization algorithm used to minimize the loss function.', difficulty: 'Mid', category: 'Conceptual' },
+          { question: 'Train/Test split purpose?', answer: 'To evaluate how the model performs on data it hasn\'t seen during training.', difficulty: 'Fresher', category: 'Conceptual' },
+          { question: 'What is Bias?', answer: 'Error from erroneous assumptions in the learning algorithm.', difficulty: 'Mid', category: 'Conceptual' },
+          { question: 'What is Variance?', answer: 'Error from sensitivity to small fluctuations in the training set.', difficulty: 'Mid', category: 'Conceptual' },
+          { question: 'What is a Hyperparameter?', answer: 'A configuration value that is set before the learning process begins.', difficulty: 'Senior', category: 'Conceptual' }
+        ]
+      },
+      {
+        id: 'ml-linear',
+        slug: 'linear-regression',
+        title: 'Linear Regression',
+        description: 'Predicting continuous values using the power of lines.',
+        sections: {
+          what: { text: 'Linear regression models the relationship between a dependent variable and one or more independent variables.' },
+          components: {
+            components: [
+              { title: 'Slope (m)', description: 'How much the output changes for every unit change in input.' },
+              { title: 'Intercept (c)', description: 'The value of the output when the input is zero.' }
+            ]
+          },
+          code: { 
+            code: 'from sklearn.linear_model import LinearRegression\nmodel = LinearRegression()\nmodel.fit(X_train, y_train)',
+            breakdown: [{ line: 'model.fit()', explanation: 'Trains the model on our data.' }]
+          }
+        },
+        interviewQuestions: []
+      },
+      {
+        id: 'ml-workflow',
+        slug: 'workflow',
+        title: 'The ML Workflow',
+        description: 'The step-by-step process of building a machine learning system.',
+        sections: {
+          what: { text: 'Building an ML model isn\'t just about the algorithm. it\'s a multi-stage lifecycle.' },
+          components: {
+            components: [
+              { title: 'Data Collection', description: 'Gathering raw data from various sources.' },
+              { title: 'Preprocessing', description: 'Cleaning and preparing data for the model.' },
+              { title: 'Training', description: 'The model learns patterns from the data.' },
+              { title: 'Evaluation', description: 'Testing the model on unseen data.' },
+              { title: 'Deployment', description: 'Making the model available for real-world use.' }
+            ]
+          },
+          diagram: { chart: 'graph TD\n  A[Collect] --> B[Clean]\n  B --> C[Train]\n  C --> D[Evaluate]\n  D --> E[Deploy]' }
+        },
+        interviewQuestions: []
+      },
+      {
+        id: 'ml-logistic',
+        slug: 'logistic-regression',
+        title: 'Logistic Regression',
+        description: 'The foundation of classification. Predicting categories instead of values.',
+        sections: {
+          what: { text: 'Logistic regression is used to estimate the probability that an instance belongs to a particular class.' },
+          components: {
+            components: [
+              { title: 'Sigmoid Function', description: 'Squashes any real-valued number into a value between 0 and 1.' },
+              { title: 'Decision Boundary', description: 'The threshold used to classify an instance (usually 0.5).' }
+            ]
+          }
+        },
+        interviewQuestions: [
+          { question: 'Why use Sigmoid in Logistic Regression?', answer: 'To map predictions to probabilities between 0 and 1.', difficulty: 'Mid', category: 'Conceptual' }
+        ]
+      }
+    ]
+  },
   { id: 'dl', slug: 'deep-learning', name: 'Deep Learning', description: 'Neural Networks.', icon: Network, level: 8, estimatedHours: 25, topics: [] },
   { id: 'genai', slug: 'gen-ai', name: 'Generative AI', description: 'LLMs & RAG.', icon: Sparkles, level: 9, estimatedHours: 15, topics: [] },
   { id: 'agentic', slug: 'agentic-ai', name: 'Agentic AI', description: 'AI Agents.', icon: Bot, level: 10, estimatedHours: 20, topics: [] },

@@ -188,7 +188,7 @@
 ## Milestone 4 — Content Waves
 
 ### Phase 16: Content Wave 1 — SQL & Python Basics
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Write and integrate the first 10 SQL topics and first 5 Python topics. SQL topics require in-memory database seeds. Content must follow the 11-section standard rigorously. English only for launch.
 **Deliverables**:
 - `lib/content/sql/` — 10 topic files
