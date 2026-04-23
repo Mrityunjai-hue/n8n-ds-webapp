@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
+import { AuthModal } from '@/components/layout/AuthModal';
 
 const syne = Syne({
   subsets: ['latin'],
@@ -59,6 +60,7 @@ export default function RootLayout({
           </main>
 
           <Footer />
+          <AuthModal />
         </ThemeProvider>
       </body>
     </html>

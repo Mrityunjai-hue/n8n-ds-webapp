@@ -79,7 +79,7 @@
 ---
 
 ### Phase 5: Subject Cards Grid
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Below the roadmap on the homepage, show a responsive grid of 10 subject cards. Each card: subject icon, name, topic count, estimated hours, completion progress bar, and a "Start" or "Continue" button. Progress bar reads from the progress store (starts at 0% for guests).
 **Deliverables**:
 - `SubjectCard` component

@@ -7,15 +7,15 @@
 
 ## Active Context
 
-- **Phase**: 4 (completed)
-- **Task**: Interactive Learning Roadmap complete
+- **Phase**: 5 (completed)
+- **Task**: Subject Cards Grid complete
 - **Status**: Verified
 
 ## Last Session Summary
-Phase 4 executed successfully. Subject metadata defined, interactive roadmap graph component built, and standalone /roadmap page assembled.
+Phase 5 executed successfully. Subject cards with progress bars and metadata grid implemented on the homepage. Reusable ProgressBar component created.
 
 ## Next Steps
-1. Proceed to Phase 5: Subject Cards Grid
+1. Proceed to Phase 6: Auth UI & LocalProgress Store (Zustand)
 
 ---
 

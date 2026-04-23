@@ -3,9 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Search, Flame } from 'lucide-react';
+import { Menu, X, Search, Flame, User } from 'lucide-react';
 import { DarkModeToggle } from './DarkModeToggle';
 import { Button } from '../ui/Button';
+import { useAuthUIStore } from '@/lib/store/useAuthUIStore';
+import { useProgressStore } from '@/lib/store/useProgressStore';
 
 const navLinks = [
   { name: 'Roadmap', href: '/roadmap' },
@@ -18,6 +20,11 @@ export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const { openModal } = useAuthUIStore();
+  const { streak } = useProgressStore();
+  
+  // Mock auth state for UI testing
+  const [user, setUser] = useState<{ name: string } | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,14 +73,20 @@ export const Navbar = () => {
           
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-amber/10 border border-accent-amber/20 text-accent-amber text-xs font-bold">
             <Flame className="w-4 h-4 fill-current" />
-            <span>0</span>
+            <span>{streak}</span>
           </div>
 
           <DarkModeToggle />
           
-          <Button variant="primary" size="sm">
-            Sign In
-          </Button>
+          {user ? (
+            <button className="w-10 h-10 rounded-full bg-bg-surface border border-border flex items-center justify-center text-text-secondary hover:border-accent-teal transition-colors">
+              <User className="w-5 h-5" />
+            </button>
+          ) : (
+            <Button variant="primary" size="sm" onClick={() => openModal('login')}>
+              Sign In
+            </Button>
+          )}
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -109,11 +122,25 @@ export const Navbar = () => {
           <div className="mt-8 pt-8 border-t border-border flex flex-col gap-6">
             <div className="flex items-center gap-4 text-accent-amber">
               <Flame className="w-6 h-6 fill-current" />
-              <span className="text-xl font-bold">0 Day Streak</span>
+              <span className="text-xl font-bold">{streak} Day Streak</span>
             </div>
-            <Button variant="primary" size="lg" className="w-full">
-              Sign In
-            </Button>
+            {user ? (
+              <Button variant="secondary" size="lg" className="w-full">
+                Dashboard
+              </Button>
+            ) : (
+              <Button 
+                variant="primary" 
+                size="lg" 
+                className="w-full"
+                onClick={() => {
+                  setIsOpen(false);
+                  openModal('register');
+                }}
+              >
+                Sign In
+              </Button>
+            )}
           </div>
         </div>
       </div>
