@@ -79,7 +79,7 @@
 ## Milestone 2 — Learning Engine
 
 ### Phase 7: Topic Page Shell & Sidebar
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Build the topic page layout at `/learn/[subject]/[topic]`. Left sidebar on desktop (subject name, topic list, current highlighted, completion checkmarks, progress %). Hamburger drawer on mobile. Main content area with 11-section structure as empty scaffolding, ready to receive content.
 **Deliverables**:
 - `app/learn/[subject]/[topic]/page.tsx` route

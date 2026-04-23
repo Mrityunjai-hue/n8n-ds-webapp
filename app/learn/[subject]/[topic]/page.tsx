@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { sections, mockTopics } from '@/lib/mock-data';
 import { ChevronLeft, ChevronRight, Menu, LayoutPanelLeft, Star, Info } from 'lucide-react';
+import { InteractiveEditor } from '@/components/learn/InteractiveEditor';
+import { LineByLineBreakdown } from '@/components/learn/LineByLineBreakdown';
 
 export default function TopicPage() {
   const params = useParams();
@@ -97,17 +99,31 @@ export default function TopicPage() {
                   {section.title.split('. ')[1] || section.title}
                 </h2>
                 
-                <div className="p-8 bg-bg-surface border border-border rounded-modal border-dashed flex flex-col items-center justify-center text-center group hover:border-accent-teal transition-colors">
-                  <div className="w-12 h-12 rounded-full bg-bg-primary border border-border flex items-center justify-center text-text-secondary mb-4 group-hover:text-accent-teal transition-colors">
-                    <Info className="w-6 h-6" />
+                {section.id === 'code' ? (
+                  <div className="space-y-8">
+                    <InteractiveEditor 
+                      initialCode={`# Python Basics\nname = "N8N Community"\nprint(f"Hello from {name}!")\n\n# Try changing the code and clicking Run!`} 
+                    />
+                    <LineByLineBreakdown 
+                      items={[
+                        { line: 'name = "N8N Community"', explanation: 'We define a variable called "name" and assign it a string value.' },
+                        { line: 'print(f"Hello from {name}!")', explanation: 'We use an f-string to print a greeting that includes our variable.' },
+                      ]}
+                    />
                   </div>
-                  <p className="text-text-secondary italic">
-                    [Placeholder for {section.title.split('. ')[1] || section.title} content]
-                  </p>
-                  <p className="text-xs text-text-secondary mt-4 opacity-50">
-                    Component: {section.id.toUpperCase()}_SECTION
-                  </p>
-                </div>
+                ) : (
+                  <div className="p-8 bg-bg-surface border border-border rounded-modal border-dashed flex flex-col items-center justify-center text-center group hover:border-accent-teal transition-colors">
+                    <div className="w-12 h-12 rounded-full bg-bg-primary border border-border flex items-center justify-center text-text-secondary mb-4 group-hover:text-accent-teal transition-colors">
+                      <Info className="w-6 h-6" />
+                    </div>
+                    <p className="text-text-secondary italic">
+                      [Placeholder for {section.title.split('. ')[1] || section.title} content]
+                    </p>
+                    <p className="text-xs text-text-secondary mt-4 opacity-50">
+                      Component: {section.id.toUpperCase()}_SECTION
+                    </p>
+                  </div>
+                )}
               </section>
             ))}
           </div>

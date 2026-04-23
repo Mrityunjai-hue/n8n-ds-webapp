@@ -7,15 +7,15 @@
 
 ## Active Context
 
-- **Phase**: 6 (completed)
-- **Task**: Auth UI & LocalProgress Store complete
+- **Phase**: 7 (completed)
+- **Task**: Topic Page Shell & Sidebar complete
 - **Status**: Verified
 
 ## Last Session Summary
-Phase 6 executed successfully. Zustand stores for progress and auth UI implemented. AuthModal created and integrated into Navbar. Streak tracking and guest persistence (localStorage) active.
+Phase 7 executed successfully. Topic page route implemented with sidebar navigation, 11-section scaffolding, and keyboard shortcuts.
 
 ## Next Steps
-1. Proceed to Phase 7: Topic Page Shell & Sidebar
+1. Proceed to Phase 8: Monaco Editor + Pyodide (Python)
 
 ---
 
