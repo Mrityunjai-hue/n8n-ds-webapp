@@ -7,15 +7,15 @@
 
 ## Active Context
 
-- **Phase**: 3 (completed)
-- **Task**: Homepage Hero + Stats Bar complete
+- **Phase**: 4 (completed)
+- **Task**: Interactive Learning Roadmap complete
 - **Status**: Verified
 
 ## Last Session Summary
-Phase 3 executed successfully. High-impact Hero section with canvas node animation and responsive Stats bar implemented on the homepage.
+Phase 4 executed successfully. Subject metadata defined, interactive roadmap graph component built, and standalone /roadmap page assembled.
 
 ## Next Steps
-1. Proceed to Phase 4: Interactive Learning Roadmap (Homepage + /roadmap)
+1. Proceed to Phase 5: Subject Cards Grid
 
 ---
 

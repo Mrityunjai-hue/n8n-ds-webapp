@@ -65,7 +65,7 @@
 ---
 
 ### Phase 4: Interactive Learning Roadmap (Homepage + /roadmap)
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Build the interactive node-based learning roadmap. Nodes: SQL → Power BI → Python Basics → NumPy → Pandas → Data Visualization → ML → Deep Learning → Gen AI → Agentic AI. Each node has completion status colors (gray/amber/teal). Clicking a node navigates to that subject. Dependency lines connect nodes. Works on mobile (horizontal scroll or vertical collapse).
 **Deliverables**:
 - `RoadmapGraph` component (CSS-based or lightweight SVG — no heavy libs)
