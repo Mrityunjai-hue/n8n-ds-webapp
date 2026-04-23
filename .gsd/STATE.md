@@ -7,15 +7,15 @@
 
 ## Active Context
 
-- **Phase**: 7 (completed)
-- **Task**: Topic Page Shell & Sidebar complete
+- **Phase**: 8 (completed)
+- **Task**: Monaco Editor + Pyodide (Python) complete
 - **Status**: Verified
 
 ## Last Session Summary
-Phase 7 executed successfully. Topic page route implemented with sidebar navigation, 11-section scaffolding, and keyboard shortcuts.
+Phase 8 executed successfully. Monaco Editor integrated with Pyodide for in-browser Python execution. InteractiveEditor and LineByLineBreakdown components built and integrated.
 
 ## Next Steps
-1. Proceed to Phase 8: Monaco Editor + Pyodide (Python)
+1. Proceed to Phase 9: Monaco Editor + sql.js (SQL)
 
 ---
 

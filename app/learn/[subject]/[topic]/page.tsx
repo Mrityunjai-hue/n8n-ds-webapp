@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 import { sections, mockTopics } from '@/lib/mock-data';
 import { ChevronLeft, ChevronRight, Menu, LayoutPanelLeft, Star, Info } from 'lucide-react';
 import { InteractiveEditor } from '@/components/learn/InteractiveEditor';
+import { SqlEditor } from '@/components/learn/SqlEditor';
 import { LineByLineBreakdown } from '@/components/learn/LineByLineBreakdown';
 
 export default function TopicPage() {
@@ -101,15 +102,31 @@ export default function TopicPage() {
                 
                 {section.id === 'code' ? (
                   <div className="space-y-8">
-                    <InteractiveEditor 
-                      initialCode={`# Python Basics\nname = "N8N Community"\nprint(f"Hello from {name}!")\n\n# Try changing the code and clicking Run!`} 
-                    />
-                    <LineByLineBreakdown 
-                      items={[
-                        { line: 'name = "N8N Community"', explanation: 'We define a variable called "name" and assign it a string value.' },
-                        { line: 'print(f"Hello from {name}!")', explanation: 'We use an f-string to print a greeting that includes our variable.' },
-                      ]}
-                    />
+                    {currentSubject === 'sql' ? (
+                      <>
+                        <SqlEditor 
+                          initialQuery={`SELECT * FROM sales\nWHERE amount > 600\nORDER BY date DESC;`} 
+                        />
+                        <LineByLineBreakdown 
+                          items={[
+                            { line: 'SELECT * FROM sales', explanation: 'This fetches all columns from the sales table.' },
+                            { line: 'WHERE amount > 600', explanation: 'Filters the results to only show products more expensive than $600.' },
+                          ]}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <InteractiveEditor 
+                          initialCode={`# Python Basics\nname = "N8N Community"\nprint(f"Hello from {name}!")\n\n# Try changing the code and clicking Run!`} 
+                        />
+                        <LineByLineBreakdown 
+                          items={[
+                            { line: 'name = "N8N Community"', explanation: 'We define a variable called "name" and assign it a string value.' },
+                            { line: 'print(f"Hello from {name}!")', explanation: 'We use an f-string to print a greeting that includes our variable.' },
+                          ]}
+                        />
+                      </>
+                    )}
                   </div>
                 ) : (
                   <div className="p-8 bg-bg-surface border border-border rounded-modal border-dashed flex flex-col items-center justify-center text-center group hover:border-accent-teal transition-colors">
