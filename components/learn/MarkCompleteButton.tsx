@@ -5,6 +5,8 @@ import confetti from 'canvas-confetti';
 import { CheckCircle, ArrowRight, PartyPopper } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useProgressStore } from '@/lib/store/useProgressStore';
+import { useUserStore } from '@/lib/store/useUserStore';
+import { saveTopicCompletion } from '@/lib/firebase/db';
 
 interface MarkCompleteButtonProps {
   topicId: string;
@@ -18,14 +20,19 @@ export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({
   nextTopicTitle 
 }) => {
   const { completedTopics, completeTopic } = useProgressStore();
+  const { user } = useUserStore();
   const isCompleted = completedTopics.includes(topicId);
   const [justCompleted, setJustCompleted] = useState(false);
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     if (isCompleted) return;
     
     completeTopic(topicId);
     setJustCompleted(true);
+
+    if (user) {
+      await saveTopicCompletion(user.uid, topicId, true);
+    }
     
     confetti({
       particleCount: 150,

@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { AuthModal } from '@/components/layout/AuthModal';
+import { AuthProvider } from '@/components/providers/AuthProvider';
 
 const syne = Syne({
   subsets: ['latin'],
@@ -55,12 +56,14 @@ export default function RootLayout({
           
           <Navbar />
           
-          <main id="main-content" className="flex-grow pt-20">
-            {children}
-          </main>
+          <AuthProvider>
+            <main id="main-content" className="flex-grow pt-20">
+              {children}
+            </main>
 
-          <Footer />
-          <AuthModal />
+            <Footer />
+            <AuthModal />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

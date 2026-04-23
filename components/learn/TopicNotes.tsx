@@ -1,18 +1,40 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import { Save, Check, Loader2 } from 'lucide-react';
+import { useUserStore } from '@/lib/store/useUserStore';
+import { saveTopicNote, getTopicNote } from '@/lib/firebase/db';
 
 export const TopicNotes = () => {
+  const params = useParams();
+  const { user } = useUserStore();
   const [notes, setNotes] = useState('');
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
-  const handleSave = () => {
+  const topicId = params.topic as string;
+
+  useEffect(() => {
+    const fetchNote = async () => {
+      if (user && topicId) {
+        const cloudNote = await getTopicNote(user.uid, topicId);
+        if (cloudNote) setNotes(cloudNote);
+      }
+    };
+    fetchNote();
+  }, [user, topicId]);
+
+  const handleSave = async () => {
     setStatus('saving');
+    
+    if (user && topicId) {
+      await saveTopicNote(user.uid, topicId, notes);
+    }
+
     setTimeout(() => {
       setStatus('saved');
       setTimeout(() => setStatus('idle'), 2000);
-    }, 1000);
+    }, 500);
   };
 
   return (

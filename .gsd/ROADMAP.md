@@ -142,7 +142,7 @@
 ---
 
 ### Phase 12: Topic Content System & Static Engine
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Create the engine that pulls static topic data from `lib/content/` and renders it through the topic shell. Subject data includes: array of topic IDs. Topic data includes: content for all 11 sections, Monaco code snippet, Mermaid string. Type safety for all content files.
 **Deliverables**:
 - `lib/content/index.ts` — main resolver for subjects and topics

@@ -1,12 +1,20 @@
 'use client';
 
 import React from 'react';
-import { X, Mail, LogIn } from 'lucide-react';
+import { X, LogIn } from 'lucide-react';
 import { useAuthUIStore } from '@/lib/store/useAuthUIStore';
+import { useFirebaseAuth } from '@/lib/hooks/useFirebaseAuth';
 import { Button } from '../ui/Button';
 
 export const AuthModal = () => {
   const { isModalOpen, closeModal, view, setView } = useAuthUIStore();
+  const { signInWithGoogle, signInWithGithub } = useFirebaseAuth();
+
+  const handleAuth = async (provider: 'google' | 'github') => {
+    if (provider === 'google') await signInWithGoogle();
+    else await signInWithGithub();
+    closeModal();
+  };
 
   if (!isModalOpen) return null;
 
@@ -35,11 +43,19 @@ export const AuthModal = () => {
         </div>
 
         <div className="space-y-4">
-          <Button variant="secondary" className="w-full gap-3 py-3">
+          <Button 
+            variant="secondary" 
+            className="w-full gap-3 py-3"
+            onClick={() => handleAuth('github')}
+          >
             <LogIn className="w-5 h-5" />
             Continue with GitHub
           </Button>
-          <Button variant="secondary" className="w-full gap-3 py-3">
+          <Button 
+            variant="secondary" 
+            className="w-full gap-3 py-3"
+            onClick={() => handleAuth('google')}
+          >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.90 3.16-1.78 4.04-1.12 1.12-2.88 2.32-6.06 2.32-5.12 0-9.28-4.16-9.28-9.28s4.16-9.28 9.28-9.28c2.8 0 4.94 1.1 6.54 2.62l2.3-2.3C18.96 1.48 16.2 0 12.48 0 5.86 0 .3 5.4.3 12s5.56 12 12.18 12c3.56 0 6.36-1.18 8.52-3.42 2.22-2.22 2.92-5.34 2.92-7.86 0-.74-.06-1.44-.18-2.12H12.48z"/>
             </svg>

@@ -7,15 +7,16 @@
 
 ## Active Context
 
-- **Phase**: 11 (completed)
-- **Task**: Topic Sections — Content Components complete
+- **Phase**: 12 (completed)
+- **Task**: Topic Content System & Static Engine complete
 - **Status**: Verified
 
 ## Last Session Summary
-Phase 11 executed successfully. Interactive content components for the topic page implemented: Interview cards, Mark Complete button with confetti, ELI5 toggle, and content blocks.
+Phase 12 executed successfully. Centralized content system and static resolver implemented. All global components migrated to the new unified data engine. Milestone 2 (Learning Engine) is now complete.
 
 ## Next Steps
-1. Proceed to Phase 12: Topic Content System & Static Engine
+1. Proceed to Milestone 3: Community & Persistence
+2. Phase 13: Firebase Initialization (Auth & Firestore)
 
 ---
 
