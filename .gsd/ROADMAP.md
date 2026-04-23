@@ -41,7 +41,7 @@
 ---
 
 ### Phase 2: Navigation & Global Layout
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Build the site-wide navigation (desktop topnav + mobile hamburger), footer, and the global layout shell. Include the streak counter (visible when logged in), light/dark toggle, and Ctrl+K search trigger in the nav.
 **Deliverables**:
 - `Navbar` component — logo, nav links, dark toggle, streak display, auth state (login/avatar)

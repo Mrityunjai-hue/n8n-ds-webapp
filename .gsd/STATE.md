@@ -7,16 +7,15 @@
 
 ## Active Context
 
-- **Active Milestone**: Milestone 1 — Foundation & Core Infrastructure
-- **Phase**: 1 (completed)
-- **Task**: Project Setup & Design System complete
+- **Phase**: 2 (completed)
+- **Task**: Navigation & Global Layout complete
 - **Status**: Verified
 
 ## Last Session Summary
-Phase 1 executed successfully. Next.js 14 project initialized, Tailwind design system configured with all SPEC tokens, and base UI components built.
+Phase 2 executed successfully. Responsive Navbar with mobile drawer and active highlighting built. Global Footer and skip-to-content accessibility integrated.
 
 ## Next Steps
-1. Proceed to Phase 2: Navigation & Global Layout
+1. Proceed to Phase 3: Homepage — Hero + Stats Bar
 
 ---
 
