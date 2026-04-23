@@ -107,7 +107,7 @@
 ---
 
 ### Phase 9: Monaco Editor + sql.js (SQL)
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Integrate sql.js for SQL topics. Same Monaco Editor shell but with SQL syntax highlighting. Pre-loaded SQL queries + in-memory SQLite dataset. Results rendered as a clean table in the output panel.
 **Deliverables**:
 - `SqlEditor` component (Monaco, SQL mode, sql.js backend)

@@ -10,6 +10,7 @@ import { ChevronLeft, ChevronRight, Menu, LayoutPanelLeft, Star, Info } from 'lu
 import { InteractiveEditor } from '@/components/learn/InteractiveEditor';
 import { SqlEditor } from '@/components/learn/SqlEditor';
 import { LineByLineBreakdown } from '@/components/learn/LineByLineBreakdown';
+import { MermaidDiagram } from '@/components/learn/MermaidDiagram';
 
 export default function TopicPage() {
   const params = useParams();
@@ -100,7 +101,14 @@ export default function TopicPage() {
                   {section.title.split('. ')[1] || section.title}
                 </h2>
                 
-                {section.id === 'code' ? (
+                {section.id === 'diagram' ? (
+                  <MermaidDiagram 
+                    chart={currentSubject === 'sql' 
+                      ? `graph TD\n  A[Client App] -->|SELECT| B(SQL Database)\n  B -->|Result Set| C{Data Filter}\n  C -->|Matched| D[User View]\n  C -->|Unmatched| E[Empty State]`
+                      : `graph LR\n  A[Input Data] --> B(Process)\n  B --> C{Decision}\n  C -->|Yes| D[Result A]\n  C -->|No| E[Result B]`
+                    } 
+                  />
+                ) : section.id === 'code' ? (
                   <div className="space-y-8">
                     {currentSubject === 'sql' ? (
                       <>
