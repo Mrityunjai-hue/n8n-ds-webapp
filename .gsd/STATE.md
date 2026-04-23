@@ -7,16 +7,16 @@
 
 ## Active Context
 
-- **Phase**: 14 (completed)
-- **Task**: Personal Topic Notes complete
+- **Phase**: 15 (completed)
+- **Task**: Bookmarks & Dashboard complete
 - **Status**: Verified
 
 ## Last Session Summary
-Phase 14 executed successfully. Debounced auto-save (2s) implemented for topic notes. Integration with Firestore verified for authenticated users.
+Phase 15 executed successfully. Bookmark system and Personal Dashboard implemented. Milestone 3 (Community & Persistence) is now complete. Platform features full multi-device sync, cloud journaling, and a personalized mission control.
 
 ## Next Steps
-1. Proceed to Phase 15: Bookmarks & Dashboard
-2. Build BookmarkButton and /dashboard page
+1. Proceed to Milestone 4: Content Waves
+2. Phase 16: Content Wave 1 — SQL & Python Basics
 
 ---
 

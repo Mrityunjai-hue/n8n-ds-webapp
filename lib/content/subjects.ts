@@ -73,8 +73,148 @@ export const subjects: SubjectContent[] = [
           }
         ]
       },
-      createTopic('sql-select', 'SELECT Statements', 'select'),
-      createTopic('sql-where', 'Filtering Data', 'where'),
+      {
+        id: 'sql-select',
+        slug: 'select',
+        title: 'SELECT & FROM',
+        description: 'The fundamental building blocks of any SQL query. Learn how to specify the data you want.',
+        sections: {
+          what: {
+            text: 'The SELECT statement is used to pick specific columns from a table, while FROM specifies which table those columns live in.',
+            eli5: 'It\'s like pointing at a menu and saying "I want the Burger (Column) from this Restaurant (Table)."',
+            points: ['Columns are vertical', 'Rows are horizontal', 'Case insensitivity in keywords']
+          },
+          why: {
+            text: 'In real-world databases, tables can have hundreds of columns. SELECT helps you focus only on the data relevant to your analysis, saving memory and time.',
+            tip: 'Always list specific columns instead of using SELECT *. It makes your code faster and easier to maintain.'
+          },
+          diagram: {
+            chart: 'graph LR\n  T[Table] -->|SELECT name, age| R[Result Set]\n  T -->|FROM users| T'
+          },
+          code: {
+            code: '-- Fetching specific columns\nSELECT first_name, email\nFROM customers;',
+            breakdown: [
+              { line: 'SELECT first_name', explanation: 'Tells SQL to only look at the name column.' },
+              { line: 'FROM customers', explanation: 'Tells SQL to look inside the customers table.' }
+            ]
+          },
+          proTip: {
+            title: 'Column Aliasing',
+            text: 'You can rename columns in your output using the AS keyword. This is incredibly useful for making reports more readable.'
+          },
+          warning: {
+            title: 'Avoid SELECT *',
+            text: 'Using the asterisk (*) fetches every single column. In a table with millions of rows, this can seriously slow down the database and the network.'
+          },
+          keyPoints: {
+            title: 'Query Basics',
+            points: [
+              'SQL queries usually end with a semicolon (;).',
+              'Keywords like SELECT are often written in UPPERCASE by convention.',
+              'You can select multiple columns by separating them with commas.'
+            ]
+          }
+        },
+        interviewQuestions: [
+          {
+            question: 'What happens if you omit the FROM clause in a query?',
+            answer: 'Most modern SQL engines will throw an error because they don\'t know which table to search, though some allow SELECT on literal values (e.g., SELECT 1+1).',
+            difficulty: 'Fresher',
+            category: 'Trap'
+          }
+        ]
+      },
+      {
+        id: 'sql-where',
+        slug: 'where',
+        title: 'Filtering with WHERE',
+        description: 'Learn how to filter your data using logical conditions and operators.',
+        sections: {
+          what: {
+            text: 'The WHERE clause allows you to filter records that fulfill a specified condition. It acts as a gatekeeper for your rows.',
+            eli5: 'It\'s like a filter on an e-commerce site where you only show "Shoes" that are "Size 10".'
+          },
+          why: {
+            text: 'Without filtering, you would always get every row in a table. WHERE allows you to zoom in on specific segments, like "active users" or "high-value transactions".'
+          },
+          code: {
+            code: 'SELECT product_name, price\nFROM products\nWHERE price > 100\nAND category = \'Electronics\';',
+            breakdown: [
+              { line: 'WHERE price > 100', explanation: 'Filters for items costing more than 100.' },
+              { line: 'AND category = \'Electronics\'', explanation: 'Adds a second required condition.' }
+            ]
+          },
+          proTip: {
+            title: 'The Power of LIKE',
+            text: 'Use the LIKE operator with wildcards (%) to search for patterns. e.g., WHERE name LIKE "A%" finds all names starting with A.'
+          },
+          warning: {
+            title: 'NULL Values',
+            text: 'You cannot use = to check for NULL. You must use IS NULL or IS NOT NULL. This is a very common mistake!'
+          }
+        },
+        interviewQuestions: [
+          {
+            question: 'What is the difference between = and LIKE?',
+            answer: '= looks for an exact match, while LIKE allows for pattern matching using wildcards.',
+            difficulty: 'Fresher',
+            category: 'Conceptual'
+          }
+        ]
+      },
+      {
+        id: 'sql-order',
+        slug: 'ordering',
+        title: 'Ordering & Limiting',
+        description: 'Learn how to sort your data and control the number of results returned.',
+        sections: {
+          what: {
+            text: 'ORDER BY is used to sort the result-set in ascending or descending order. LIMIT is used to specify the number of records to return.',
+            eli5: 'ORDER BY is like sorting your contact list by name. LIMIT is like only looking at the first 10 names.'
+          },
+          code: {
+            code: 'SELECT name, salary\nFROM employees\nORDER BY salary DESC\nLIMIT 5;',
+            breakdown: [
+              { line: 'ORDER BY salary DESC', explanation: 'Sorts highest salary first.' },
+              { line: 'LIMIT 5', explanation: 'Only shows the top 5 earners.' }
+            ]
+          }
+        },
+        interviewQuestions: [
+          {
+            question: 'How do you find the 2nd highest salary?',
+            answer: 'SELECT salary FROM employees ORDER BY salary DESC LIMIT 1 OFFSET 1;',
+            difficulty: 'Mid',
+            category: 'Coding'
+          }
+        ]
+      },
+      {
+        id: 'sql-joins',
+        slug: 'joins',
+        title: 'Merging Tables (JOINs)',
+        description: 'The real power of SQL. Learn how to combine data from multiple tables.',
+        sections: {
+          what: {
+            text: 'A JOIN clause is used to combine rows from two or more tables, based on a related column between them.',
+            eli5: 'It\'s like connecting a "Customer ID" on an order to the "Customer ID" in the customers list to see who bought what.'
+          },
+          code: {
+            code: 'SELECT orders.id, customers.name\nFROM orders\nINNER JOIN customers ON orders.customer_id = customers.id;',
+            breakdown: [
+              { line: 'INNER JOIN', explanation: 'Only keeps rows where there is a match in both.' }
+            ]
+          }
+        },
+        interviewQuestions: [
+          {
+            question: 'What is the difference between INNER and LEFT JOIN?',
+            answer: 'INNER JOIN returns only matching rows. LEFT JOIN returns all rows from the left table and matching rows from the right.',
+            difficulty: 'Mid',
+            category: 'Conceptual'
+          }
+        ]
+      }
     ]
   },
   {
@@ -105,7 +245,110 @@ export const subjects: SubjectContent[] = [
         },
         interviewQuestions: []
       },
-      createTopic('py-vars', 'Variables & Types', 'variables'),
+      {
+        id: 'py-vars',
+        slug: 'variables',
+        title: 'Variables & Types',
+        description: 'Understanding how Python stores data.',
+        sections: {
+          what: {
+            text: 'Variables are containers for storing data values. Python has various types like integers, floats, strings, and booleans.',
+            eli5: 'Think of variables as labeled boxes where you can store different items.'
+          },
+          code: {
+            code: 'age = 25          # Integer\nprice = 19.99     # Float\nname = "Alice"    # String\nis_active = True  # Boolean',
+            breakdown: [
+              { line: 'age = 25', explanation: 'Creates an integer variable.' }
+            ]
+          }
+        },
+        interviewQuestions: [
+          {
+            question: 'Is Python statically or dynamically typed?',
+            answer: 'Dynamically typed. You don\'t need to declare the type of a variable.',
+            difficulty: 'Fresher',
+            category: 'Conceptual'
+          }
+        ]
+      },
+      {
+        id: 'py-loops',
+        slug: 'loops',
+        title: 'Loops & Iteration',
+        description: 'Learn how to automate repetitive tasks using For and While loops.',
+        sections: {
+          what: {
+            text: 'Loops allow you to execute a block of code multiple times. For loops are great for iterating over collections, while While loops run as long as a condition is true.',
+            eli5: 'It\'s like telling someone to "Keep jumping until I say stop" (While) or "Jump 5 times" (For).'
+          },
+          code: {
+            code: 'fruits = ["apple", "banana", "cherry"]\nfor fruit in fruits:\n    print(fruit)',
+            breakdown: [
+              { line: 'for fruit in fruits', explanation: 'Goes through each item in the list.' }
+            ]
+          }
+        },
+        interviewQuestions: [
+          {
+            question: 'What is the purpose of "break" in a loop?',
+            answer: 'It immediately terminates the loop.',
+            difficulty: 'Fresher',
+            category: 'Conceptual'
+          }
+        ]
+      },
+      {
+        id: 'py-funcs',
+        slug: 'functions',
+        title: 'Reusable Functions',
+        description: 'Don\'t Repeat Yourself. Learn to package logic into functions.',
+        sections: {
+          what: {
+            text: 'A function is a block of code which only runs when it is called. You can pass data, known as parameters, into a function.',
+            eli5: 'It\'s like a recipe. You define it once, and you can cook it as many times as you want by just calling its name.'
+          },
+          code: {
+            code: 'def greet(name):\n    return f"Hello, {name}!"\n\nprint(greet("N8N"))',
+            breakdown: [
+              { line: 'def greet(name)', explanation: 'Defines the function with a parameter.' }
+            ]
+          }
+        },
+        interviewQuestions: [
+          {
+            question: 'What does the "return" keyword do?',
+            answer: 'It exits the function and sends a value back to the caller.',
+            difficulty: 'Fresher',
+            category: 'Conceptual'
+          }
+        ]
+      },
+      {
+        id: 'py-collections',
+        slug: 'collections',
+        title: 'Lists & Dictionaries',
+        description: 'Master the most important data structures in Python.',
+        sections: {
+          what: {
+            text: 'Lists are ordered collections. Dictionaries are key-value pairs. Together, they form the backbone of data manipulation in Python.',
+            eli5: 'A list is like a grocery list. A dictionary is like a real dictionary where you look up a word (key) to find its meaning (value).'
+          },
+          code: {
+            code: 'user = {"id": 1, "name": "Alice"}\nscores = [85, 92, 78]',
+            breakdown: [
+              { line: 'user = {...}', explanation: 'Creates a dictionary.' }
+            ]
+          }
+        },
+        interviewQuestions: [
+          {
+            question: 'What is the difference between a List and a Tuple?',
+            answer: 'Lists are mutable (can change), Tuples are immutable (cannot change).',
+            difficulty: 'Fresher',
+            category: 'Conceptual'
+          }
+        ]
+      }
     ]
   },
   // Add other subjects as placeholders for now

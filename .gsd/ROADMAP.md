@@ -176,7 +176,7 @@
 ---
 
 ### Phase 15: Bookmarks & Dashboard
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Add "Bookmark" toggle to topic headers, projects, and interview questions. Build the User Dashboard (`/dashboard`) showing: streak, overall progress %, bookmarked items list, recent topics visited, and "Next Recommended Topic".
 **Deliverables**:
 - `BookmarkButton` component

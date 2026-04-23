@@ -11,9 +11,11 @@ export interface InterviewQuestion {
 }
 
 export interface SectionContent {
+  title?: string;
   text?: string;
   eli5?: string;
   points?: string[];
+  items?: string[]; // For key points
   tip?: string;
   warning?: string;
   chart?: string; // Mermaid syntax
