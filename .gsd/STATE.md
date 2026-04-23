@@ -7,15 +7,15 @@
 
 ## Active Context
 
-- **Phase**: 5 (completed)
-- **Task**: Subject Cards Grid complete
+- **Phase**: 6 (completed)
+- **Task**: Auth UI & LocalProgress Store complete
 - **Status**: Verified
 
 ## Last Session Summary
-Phase 5 executed successfully. Subject cards with progress bars and metadata grid implemented on the homepage. Reusable ProgressBar component created.
+Phase 6 executed successfully. Zustand stores for progress and auth UI implemented. AuthModal created and integrated into Navbar. Streak tracking and guest persistence (localStorage) active.
 
 ## Next Steps
-1. Proceed to Phase 6: Auth UI & LocalProgress Store (Zustand)
+1. Proceed to Phase 7: Topic Page Shell & Sidebar
 
 ---
 
