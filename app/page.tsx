@@ -1,5 +1,6 @@
 import { HeroSection } from '@/components/home/HeroSection';
 import { StatsBar } from '@/components/home/StatsBar';
+import { RoadmapGraph } from '@/components/home/RoadmapGraph';
 
 export default function Home() {
   return (
@@ -7,14 +8,16 @@ export default function Home() {
       <HeroSection />
       <StatsBar />
       
-      {/* Roadmap placeholder for next phase */}
-      <section className="py-24 container mx-auto px-6 text-center">
-        <h2 className="text-4xl font-display font-bold mb-8">
-          Interactive Roadmap Coming Soon
-        </h2>
-        <div className="h-64 bg-bg-surface border border-dashed border-border rounded-modal flex items-center justify-center text-text-secondary">
-          Phase 4: Interactive Node Roadmap
+      <section className="py-24 overflow-hidden border-b border-border">
+        <div className="container mx-auto px-6 text-center mb-16">
+          <h2 className="text-4xl lg:text-5xl font-display font-bold mb-4">
+            The Visual <span className="text-accent-teal">Path</span>
+          </h2>
+          <p className="text-text-secondary max-w-2xl mx-auto">
+            A structured, step-by-step curriculum to take you from a data novice to an AI architect.
+          </p>
         </div>
+        <RoadmapGraph />
       </section>
     </div>
   );

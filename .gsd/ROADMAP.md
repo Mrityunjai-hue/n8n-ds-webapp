@@ -54,7 +54,7 @@
 ---
 
 ### Phase 3: Homepage — Hero + Stats Bar
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Build the homepage hero section with animated background (lightweight CSS/canvas floating nodes/network), bold headline, subheading, two CTAs, and the community intro. Add the Stats Bar (topic count, project count, interview question count, "Free forever").
 **Deliverables**:
 - `HeroSection` component with animated node-network background
