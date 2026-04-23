@@ -28,7 +28,7 @@
 ## Milestone 1 — Foundation & Core Infrastructure
 
 ### Phase 1: Project Setup & Design System
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Initialize the Next.js 14 App Router project, configure Tailwind with the full custom design system (colors, fonts, tokens, dark mode class strategy), set up Google Fonts (Syne, Plus Jakarta Sans, JetBrains Mono), create global CSS variables, and scaffold the complete folder/file structure. Also create reusable base components: Button, Badge, Card, Skeleton, Toast.
 **Deliverables**:
 - Working Next.js dev server at localhost:3000

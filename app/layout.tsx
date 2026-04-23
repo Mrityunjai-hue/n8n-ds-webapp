@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Syne, Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
 
 const syne = Syne({
   subsets: ['latin'],
@@ -35,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${syne.variable} ${jakarta.variable} ${jetbrains.variable} font-body bg-bg-primary text-text-primary antialiased`}
+        className={`${syne.variable} ${jakarta.variable} ${jetbrains.variable} font-body bg-bg-primary text-text-primary antialiased min-h-screen flex flex-col`}
       >
         <ThemeProvider
           attribute="class"
@@ -43,7 +45,20 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-accent-teal focus:text-white focus:rounded-card focus:font-bold"
+          >
+            Skip to content
+          </a>
+          
+          <Navbar />
+          
+          <main id="main-content" className="flex-grow pt-20">
+            {children}
+          </main>
+
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

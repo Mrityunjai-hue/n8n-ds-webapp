@@ -25,7 +25,7 @@
 | REQ-18 | Topic notes must auto-save to Firestore (debounced, 2 seconds) | SPEC Goal 3 | Pending |
 | REQ-19 | Bookmarks must be saveable from topic pages, projects, and viewable from dashboard | SPEC Goal 3 | Pending |
 | REQ-20 | Global search (Ctrl+K) must return results within 200ms, no network call | SPEC Goal 2 | Pending |
-| REQ-21 | Dark mode must be default; preference persists via localStorage | Design | Pending |
+| REQ-21 | Dark mode must be default; preference persists via localStorage | Design | Complete |
 | REQ-22 | ELI5 toggle must exist on every topic page; state saved per topic | Design | Pending |
 | REQ-23 | Site must be fully responsive at 375px, 768px, 1280px, 1920px | Constraint | Pending |
 | REQ-24 | Monaco Editor and Pyodide must load lazily (not in initial bundle) | Constraint | Pending |
