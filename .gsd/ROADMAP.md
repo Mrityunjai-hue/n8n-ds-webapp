@@ -155,7 +155,7 @@
 ## Milestone 3 — Community & Persistence
 
 ### Phase 13: Firebase Initialization (Auth & Firestore)
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Initialize Firebase project and integrate Client SDK. Configure Google & GitHub providers. Setup Firestore collections: `users`, `progress`, `notes`, `bookmarks`. Implement a "Sync Logic" that moves progress from localStorage to Firestore upon first login.
 **Deliverables**:
 - `lib/firebase.ts` — initialized app and services
@@ -166,7 +166,7 @@
 ---
 
 ### Phase 14: Personal Topic Notes
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Add a "My Notes" section to every topic page (Section 11). Rich text or Markdown editor (simple textarea or minimal editor). Auto-saves to Firestore with debounce (2 seconds). Notes are per-user, per-topic.
 **Deliverables**:
 - `TopicNotes` component

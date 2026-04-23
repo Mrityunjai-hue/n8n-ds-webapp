@@ -43,3 +43,30 @@ export const getTopicNote = async (userId: string, topicId: string) => {
     return '';
   }
 };
+export const toggleBookmark = async (userId: string, topicId: string, isBookmarked: boolean) => {
+  const userDocRef = doc(db, 'users', userId);
+  
+  try {
+    await updateDoc(userDocRef, {
+      bookmarks: isBookmarked ? arrayUnion(topicId) : arrayRemove(topicId),
+      updatedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Error toggling bookmark:', error);
+  }
+};
+
+export const getBookmarks = async (userId: string) => {
+  const userDocRef = doc(db, 'users', userId);
+  
+  try {
+    const docSnap = await getDoc(userDocRef);
+    if (docSnap.exists()) {
+      return docSnap.data().bookmarks || [];
+    }
+    return [];
+  } catch (error) {
+    console.error('Error fetching bookmarks:', error);
+    return [];
+  }
+};

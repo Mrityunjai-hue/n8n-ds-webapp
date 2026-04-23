@@ -8,12 +8,13 @@ import { DarkModeToggle } from './DarkModeToggle';
 import { Button } from '../ui/Button';
 import { useAuthUIStore } from '@/lib/store/useAuthUIStore';
 import { useProgressStore } from '@/lib/store/useProgressStore';
+import { useUserStore } from '@/lib/store/useUserStore';
 
 const navLinks = [
+  { name: 'Dashboard', href: '/dashboard' },
   { name: 'Roadmap', href: '/roadmap' },
   { name: 'Projects', href: '/projects' },
   { name: 'Interview', href: '/interview' },
-  { name: 'About', href: '/about' },
 ];
 
 export const Navbar = () => {
@@ -22,9 +23,7 @@ export const Navbar = () => {
   const pathname = usePathname();
   const { openModal } = useAuthUIStore();
   const { streak } = useProgressStore();
-  
-  // Mock auth state for UI testing
-  const [user, setUser] = useState<{ name: string } | null>(null);
+  const { user } = useUserStore();
 
   useEffect(() => {
     const handleScroll = () => {

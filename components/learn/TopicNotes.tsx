@@ -24,17 +24,26 @@ export const TopicNotes = () => {
     fetchNote();
   }, [user, topicId]);
 
-  const handleSave = async () => {
-    setStatus('saving');
+  useEffect(() => {
+    if (status === 'saved' || status === 'saving') return;
     
-    if (user && topicId) {
-      await saveTopicNote(user.uid, topicId, notes);
-    }
+    const timeout = setTimeout(() => {
+      if (notes.trim()) {
+        handleSave();
+      }
+    }, 2000);
 
-    setTimeout(() => {
-      setStatus('saved');
-      setTimeout(() => setStatus('idle'), 2000);
-    }, 500);
+    return () => clearTimeout(timeout);
+  }, [notes]);
+
+  const handleSave = async () => {
+    if (!user || !topicId) return;
+    
+    setStatus('saving');
+    await saveTopicNote(user.uid, topicId, notes);
+    
+    setStatus('saved');
+    setTimeout(() => setStatus('idle'), 3000);
   };
 
   return (

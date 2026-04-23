@@ -7,16 +7,16 @@
 
 ## Active Context
 
-- **Phase**: 12 (completed)
-- **Task**: Topic Content System & Static Engine complete
+- **Phase**: 14 (completed)
+- **Task**: Personal Topic Notes complete
 - **Status**: Verified
 
 ## Last Session Summary
-Phase 12 executed successfully. Centralized content system and static resolver implemented. All global components migrated to the new unified data engine. Milestone 2 (Learning Engine) is now complete.
+Phase 14 executed successfully. Debounced auto-save (2s) implemented for topic notes. Integration with Firestore verified for authenticated users.
 
 ## Next Steps
-1. Proceed to Milestone 3: Community & Persistence
-2. Phase 13: Firebase Initialization (Auth & Firestore)
+1. Proceed to Phase 15: Bookmarks & Dashboard
+2. Build BookmarkButton and /dashboard page
 
 ---
 

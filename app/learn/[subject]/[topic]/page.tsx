@@ -17,10 +17,12 @@ import { MermaidDiagram } from '@/components/learn/MermaidDiagram';
 import { InterviewQuestionCard } from '@/components/learn/InterviewQuestionCard';
 import { MarkCompleteButton } from '@/components/learn/MarkCompleteButton';
 import { ELI5Toggle } from '@/components/learn/ELI5Toggle';
+import { BookmarkButton } from '@/components/learn/BookmarkButton';
 import { TopicNotes } from '@/components/learn/TopicNotes';
 import { ContentSection, ProTip, Warning, KeyPoints } from '@/components/learn/LessonContent';
 import { TopicSidebar } from '@/components/learn/TopicSidebar';
 import { getTopicBySlug } from '@/lib/content';
+import { useRecentStore } from '@/lib/store/useRecentStore';
 
 // Standard 11-section lesson structure
 const LESSON_SECTIONS = [
@@ -46,6 +48,8 @@ export default function TopicPage() {
   const subjectSlug = params.subject as string;
   const topicSlug = params.topic as string;
 
+  const { setLastTopic } = useRecentStore();
+  
   const resolved = getTopicBySlug(subjectSlug, topicSlug);
   
   if (!resolved) {
@@ -53,6 +57,19 @@ export default function TopicPage() {
   }
 
   const { subject, topic } = resolved;
+
+  // Track recent topic
+  useEffect(() => {
+    if (topic) {
+      setLastTopic({
+        subjectSlug,
+        topicSlug: topic.slug,
+        topicTitle: topic.title,
+        timestamp: Date.now(),
+      });
+    }
+  }, [topic, subjectSlug, setLastTopic]);
+
   const currentTopicIndex = subject.topics.findIndex(t => t.id === topic.id);
   const nextTopic = subject.topics[currentTopicIndex + 1];
   const prevTopic = subject.topics[currentTopicIndex - 1];
@@ -113,9 +130,7 @@ export default function TopicPage() {
 
             <div className="flex items-center gap-3">
               <ELI5Toggle isELI5={isELI5} setIsELI5={setIsELI5} />
-              <button className="p-2 hover:bg-bg-surface rounded-lg text-text-secondary">
-                <Star className="w-5 h-5" />
-              </button>
+              <BookmarkButton topicId={topic.id} />
             </div>
           </div>
         </header>
