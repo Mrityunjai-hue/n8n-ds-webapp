@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { subjects } from '@/lib/content/subjects';
 import { SubjectContent } from '@/lib/types/content';
+import { useProgressStore } from '@/lib/store/useProgressStore';
 
 interface RoadmapNodeProps {
   subject: SubjectContent;
@@ -16,13 +17,13 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({ subject, status, isLast }) =>
   const Icon = subject.icon as any;
 
   const statusColors = {
-    'not-started': 'bg-bg-elevated text-text-secondary border-border grayscale opacity-50',
+    'not-started': 'bg-accent-teal/5 text-accent-teal/60 border-accent-teal/20 hover:bg-accent-teal/10 hover:text-accent-teal hover:border-accent-teal/40 shadow-[0_0_10px_rgba(0,201,167,0.02)]',
     'in-progress': 'bg-accent-amber/10 text-accent-amber border-accent-amber/50 shadow-[0_0_15px_rgba(245,158,11,0.1)]',
-    'completed': 'bg-accent-teal/10 text-accent-teal border-accent-teal/50 shadow-[0_0_15px_rgba(0,201,167,0.1)]',
+    'completed': 'bg-accent-teal/10 text-accent-teal border-accent-teal/50 shadow-[0_0_15px_rgba(0,201,167,0.15)]',
   };
 
   const dotColors = {
-    'not-started': 'bg-text-secondary',
+    'not-started': 'bg-accent-teal/30',
     'in-progress': 'bg-accent-amber animate-pulse',
     'completed': 'bg-accent-teal',
   };
@@ -51,8 +52,8 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({ subject, status, isLast }) =>
 
       {/* Connection Line */}
       {!isLast && (
-        <div className="hidden lg:block absolute left-full top-1/2 -translate-y-1/2 w-12 h-[2px] bg-border overflow-hidden">
-          <div className={`h-full transition-all duration-500 ${status === 'completed' ? 'w-full bg-accent-teal' : 'w-0'}`} />
+        <div className="hidden lg:block absolute left-full top-1/2 -translate-y-1/2 w-12 h-[2px] bg-accent-teal/10 overflow-hidden">
+          <div className={`h-full transition-all duration-500 ${status === 'completed' ? 'w-full bg-accent-teal' : status === 'in-progress' ? 'w-1/2 bg-accent-amber' : 'w-0'}`} />
         </div>
       )}
 
@@ -63,15 +64,23 @@ const RoadmapNode: React.FC<RoadmapNodeProps> = ({ subject, status, isLast }) =>
 };
 
 export const RoadmapGraph = () => {
+  const { completedTopics, visitedTopics } = useProgressStore();
+
   return (
     <div className="w-full overflow-x-auto pb-20 pt-10 no-scrollbar">
       <div className="container mx-auto px-6 min-w-max">
         <div className="flex items-center justify-between gap-4 lg:gap-12">
           {subjects.map((subject, index) => {
-            // Mock status for now
+            const subjectTopicIds = subject.topics.map(t => t.id);
+            const numCompleted = subjectTopicIds.filter(id => completedTopics.includes(id)).length;
+            const numVisited = subjectTopicIds.filter(id => visitedTopics.includes(id)).length;
+            
             let status: 'not-started' | 'in-progress' | 'completed' = 'not-started';
-            if (index < 2) status = 'completed';
-            if (index === 2) status = 'in-progress';
+            if (numCompleted === subjectTopicIds.length && subjectTopicIds.length > 0) {
+              status = 'completed';
+            } else if (numCompleted > 0 || numVisited > 0) {
+              status = 'in-progress';
+            }
 
             return (
               <RoadmapNode

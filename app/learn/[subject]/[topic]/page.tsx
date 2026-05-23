@@ -10,10 +10,25 @@ import {
   Star, 
   Info 
 } from 'lucide-react';
-import { InteractiveEditor } from '@/components/learn/InteractiveEditor';
-import { SqlEditor } from '@/components/learn/SqlEditor';
+import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/Skeleton';
+
+const InteractiveEditor = dynamic(
+  () => import('@/components/learn/InteractiveEditor').then(mod => mod.InteractiveEditor),
+  { loading: () => <Skeleton className="h-[400px] w-full rounded-modal" />, ssr: false }
+);
+
+const SqlEditor = dynamic(
+  () => import('@/components/learn/SqlEditor').then(mod => mod.SqlEditor),
+  { loading: () => <Skeleton className="h-[400px] w-full rounded-modal" />, ssr: false }
+);
+
+const MermaidDiagram = dynamic(
+  () => import('@/components/learn/MermaidDiagram').then(mod => mod.MermaidDiagram),
+  { loading: () => <Skeleton className="h-[300px] w-full rounded-modal" />, ssr: false }
+);
+
 import { LineByLineBreakdown } from '@/components/learn/LineByLineBreakdown';
-import { MermaidDiagram } from '@/components/learn/MermaidDiagram';
 import { InterviewQuestionCard } from '@/components/learn/InterviewQuestionCard';
 import { MarkCompleteButton } from '@/components/learn/MarkCompleteButton';
 import { ELI5Toggle } from '@/components/learn/ELI5Toggle';
@@ -24,6 +39,7 @@ import { ComponentsBreakdown } from '@/components/learn/ComponentsBreakdown';
 import { TopicSidebar } from '@/components/learn/TopicSidebar';
 import { getTopicBySlug } from '@/lib/content';
 import { useRecentStore } from '@/lib/store/useRecentStore';
+import { StayTuned } from '@/components/learn/StayTuned';
 
 // Standard 11-section lesson structure
 const LESSON_SECTIONS = [
@@ -35,9 +51,8 @@ const LESSON_SECTIONS = [
   { id: 'code', title: '6. Interactive Lab' },
   { id: 'mistakes', title: '7. Common Mistakes' },
   { id: 'interview', title: '8. Interview Questions' },
-  { id: 'summary', title: '9. Quick Summary' },
-  { id: 'complete', title: '10. Mark Complete' },
-  { id: 'notes', title: '11. Personal Notes' },
+  { id: 'complete', title: '9. Mark Complete' },
+  { id: 'notes', title: '10. Personal Notes' },
 ];
 
 export default function TopicPage() {
@@ -50,6 +65,13 @@ export default function TopicPage() {
   const topicSlug = params.topic as string;
 
   const { setLastTopic } = useRecentStore();
+  
+  useEffect(() => {
+    // Close sidebar on mobile by default
+    if (window.innerWidth < 1024) {
+      setSidebarOpen(false);
+    }
+  }, []);
   
   const resolved = getTopicBySlug(subjectSlug, topicSlug);
   
@@ -97,9 +119,9 @@ export default function TopicPage() {
 
   return (
     <div className="flex min-h-[calc(100vh-64px)] bg-bg-primary text-text-primary">
-      {/* Sidebar - Desktop */}
+      {/* Sidebar - Desktop/Mobile */}
       <div className={`
-        fixed inset-y-16 left-0 z-40 w-72 transform border-r border-border bg-bg-primary transition-transform duration-300 ease-in-out lg:static lg:translate-x-0
+        fixed inset-y-0 left-0 z-40 w-72 transform border-r border-border bg-bg-primary transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 pt-16
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:hidden'}
       `}>
         <TopicSidebar 
@@ -109,6 +131,15 @@ export default function TopicPage() {
           subjectSlug={subjectSlug}
         />
       </div>
+
+      {/* Sidebar Backdrop - Mobile only */}
+      {sidebarOpen && (
+        <button 
+          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden w-full h-full cursor-pointer border-none"
+          onClick={() => setSidebarOpen(false)}
+          aria-label="Close sidebar"
+        />
+      )}
 
       {/* Main Content Area */}
       <div className="flex-grow">
@@ -140,7 +171,7 @@ export default function TopicPage() {
         <main className="mx-auto max-w-4xl px-6 py-12">
           {/* Hero/Intro Section */}
           <div className="mb-20">
-            <h1 className="mb-4 text-4xl lg:text-5xl font-display font-bold tracking-tight bg-gradient-to-r from-text-primary to-text-secondary bg-clip-text text-transparent">
+            <h1 className="mb-4 text-3xl sm:text-4xl lg:text-5xl font-display font-bold tracking-tight bg-gradient-to-r from-text-primary to-text-secondary bg-clip-text text-transparent">
               {topic.title}
             </h1>
             <p className="text-xl text-text-secondary leading-relaxed max-w-2xl">
@@ -152,6 +183,20 @@ export default function TopicPage() {
             {LESSON_SECTIONS.map((section) => {
               const content = topic.sections[section.id];
               
+              // Skip rendering the entire section if it's empty
+              let hasContent = false;
+              if (section.id === 'what' && content) hasContent = true;
+              else if (section.id === 'why' && content) hasContent = true;
+              else if (section.id === 'how' && content) hasContent = true;
+              else if (section.id === 'diagram' && content?.chart) hasContent = true;
+              else if (section.id === 'breakdown' && (content?.components?.length ?? 0) > 0) hasContent = true;
+              else if (section.id === 'code' && content) hasContent = true;
+              else if (section.id === 'mistakes' && content?.warning) hasContent = true;
+              else if (section.id === 'interview' && (topic.interviewQuestions?.length ?? 0) > 0) hasContent = true;
+              else if (section.id === 'complete' || section.id === 'notes') hasContent = true;
+
+              if (!hasContent) return null;
+
               return (
                 <section key={section.id} id={section.id} className="scroll-mt-40">
                   <h2 className="text-2xl font-display font-bold mb-6 flex items-center gap-3">
@@ -164,21 +209,27 @@ export default function TopicPage() {
                   {/* Section Rendering Logic */}
                   {section.id === 'what' && content && (
                     <ContentSection title={section.title}>
-                      <p>
-                        {isELI5 ? content.eli5 : content.text}
-                      </p>
+                      <div className="space-y-4">
+                        {(isELI5 ? content.eli5 : content.text)?.split('\n\n').map((paragraph: string, idx: number) => (
+                          <p key={idx}>{paragraph}</p>
+                        ))}
+                      </div>
                       {content.points && <KeyPoints points={content.points} />}
                     </ContentSection>
                   )}
 
                   {section.id === 'why' && content && (
                     <ContentSection title={section.title}>
-                      <p>{content.text}</p>
+                      <div className="space-y-4">
+                        {content.text?.split('\n\n').map((paragraph: string, idx: number) => (
+                          <p key={idx}>{paragraph}</p>
+                        ))}
+                      </div>
                       {content.tip && <ProTip>{content.tip}</ProTip>}
                     </ContentSection>
                   )}
 
-                  {section.id === 'components' && content?.components && (
+                  {section.id === 'breakdown' && content?.components && (
                     <ComponentsBreakdown items={content.components} />
                   )}
 
@@ -210,28 +261,21 @@ export default function TopicPage() {
                   )}
 
                   {section.id === 'complete' && (
-                    <MarkCompleteButton 
-                      topicId={topic.id}
-                      nextTopicHref={nextTopic ? `/learn/${subjectSlug}/${nextTopic.slug}` : undefined}
-                      nextTopicTitle={nextTopic?.title}
-                    />
+                    <div className="space-y-12">
+                      {!topic.sections.what && <StayTuned />}
+                      <MarkCompleteButton 
+                        topicId={topic.id}
+                        nextTopicHref={nextTopic ? `/learn/${subjectSlug}/${nextTopic.slug}` : undefined}
+                        nextTopicTitle={nextTopic?.title}
+                      />
+                    </div>
                   )}
 
                   {section.id === 'notes' && (
                     <TopicNotes />
                   )}
 
-                  {/* Placeholder for missing content in sections */}
-                  {!content && !['interview', 'complete', 'notes'].includes(section.id) && (
-                    <div className="p-8 bg-bg-surface border border-border rounded-modal border-dashed flex flex-col items-center justify-center text-center group hover:border-accent-teal transition-colors">
-                      <div className="w-12 h-12 rounded-full bg-bg-primary border border-border flex items-center justify-center text-text-secondary mb-4 group-hover:text-accent-teal transition-colors">
-                        <Info className="w-6 h-6" />
-                      </div>
-                      <p className="text-text-secondary italic">
-                        Visualizing data for this section... Stay tuned.
-                      </p>
-                    </div>
-                  )}
+                  {/* Removed generic placeholder to avoid "stay tuned" clutter */}
                 </section>
               );
             })}

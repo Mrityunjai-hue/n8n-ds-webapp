@@ -97,10 +97,21 @@ export const InteractiveEditor: React.FC<InteractiveEditorProps> = ({ initialCod
               automaticLayout: true,
             }}
           />
-          {isPyodideLoading && (
+          {isPyodideLoading && !pyodideError && (
             <div className="absolute inset-0 bg-bg-surface/80 backdrop-blur-sm flex flex-col items-center justify-center z-10">
               <Loader2 className="w-8 h-8 text-accent-teal animate-spin mb-4" />
-              <p className="text-sm font-bold animate-pulse">Setting up Python environment...</p>
+              <p className="text-sm font-bold animate-pulse">
+                {code.includes('import pandas') ? 'Loading Pandas (this may take 30s)...' : 
+                 code.includes('import numpy') ? 'Loading NumPy...' : 
+                 'Setting up Python environment...'}
+              </p>
+            </div>
+          )}
+          {pyodideError && (
+            <div className="absolute inset-0 bg-danger/5 backdrop-blur-sm flex flex-col items-center justify-center z-10 text-center p-6">
+              <AlertCircle className="w-8 h-8 text-danger mb-4" />
+              <p className="text-sm font-bold text-danger mb-2">Failed to load Python</p>
+              <p className="text-xs text-text-secondary">{pyodideError}</p>
             </div>
           )}
         </div>
@@ -111,11 +122,13 @@ export const InteractiveEditor: React.FC<InteractiveEditorProps> = ({ initialCod
             <span className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">Output</span>
             {error && <AlertCircle className="w-3 h-3 text-danger" />}
           </div>
-          <div className="p-4 flex-grow overflow-auto no-scrollbar">
+          <div className="p-4 flex-grow overflow-auto no-scrollbar font-mono text-xs leading-relaxed">
             {error ? (
-              <pre className="text-danger whitespace-pre-wrap">{error}</pre>
+              <pre className="text-danger/90 whitespace-pre-wrap bg-danger/5 p-3 rounded-lg border border-danger/20">{error}</pre>
             ) : output ? (
-              <pre className="text-text-primary whitespace-pre-wrap">{output}</pre>
+              <div className="space-y-2">
+                <pre className="text-accent-teal whitespace-pre-wrap">{output}</pre>
+              </div>
             ) : (
               <p className="text-text-secondary italic opacity-30">Run code to see output...</p>
             )}

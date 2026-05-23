@@ -187,7 +187,7 @@ export default function DashboardPage() {
             <section>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-display font-bold">Bookmarks</h2>
-                <Link href="/bookmarks" className="text-xs font-bold text-accent-teal hover:underline uppercase tracking-widest">View All</Link>
+                <span className="text-xs font-bold text-text-secondary/40 uppercase tracking-widest cursor-default">View All</span>
               </div>
               <div className="space-y-3">
                 {dashboardLoading ? (

@@ -2,35 +2,42 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X, Search, Flame, User } from 'lucide-react';
 import { DarkModeToggle } from './DarkModeToggle';
 import { Button } from '../ui/Button';
 import { useAuthUIStore } from '@/lib/store/useAuthUIStore';
 import { useProgressStore } from '@/lib/store/useProgressStore';
 import { useUserStore } from '@/lib/store/useUserStore';
+import { useSearchStore } from '@/lib/store/useSearchStore';
 
 const navLinks = [
   { name: 'Dashboard', href: '/dashboard' },
   { name: 'Roadmap', href: '/roadmap' },
   { name: 'Projects', href: '/projects' },
   { name: 'Interview', href: '/interview' },
+  { name: 'About', href: '/about' },
 ];
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const { openModal } = useAuthUIStore();
   const { streak } = useProgressStore();
   const { user } = useUserStore();
+  const { openSearch } = useSearchStore();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') setIsOpen(false); };
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('keydown', handleEsc);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('keydown', handleEsc);
+    };
   }, []);
 
   return (
@@ -39,7 +46,7 @@ export const Navbar = () => {
     }`}>
       <div className="container mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-2 group" aria-label="Home">
           <div className="w-8 h-8 rounded-lg bg-accent-teal flex items-center justify-center text-white font-bold text-xl group-hover:rotate-12 transition-transform">
             N
           </div>
@@ -65,21 +72,31 @@ export const Navbar = () => {
 
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-4">
-          <button className="p-2 text-text-secondary hover:text-text-primary transition-colors flex items-center gap-2 text-sm border border-border rounded-card bg-bg-surface px-3">
+          {/* Search button — opens GlobalSearch */}
+          <button
+            onClick={openSearch}
+            className="p-2 text-text-secondary hover:text-text-primary transition-colors flex items-center gap-2 text-sm border border-border rounded-card bg-bg-surface px-3"
+            aria-label="Open search (Ctrl+K)"
+          >
             <Search className="w-4 h-4" />
             <span className="hidden lg:inline text-xs opacity-50">Ctrl+K</span>
           </button>
-          
+
+          {/* Streak badge */}
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-amber/10 border border-accent-amber/20 text-accent-amber text-xs font-bold">
             <Flame className="w-4 h-4 fill-current" />
             <span>{streak}</span>
           </div>
 
           <DarkModeToggle />
-          
+
           {user ? (
-            <button className="w-10 h-10 rounded-full bg-bg-surface border border-border flex items-center justify-center text-text-secondary hover:border-accent-teal transition-colors">
-              <User className="w-5 h-5" />
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="w-10 h-10 rounded-full bg-accent-teal flex items-center justify-center text-white font-bold text-sm hover:ring-2 hover:ring-accent-teal/50 transition-all"
+              aria-label="Go to Dashboard"
+            >
+              {user.displayName?.[0]?.toUpperCase() || <User className="w-5 h-5" />}
             </button>
           ) : (
             <Button variant="primary" size="sm" onClick={() => openModal('login')}>
@@ -102,7 +119,7 @@ export const Navbar = () => {
       </div>
 
       {/* Mobile Drawer */}
-      <div className={`fixed inset-0 bg-bg-primary z-40 md:hidden transition-transform duration-300 transform ${
+      <div className={`fixed inset-0 bg-bg-primary/95 backdrop-blur-xl z-40 md:hidden transition-transform duration-300 transform ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         <div className="flex flex-col p-8 pt-24 gap-8">
@@ -118,26 +135,31 @@ export const Navbar = () => {
               {link.name}
             </Link>
           ))}
+
+          <button
+            onClick={() => { setIsOpen(false); openSearch(); }}
+            className="flex items-center gap-3 text-xl font-bold text-text-secondary"
+          >
+            <Search className="w-6 h-6" /> Search
+          </button>
+
           <div className="mt-8 pt-8 border-t border-border flex flex-col gap-6">
             <div className="flex items-center gap-4 text-accent-amber">
               <Flame className="w-6 h-6 fill-current" />
               <span className="text-xl font-bold">{streak} Day Streak</span>
             </div>
             {user ? (
-              <Button variant="secondary" size="lg" className="w-full">
+              <Button variant="secondary" size="lg" className="w-full" onClick={() => { setIsOpen(false); router.push('/dashboard'); }}>
                 Dashboard
               </Button>
             ) : (
-              <Button 
-                variant="primary" 
-                size="lg" 
+              <Button
+                variant="primary"
+                size="lg"
                 className="w-full"
-                onClick={() => {
-                  setIsOpen(false);
-                  openModal('register');
-                }}
+                onClick={() => { setIsOpen(false); openModal('register'); }}
               >
-                Sign In
+                Sign In / Register
               </Button>
             )}
           </div>

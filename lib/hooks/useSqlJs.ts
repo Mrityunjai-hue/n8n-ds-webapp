@@ -12,7 +12,7 @@ export const useSqlJs = () => {
     const init = async () => {
       try {
         const SQL = await initSqlJs({
-          locateFile: (file) => `https://sql.js.org/dist/${file}`,
+          locateFile: (file) => `https://unpkg.com/sql.js@1.14.1/dist/${file}`,
         });
         const newDb = new SQL.Database();
         

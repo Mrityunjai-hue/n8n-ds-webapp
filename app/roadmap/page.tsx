@@ -1,6 +1,7 @@
 import { subjects } from '@/lib/content/subjects';
 import { RoadmapGraph } from '@/components/home/RoadmapGraph';
 import { SubjectContent } from '@/lib/types/content';
+import Link from 'next/link';
 
 export default function RoadmapPage() {
   return (
@@ -23,7 +24,11 @@ export default function RoadmapPage() {
         <h2 className="text-2xl font-display font-bold mb-8">Subject Overview</h2>
         <div className="grid gap-4">
           {subjects.map((subject) => (
-            <div key={subject.id} className="p-6 bg-bg-surface border border-border rounded-card flex items-center justify-between group hover:border-accent-teal transition-colors">
+            <Link 
+              key={subject.id} 
+              href={`/learn/${subject.slug}`}
+              className="p-6 bg-bg-surface border border-border rounded-card flex items-center justify-between group hover:border-accent-teal transition-all hover:-translate-y-1"
+            >
               <div className="flex items-center gap-6">
                 <div className="p-3 rounded-xl bg-bg-primary border border-border text-text-secondary group-hover:text-accent-teal transition-colors">
                   <subject.icon className="w-6 h-6" />
@@ -37,7 +42,7 @@ export default function RoadmapPage() {
                 <div className="text-sm font-bold">{subject.topics.length} Topics</div>
                 <div className="text-xs text-text-secondary">{subject.estimatedHours} Hours</div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

@@ -116,7 +116,7 @@ export const HeroSection = () => {
           By N8N Data Science Community
         </div>
         
-        <h1 className="text-5xl lg:text-8xl font-display font-bold leading-tight mb-8 animate-slide-up">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-8xl font-display font-bold leading-tight mb-8 animate-slide-up">
           Learn Data Science.<br />
           <span className="text-accent-teal">Actually understand it.</span>
         </h1>

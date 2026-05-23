@@ -53,8 +53,8 @@ export const Footer = () => {
         <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-text-secondary">
           <p>© {new Date().getFullYear()} N8N Data Science Community. All rights reserved.</p>
           <div className="flex gap-8">
-            <Link href="/privacy" className="hover:text-text-primary">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-text-primary">Terms of Service</Link>
+            <span className="text-text-secondary/40 cursor-default">Privacy Policy</span>
+            <span className="text-text-secondary/40 cursor-default">Terms of Service</span>
           </div>
         </div>
       </div>

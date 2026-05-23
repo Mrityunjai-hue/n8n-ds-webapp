@@ -6,6 +6,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { AuthModal } from '@/components/layout/AuthModal';
 import { AuthProvider } from '@/components/providers/AuthProvider';
+import { GlobalSearch } from '@/components/search/GlobalSearch';
 
 const syne = Syne({
   subsets: ['latin'],
@@ -63,6 +64,7 @@ export default function RootLayout({
 
             <Footer />
             <AuthModal />
+            <GlobalSearch />
           </AuthProvider>
         </ThemeProvider>
       </body>
