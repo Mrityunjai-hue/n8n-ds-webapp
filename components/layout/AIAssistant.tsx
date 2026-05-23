@@ -381,13 +381,14 @@ export const AIAssistant: React.FC = () => {
   const contextLabel = getContextLabel();
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
 
       {/* Floating Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 rounded-full bg-gradient-to-tr from-accent-teal to-accent-purple font-bold flex items-center justify-center shadow-lg shadow-accent-teal/20 transition-transform active:scale-95 duration-200 cursor-pointer relative overflow-hidden group hover:scale-105 border-none"
+        className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-accent-teal to-accent-purple font-bold flex items-center justify-center shadow-lg shadow-accent-teal/20 transition-transform active:scale-95 duration-200 cursor-pointer relative overflow-hidden group hover:scale-105 border-none"
         aria-label="Toggle AI Study Assistant"
+        style={{ WebkitTapHighlightColor: 'transparent' }}
       >
         <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
         <AnimatePresence mode="wait">
@@ -407,7 +408,7 @@ export const AIAssistant: React.FC = () => {
         )}
       </button>
 
-      {/* Chat Panel */}
+      {/* Chat Panel — full-screen on mobile, floating on sm+ */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -415,7 +416,14 @@ export const AIAssistant: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute bottom-18 right-0 w-[370px] sm:w-[420px] h-[580px] bg-bg-surface border border-border rounded-2xl flex flex-col shadow-2xl overflow-hidden backdrop-blur-md"
+            className="
+              fixed inset-x-0 bottom-0 top-0 z-[60]
+              sm:absolute sm:inset-auto sm:bottom-18 sm:right-0 sm:top-auto
+              sm:w-[420px] sm:h-[580px]
+              bg-bg-surface border-t sm:border border-border sm:rounded-2xl
+              flex flex-col shadow-2xl overflow-hidden backdrop-blur-md
+              sm:max-h-[85vh]
+            "
           >
             {/* Decorative blurs */}
             <div className="absolute -top-12 -right-12 w-32 h-32 bg-accent-teal/10 rounded-full filter blur-2xl pointer-events-none" />

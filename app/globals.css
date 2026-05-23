@@ -372,3 +372,60 @@ pre, code {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ============================================================
+   MOBILE OPTIMIZATIONS
+   ============================================================ */
+
+/* Remove blue tap highlight on iOS/Android */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Smooth momentum scrolling on iOS */
+.overflow-y-auto,
+.overflow-x-auto,
+.overflow-y-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent text size adjustment on orientation change */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Prevent horizontal overflow on mobile */
+body {
+  overflow-x: hidden;
+}
+
+/* Safe area padding helpers */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Ensure minimum tap target size (44px) on interactive elements */
+@media (max-width: 640px) {
+  button, a, [role="button"] {
+    min-height: 44px;
+  }
+  /* Exclude small decorative elements */
+  button.no-min-h, .no-min-h {
+    min-height: unset;
+  }
+}
+
+/* Fix for iOS input zoom (prevents zoom on input focus) */
+@media (max-width: 640px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}

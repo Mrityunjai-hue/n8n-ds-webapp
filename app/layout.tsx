@@ -33,6 +33,17 @@ export const metadata: Metadata = {
   keywords: ['Data Science', 'Learning', 'SQL', 'Python', 'Machine Learning', 'AI', 'N8N'],
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#070b14' },
+    { media: '(prefers-color-scheme: light)', color: '#f8faff' },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{

@@ -205,72 +205,71 @@ export const HeroSection = () => {
   const simulation = CODE_SIMULATIONS[activeCodeLang];
 
   return (
-    <section className="relative overflow-hidden pt-28 pb-20 lg:pt-36 lg:pb-28 bg-bg-base neural-grid">
+    <section className="relative overflow-hidden pt-24 pb-16 lg:pt-36 lg:pb-28 bg-bg-base neural-grid">
       {/* Background Animated Gradient Mesh */}
       <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-accent-teal/5 rounded-full filter blur-[150px] pointer-events-none animate-pulse" />
       <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-accent-purple/5 rounded-full filter blur-[150px] pointer-events-none" />
 
-      {/* Connection lines canvas */}
+      {/* Connection lines canvas — hidden on mobile for performance */}
       <canvas
         ref={canvasRef}
-        className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-60"
+        className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-60 hidden sm:block"
       />
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Text/Content Column */}
-          <div className="lg:col-span-7 space-y-8 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-accent-teal/10 border border-accent-teal/20 text-accent-teal text-xs font-bold font-mono">
-              <span className="w-2 h-2 rounded-full bg-accent-teal animate-pulse" />
-              <span>AI-POWERED INTERACTIVE LEARNING ENGINE</span>
+          <div className="lg:col-span-7 space-y-6 sm:space-y-8 text-center sm:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-accent-teal/10 border border-accent-teal/20 text-accent-teal text-[11px] sm:text-xs font-bold font-mono">
+              <span className="w-2 h-2 rounded-full bg-accent-teal animate-pulse shrink-0" />
+              <span className="truncate">AI-POWERED INTERACTIVE LEARNING ENGINE</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-display font-extrabold leading-none tracking-tight text-text-primary">
-              The OS to master <br />
-              <span className="bg-gradient-to-r from-accent-teal via-accent-purple to-accent-rose bg-clip-text text-transparent h-[76px] inline-block">
-                {displayText}
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-display font-extrabold leading-tight tracking-tight text-text-primary">
+              The OS to master
+              <span className="block bg-gradient-to-r from-accent-teal via-accent-purple to-accent-rose bg-clip-text text-transparent min-h-[1.2em]">
+                {displayText}<span className="text-text-primary animate-pulse">|</span>
               </span>
-              <span className="text-text-primary animate-pulse">|</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-text-secondary leading-relaxed max-w-xl">
+            <p className="text-sm sm:text-lg text-text-secondary leading-relaxed max-w-xl mx-auto sm:mx-0">
               An immersive interactive platform providing live-compiler sandboxes, visual mapping diagrams, real-world case studies, and customized exams for developers and scientists.
             </p>
 
             {/* Platform Statistics */}
-            <div className="grid grid-cols-3 gap-4 py-4 max-w-lg border-y border-border-subtle">
-              <div>
-                <span className="text-2xl sm:text-3xl font-extrabold text-text-primary font-mono block">150+</span>
-                <span className="text-xs text-text-secondary">Core Topics</span>
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 py-4 border-y border-border-subtle max-w-lg mx-auto sm:mx-0">
+              <div className="text-center sm:text-left">
+                <span className="text-xl sm:text-3xl font-extrabold text-text-primary font-mono block">150+</span>
+                <span className="text-[11px] sm:text-xs text-text-secondary">Core Topics</span>
               </div>
-              <div>
-                <span className="text-2xl sm:text-3xl font-extrabold text-text-primary font-mono block">10</span>
-                <span className="text-xs text-text-secondary">Deep Modules</span>
+              <div className="text-center sm:text-left">
+                <span className="text-xl sm:text-3xl font-extrabold text-text-primary font-mono block">10</span>
+                <span className="text-[11px] sm:text-xs text-text-secondary">Deep Modules</span>
               </div>
-              <div>
-                <span className="text-2xl sm:text-3xl font-extrabold text-text-primary font-mono block">100%</span>
-                <span className="text-xs text-text-secondary">Browser Compiler</span>
+              <div className="text-center sm:text-left">
+                <span className="text-xl sm:text-3xl font-extrabold text-text-primary font-mono block">100%</span>
+                <span className="text-[11px] sm:text-xs text-text-secondary">Browser-based</span>
               </div>
             </div>
 
             {/* Main Action Buttons */}
-            <div className="flex flex-wrap gap-4 items-center">
-              <Link href="/learn/sql/intro">
-                <Button size="lg" className="px-8 gap-2 bg-gradient-to-r from-accent-teal to-accent-purple border-none text-text-inverse font-extrabold hover:opacity-90 transition-opacity">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center sm:items-start">
+              <Link href="/learn/sql/intro" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto px-6 sm:px-8 gap-2 bg-gradient-to-r from-accent-teal to-accent-purple border-none text-text-inverse font-extrabold hover:opacity-90 transition-opacity">
                   Start Interactive Journey
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
-              <Link href="/roadmap">
-                <button className="px-6 py-3 border border-border-subtle hover:border-border-default rounded-xl font-bold text-sm text-text-secondary hover:text-text-primary transition-all bg-bg-surface/20 backdrop-blur-sm cursor-pointer">
+              <Link href="/roadmap" className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto px-6 py-3 border border-border-subtle hover:border-border-default rounded-xl font-bold text-sm text-text-secondary hover:text-text-primary transition-all bg-bg-surface/20 backdrop-blur-sm cursor-pointer">
                   View Core Roadmap
                 </button>
               </Link>
             </div>
           </div>
 
-          {/* Code Execution Preview Column */}
-          <div className="lg:col-span-5">
+          {/* Code Execution Preview Column — hidden on small mobile, shown sm+ */}
+          <div className="hidden sm:block lg:col-span-5">
             <div className="w-full bg-bg-elevated/80 border border-border-subtle rounded-2xl overflow-hidden shadow-2xl relative">
               {/* Header block controls */}
               <div className="flex items-center justify-between px-4 py-3 bg-bg-elevated border-b border-border-subtle">
@@ -354,7 +353,7 @@ export const HeroSection = () => {
         </div>
 
         {/* Level Quick Start Row */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 text-left max-w-4xl mx-auto">
+        <div className="mt-12 sm:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-left max-w-4xl mx-auto">
           <div className="p-6 bg-bg-surface/10 border border-border-subtle rounded-2xl backdrop-blur-sm hover:border-accent-teal/30 transition-all group">
             <span className="w-10 h-10 rounded-xl bg-accent-teal/10 text-accent-teal flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <Database className="w-5 h-5" />

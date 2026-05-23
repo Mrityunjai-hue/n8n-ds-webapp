@@ -185,8 +185,8 @@ export default function TopicPage() {
       <div className="flex-grow flex flex-col min-w-0">
         {/* Sticky Header */}
         <header className="sticky top-16 z-30 border-b border-border bg-bg-primary/80 backdrop-blur-md">
-          <div className="flex h-16 items-center justify-between px-6">
-            <div className="flex items-center gap-2">
+          <div className="flex h-14 sm:h-16 items-center justify-between px-3 sm:px-6">
+            <div className="flex items-center gap-1 sm:gap-2">
               <Link 
                 href={`/learn/${subjectSlug}`}
                 className="p-2 hover:bg-bg-surface rounded-lg text-text-secondary hover:text-text-primary transition-colors flex items-center justify-center"
@@ -198,18 +198,18 @@ export default function TopicPage() {
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 className="p-2 hover:bg-bg-surface rounded-lg text-text-secondary lg:hidden"
               >
-                <Menu className="w-6 h-6" />
+                <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-text-secondary">
-                <Link href={`/learn/${subjectSlug}`} className="hover:text-accent-teal transition-colors">
+              <div className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold uppercase tracking-widest text-text-secondary">
+                <Link href={`/learn/${subjectSlug}`} className="hover:text-accent-teal transition-colors hidden sm:block">
                   {subject.name}
                 </Link>
-                <ChevronRight className="w-4 h-4" />
-                <span className="text-text-primary truncate max-w-[120px] sm:max-w-none">{topic.title}</span>
+                <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 hidden sm:block" />
+                <span className="text-text-primary truncate max-w-[140px] sm:max-w-[200px] md:max-w-none">{topic.title}</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <ELI5Toggle isELI5={isELI5} setIsELI5={setIsELI5} />
               <BookmarkButton topicId={topic.id} />
             </div>
@@ -217,8 +217,8 @@ export default function TopicPage() {
         </header>
 
         {/* Dynamic Navigation Tabs */}
-        <div className="sticky top-[128px] z-20 border-b border-border bg-bg-primary/95 backdrop-blur-sm px-6">
-          <div className="flex gap-2 overflow-x-auto no-scrollbar py-2">
+        <div className="sticky top-[112px] sm:top-[128px] z-20 border-b border-border bg-bg-primary/95 backdrop-blur-sm px-2 sm:px-6">
+          <div className="flex gap-1 sm:gap-2 overflow-x-auto no-scrollbar py-2">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -226,15 +226,17 @@ export default function TopicPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
                   className={`
-                    flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl border transition-all shrink-0 cursor-pointer
+                    flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold rounded-xl border transition-all shrink-0 cursor-pointer
                     ${isActive 
                       ? 'border-accent-teal text-accent-teal bg-accent-teal/5 shadow-lg shadow-accent-teal/5' 
                       : 'border-transparent text-text-secondary hover:text-text-primary hover:bg-bg-surface'}
                   `}
                 >
-                  <Icon className="w-4 h-4" />
-                  <span>{tab.label.split(' ').slice(1).join(' ')}</span>
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span className="hidden sm:inline">{tab.label.split(' ').slice(1).join(' ')}</span>
+                  <span className="sm:hidden">{tab.label.split(' ').slice(1, 2).join('')}</span>
                 </button>
               );
             })}
@@ -242,7 +244,7 @@ export default function TopicPage() {
         </div>
 
         {/* Content Container */}
-        <main className="flex-grow mx-auto max-w-4xl w-full px-6 py-10 flex flex-col">
+        <main className="flex-grow mx-auto max-w-4xl w-full px-4 sm:px-6 py-6 sm:py-10 flex flex-col">
           {/* Hero/Intro Section */}
           <div className="mb-8">
             <div className="flex flex-wrap items-center gap-3 mb-4">

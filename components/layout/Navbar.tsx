@@ -185,61 +185,116 @@ export const Navbar = () => {
         </div>
 
         {/* Mobile Menu Toggle */}
-        <div className="flex md:hidden items-center gap-4">
+        <div className="flex md:hidden items-center gap-2">
           <DarkModeToggle />
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 text-text-primary"
+            className="p-2 text-text-primary rounded-lg hover:bg-bg-surface transition-colors"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
             aria-label="Toggle Menu"
           >
-            {isOpen ? <X /> : <Menu />}
+            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Drawer */}
-      <div className={`fixed inset-0 bg-bg-base/98 backdrop-blur-xl z-40 md:hidden transition-transform duration-300 transform ${
+      <div className={`fixed inset-0 bg-bg-base/98 backdrop-blur-xl z-40 md:hidden transition-transform duration-300 transform overflow-y-auto ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
-      }`}>
-        <div className="flex flex-col p-8 pt-24 gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={() => setIsOpen(false)}
-              className={`text-2xl font-bold ${
-                pathname === link.href ? 'text-accent-teal' : 'text-text-primary'
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
+      }`}
+        style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
+        <div className="flex flex-col p-6 pt-20 gap-2 min-h-full">
+          {/* Nav Links */}
+          <div className="flex flex-col gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                style={{ WebkitTapHighlightColor: 'transparent' }}
+                className={`flex items-center px-4 py-4 rounded-2xl text-xl font-bold transition-colors ${
+                  pathname === link.href
+                    ? 'text-accent-teal bg-accent-teal/5'
+                    : 'text-text-primary hover:bg-bg-surface'
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
 
+          {/* Subjects */}
+          <div className="mt-4 border-t border-border pt-4">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-text-secondary px-4 block mb-2">Subjects</span>
+            <div className="grid grid-cols-2 gap-2">
+              {subjects.map((sub) => {
+                const SubIcon = sub.icon as any;
+                return (
+                  <Link
+                    key={sub.id}
+                    href={`/learn/${sub.slug}`}
+                    onClick={() => setIsOpen(false)}
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                    className="flex items-center gap-2 p-3 rounded-xl hover:bg-bg-surface border border-border/40 group transition-colors"
+                  >
+                    <span className="p-1.5 rounded-lg bg-bg-elevated border border-border-subtle text-text-secondary group-hover:text-accent-teal transition-colors shrink-0">
+                      <SubIcon className="w-3.5 h-3.5" />
+                    </span>
+                    <div className="min-w-0">
+                      <span className="text-xs font-bold text-text-primary truncate block">{sub.name}</span>
+                      <span className="text-[10px] text-text-secondary">{sub.topics.length} topics</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Search */}
           <button
             onClick={() => { setIsOpen(false); openSearch(); }}
-            className="flex items-center gap-3 text-xl font-bold text-text-secondary"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
+            className="flex items-center gap-3 px-4 py-4 rounded-2xl text-text-secondary hover:bg-bg-surface transition-colors mt-2"
           >
-            <Search className="w-6 h-6" /> Search
+            <Search className="w-5 h-5" />
+            <span className="text-lg font-bold">Search Topics</span>
           </button>
 
-          <div className="mt-8 pt-8 border-t border-border flex flex-col gap-6">
-            <div className="flex items-center gap-4 text-accent-amber">
-              <Flame className="w-6 h-6 fill-current" />
-              <span className="text-xl font-bold">{streak} Day Streak</span>
+          {/* Footer Actions */}
+          <div className="mt-auto pt-6 border-t border-border flex flex-col gap-4">
+            {/* Streak + Progress */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-accent-amber">
+                <Flame className="w-5 h-5 fill-current" />
+                <span className="text-lg font-bold">{streak} Day Streak</span>
+              </div>
+              {completedTopics.length > 0 && (
+                <span className="text-sm font-mono text-text-secondary">{progressPercent}% done</span>
+              )}
             </div>
+            {completedTopics.length > 0 && (
+              <div className="w-full h-2 bg-border rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-accent-teal to-accent-purple transition-all"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+            )}
             {user ? (
-              <Button variant="secondary" size="lg" className="w-full" onClick={() => { setIsOpen(false); router.push('/dashboard'); }}>
-                Dashboard
-              </Button>
+              <button
+                className="w-full py-4 rounded-2xl bg-bg-surface border border-border font-bold text-text-primary"
+                onClick={() => { setIsOpen(false); router.push('/dashboard'); }}
+              >
+                Go to Dashboard
+              </button>
             ) : (
-              <Button
-                variant="primary"
-                size="lg"
-                className="w-full bg-gradient-to-r from-accent-teal to-accent-purple border-none"
+              <button
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-accent-teal to-accent-purple font-bold text-text-inverse border-none"
                 onClick={() => { setIsOpen(false); openModal('register'); }}
               >
                 Sign In / Register
-              </Button>
+              </button>
             )}
           </div>
         </div>
