@@ -34,4 +34,22 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# development scripts & artifacts (one-off fix/validate/debug scripts)
+fix_*.py
+fix_*.js
+validate_*.py
+validate_*.mjs
+scan_*.py
+test_*.py
+test-vercel.js
+generate_curriculum.py
+merge_curriculum.js
+extract_charts.py
+debug_code.py
+all_charts.txt
+lab_errors.json
+mermaid_errors.json
+scratch/
+temp_mermaid/
+
 .vercel
