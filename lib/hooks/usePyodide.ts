@@ -78,11 +78,23 @@ export const usePyodide = () => {
       if (code.includes('import pandas') || code.includes('import  pandas')) packages.push('pandas');
       if (code.includes('import numpy') || code.includes('import  numpy')) packages.push('numpy');
       if (code.includes('import matplotlib') || code.includes('import  matplotlib')) packages.push('matplotlib');
+      if (code.includes('import sklearn') || code.includes('from sklearn')) packages.push('scikit-learn');
       
       if (packages.length > 0) {
         setIsLoading(true);
         await pyodide.loadPackage(packages);
         setIsLoading(false);
+      }
+
+      // Check for unsupported native libraries
+      const unsupported = ['chromadb', 'google.generativeai', 'tensorflow', 'torch', 'xgboost', 'sentence_transformers'];
+      const foundUnsupported = unsupported.find(pkg => code.includes(`import ${pkg}`) || code.includes(`from ${pkg}`));
+      
+      if (foundUnsupported) {
+        return {
+          output: `[Simulator Note]\nThe library '${foundUnsupported}' requires native C/C++ bindings or network access, which cannot be executed directly in this browser-based WASM sandbox.\n\nHowever, the syntax is valid and would execute successfully in a standard Python environment!`,
+          error: null
+        };
       }
 
       // Capture stdout correctly

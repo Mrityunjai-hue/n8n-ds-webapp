@@ -150,9 +150,17 @@ export default function InterviewPage() {
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-text-primary mb-4 leading-tight">
             Interview Question Bank
           </h1>
-          <p className="text-text-secondary text-lg max-w-2xl mb-8">
+          <p className="text-text-secondary text-lg max-w-2xl mb-6">
             {ALL_QUESTIONS.length} curated questions spanning SQL, Python, ML, Deep Learning, Generative AI, and Agentic AI — all in one place. Filter, study, ace the interview.
           </p>
+
+          <button
+            onClick={() => window.location.href = '/interview/mock'}
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-accent-teal to-accent-blue text-bg-primary font-bold rounded-xl shadow-lg shadow-accent-teal/20 hover:opacity-90 transition-opacity mb-10"
+          >
+            <BrainCircuit className="w-5 h-5" />
+            Start Mock Interview
+          </button>
 
           {/* Search bar */}
           <div className="relative max-w-xl">

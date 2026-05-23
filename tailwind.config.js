@@ -9,23 +9,41 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Backgrounds
-        'bg-primary': 'var(--bg-primary)',
-        'bg-surface': 'var(--bg-surface)',
+        // === BACKGROUND LAYERS ===
+        'bg-base':     'var(--bg-base)',
+        'bg-primary':  'var(--bg-primary)',   // legacy
+        'bg-surface':  'var(--bg-surface)',
         'bg-elevated': 'var(--bg-elevated)',
-        // Accents
-        'accent-teal': 'var(--accent-teal)',
-        'accent-amber': 'var(--accent-amber)',
-        'accent-blue': 'var(--accent-blue)',
-        // Status
-        danger: 'var(--danger)',
-        success: 'var(--success)',
-        // Text
-        'text-primary': 'var(--text-primary)',
+        'bg-hover':    'var(--bg-hover)',
+        'bg-subtle':   'var(--bg-subtle)',
+
+        // === TEXT ===
+        'text-primary':   'var(--text-primary)',
         'text-secondary': 'var(--text-secondary)',
-        // Border
-        border: 'var(--border)',
-        // Raw palette for direct use
+        'text-muted':     'var(--text-muted)',
+        'text-inverse':   'var(--text-inverse)',
+
+        // === BORDERS ===
+        'border':         'var(--border)',          // legacy
+        'border-subtle':  'var(--border-subtle)',
+        'border-default': 'var(--border-default)',
+        'border-accent':  'var(--border-accent)',
+
+        // === ACCENT COLORS ===
+        'accent-teal':    'var(--accent-teal)',      // legacy
+        'accent-cyan':    'var(--accent-cyan)',
+        'accent-violet':  'var(--accent-violet)',
+        'accent-purple':  'var(--accent-purple)',    // legacy
+        'accent-blue':    'var(--accent-blue)',
+        'accent-amber':   'var(--accent-amber)',
+        'accent-emerald': 'var(--accent-emerald)',
+        'accent-rose':    'var(--accent-rose)',
+
+        // === STATUS ===
+        danger:  'var(--danger)',
+        success: 'var(--success)',
+
+        // === RAW PALETTE (for components that need fixed values) ===
         teal: {
           400: '#2dd4bf',
           500: '#14b8a6',
@@ -35,9 +53,9 @@ module.exports = {
           DEFAULT: '#F59E0B',
         },
         navy: {
-          900: '#0D1117',
-          800: '#161B22',
-          700: '#1C2128',
+          900: '#070b14',
+          800: '#0d1424',
+          700: '#131d30',
         },
       },
       fontFamily: {
@@ -79,7 +97,7 @@ module.exports = {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-teal': 'linear-gradient(135deg, #00C9A7 0%, #3B82F6 100%)',
-        'gradient-hero': 'linear-gradient(135deg, #0D1117 0%, #161B22 50%, #0D1117 100%)',
+        'gradient-hero': 'linear-gradient(135deg, #070b14 0%, #0d1424 50%, #070b14 100%)',
       },
     },
   },

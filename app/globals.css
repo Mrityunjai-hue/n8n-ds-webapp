@@ -2,38 +2,132 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   ROOT — LIGHT MODE (applied when no class / class="light")
+   next-themes applies class="dark" for dark mode
+   ============================================================ */
 :root {
-  --bg-primary: #ffffff;
-  --bg-surface: #f6f8fa;
-  --bg-elevated: #eaecef;
-  --accent-teal: #00a887;
-  --accent-amber: #d97706;
-  --accent-blue: #2563eb;
-  --danger: #dc2626;
-  --success: #16a34a;
-  --text-primary: #1c2128;
-  --text-secondary: #57606a;
-  --border: rgba(0, 0, 0, 0.08);
+  /* === LIGHT MODE SURFACES === */
+  --bg-base:        #f8faff;
+  --bg-primary:     #f8faff;   /* alias for legacy classes */
+  --bg-surface:     #ffffff;
+  --bg-elevated:    #f0f4ff;
+  --bg-hover:       #e8eeff;
+  --bg-subtle:      #eef2ff;
+
+  /* === LIGHT MODE BORDERS === */
+  --border-subtle:  #e2e8f0;
+  --border-default: #cbd5e1;
+  --border-accent:  #7c3aed33;
+  --border:         rgba(0, 0, 0, 0.08);   /* legacy alias */
+
+  /* === LIGHT MODE TEXT === */
+  --text-primary:   #0f172a;
+  --text-secondary: #475569;
+  --text-muted:     #94a3b8;
+  --text-inverse:   #ffffff;
+
+  /* === ACCENT COLORS — LIGHT MODE === */
+  --accent-cyan:       #0891b2;
+  --accent-cyan-dim:   #0e7490;
+  --accent-cyan-bg:    #e0f9ff;
+  --accent-teal:       #0891b2;    /* legacy alias */
+  --accent-violet:     #7c3aed;
+  --accent-violet-dim: #6d28d9;
+  --accent-violet-bg:  #ede9fe;
+  --accent-purple:     #7c3aed;    /* legacy alias */
+  --accent-blue:       #2563eb;
+  --accent-amber:      #d97706;
+  --accent-amber-bg:   #fef3c7;
+  --accent-emerald:    #059669;
+  --accent-emerald-bg: #d1fae5;
+  --accent-rose:       #e11d48;
+  --accent-rose-bg:    #ffe4e6;
+
+  /* === STATUS === */
+  --danger:   #dc2626;
+  --success:  #059669;
+
+  /* === DIFFICULTY BADGES — LIGHT MODE === */
+  --badge-fresher-bg:   #d1fae5;
+  --badge-fresher-text: #065f46;
+  --badge-mid-bg:       #fef3c7;
+  --badge-mid-text:     #92400e;
+  --badge-senior-bg:    #ffe4e6;
+  --badge-senior-text:  #9f1239;
+
+  /* Monaco / code editor: always stays dark even in light mode */
+  --code-bg:   #1e2030;
+  --code-text: #cdd6f4;
 }
 
+/* ============================================================
+   DARK MODE — applied when next-themes sets class="dark"
+   ============================================================ */
 .dark {
-  --bg-primary: #0d1117;
-  --bg-surface: #161b22;
-  --bg-elevated: #1c2128;
-  --accent-teal: #00c9a7;
-  --accent-amber: #f59e0b;
-  --accent-blue: #3b82f6;
-  --danger: #ef4444;
-  --success: #22c55e;
-  --text-primary: #e6edf3;
-  --text-secondary: #8b949e;
-  --border: rgba(255, 255, 255, 0.08);
+  /* === DARK SURFACES === */
+  --bg-base:        #070b14;
+  --bg-primary:     #070b14;   /* legacy alias */
+  --bg-surface:     #0d1424;
+  --bg-elevated:    #131d30;
+  --bg-hover:       #1a2540;
+  --bg-subtle:      #1e2d47;
+
+  /* === DARK BORDERS === */
+  --border-subtle:  #1e2d47;
+  --border-default: #2a3f5f;
+  --border-accent:  #00e5ff33;
+  --border:         rgba(255, 255, 255, 0.06);   /* legacy alias */
+
+  /* === DARK TEXT === */
+  --text-primary:   #f0f4ff;
+  --text-secondary: #8899bb;
+  --text-muted:     #4a5d7a;
+  --text-inverse:   #070b14;
+
+  /* === ACCENT COLORS — DARK MODE === */
+  --accent-cyan:       #00e5ff;
+  --accent-cyan-dim:   #00b8cc;
+  --accent-cyan-bg:    #00e5ff12;
+  --accent-teal:       #00e5ff;    /* legacy alias */
+  --accent-violet:     #7c3aed;
+  --accent-violet-dim: #6d28d9;
+  --accent-violet-bg:  #7c3aed15;
+  --accent-purple:     #a78bfa;    /* legacy alias — slightly lighter for dark bg */
+  --accent-blue:       #3b82f6;
+  --accent-amber:      #f59e0b;
+  --accent-amber-bg:   #f59e0b12;
+  --accent-emerald:    #10b981;
+  --accent-emerald-bg: #10b98112;
+  --accent-rose:       #f43f5e;
+  --accent-rose-bg:    #f43f5e12;
+
+  /* === STATUS === */
+  --danger:   #f87171;
+  --success:  #34d399;
+
+  /* === DIFFICULTY BADGES — DARK MODE === */
+  --badge-fresher-bg:   #10b98120;
+  --badge-fresher-text: #34d399;
+  --badge-mid-bg:       #f59e0b20;
+  --badge-mid-text:     #fbbf24;
+  --badge-senior-bg:    #f43f5e20;
+  --badge-senior-text:  #fb7185;
+
+  /* Monaco always dark anyway — same values */
+  --code-bg:   #1e2030;
+  --code-text: #cdd6f4;
 }
 
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
 @layer base {
   body {
-    @apply bg-bg-primary text-text-primary font-body antialiased;
-    transition: background-color 150ms ease-out, color 150ms ease-out;
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    @apply font-body antialiased;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -41,33 +135,240 @@
   }
 }
 
+/* ============================================================
+   GLASSMORPHISM + CARD UTILITIES
+   ============================================================ */
 @layer components {
   .glass-morphism {
-    @apply bg-opacity-70 backdrop-blur-md;
-    background-color: var(--bg-surface);
+    background-color: color-mix(in srgb, var(--bg-surface) 50%, transparent);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+  }
+
+  /* Light-mode glass fix */
+  .light .glass-morphism {
+    background-color: color-mix(in srgb, var(--bg-surface) 80%, transparent);
+  }
+
+  .card-glow {
+    position: relative;
+  }
+  .card-glow::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(to bottom right, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .card-glow:hover::before {
+    background: linear-gradient(to bottom right, var(--accent-teal), var(--accent-purple));
   }
 
   .card-hover {
-    @apply transition-all duration-150 ease-out hover:scale-[1.02] hover:shadow-xl;
+    @apply transition-all duration-300 ease-out hover:scale-[1.01] hover:shadow-2xl;
+  }
+  .card-hover:hover {
+    box-shadow: 0 25px 50px -12px color-mix(in srgb, var(--accent-teal) 8%, transparent);
+  }
+
+  .neon-glow-teal {
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accent-teal) 20%, transparent);
+  }
+  .neon-glow-purple {
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accent-purple) 20%, transparent);
   }
 }
 
-/* Custom Scrollbar */
+/* ============================================================
+   CODE EDITOR — ALWAYS DARK regardless of theme
+   Monaco handles its own styling; keep pre/code safe
+   ============================================================ */
+pre, code {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+/* In light mode, inline pre/code blocks get a styled dark bg */
+.light pre,
+.light code {
+  background-color: #1e2030;
+  color: #cdd6f4;
+  border-color: #2a3347;
+}
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.navbar-bg-scrolled {
+  background-color: color-mix(in srgb, var(--bg-surface) 85%, transparent);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.navbar-dropdown {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+}
+
+/* ============================================================
+   SUBJECT CARD — per-subject accent top borders
+   ============================================================ */
+.subject-card-sql       { --card-accent: #06b6d4; }
+.subject-card-python    { --card-accent: #7c3aed; }
+.subject-card-powerbi   { --card-accent: #f59e0b; }
+.subject-card-numpy     { --card-accent: #10b981; }
+.subject-card-pandas    { --card-accent: #818cf8; }
+.subject-card-ml        { --card-accent: #8b5cf6; }
+.subject-card-dl        { --card-accent: #ec4899; }
+.subject-card-genai     { --card-accent: #14b8a6; }
+.subject-card-agentic   { --card-accent: #f97316; }
+.subject-card-vis       { --card-accent: #f97316; }
+
+.subject-card-top-border {
+  border-top: 3px solid var(--card-accent, var(--accent-teal));
+}
+
+/* ============================================================
+   DIFFICULTY BADGES
+   ============================================================ */
+.badge-fresher {
+  background: var(--badge-fresher-bg);
+  color: var(--badge-fresher-text);
+}
+.badge-mid {
+  background: var(--badge-mid-bg);
+  color: var(--badge-mid-text);
+}
+.badge-senior {
+  background: var(--badge-senior-bg);
+  color: var(--badge-senior-text);
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn-primary {
+  background: var(--accent-teal);
+  color: var(--text-inverse);
+  border: none;
+  transition: opacity 0.15s ease;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+/* In light mode: violet CTA is more readable than cyan on white */
+.light .btn-primary {
+  background: var(--accent-violet);
+  color: #ffffff;
+}
+
+/* ============================================================
+   PROGRESS BAR
+   ============================================================ */
+.progress-track {
+  background: var(--border-subtle);
+  border-radius: 999px;
+  height: 4px;
+}
+.progress-fill {
+  background: var(--accent-violet);
+  border-radius: 999px;
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* ============================================================
+   CALLOUT BLOCKS
+   ============================================================ */
+.callout-tip {
+  background: var(--accent-amber-bg);
+  border-left: 3px solid var(--accent-amber);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+}
+.callout-warning {
+  background: var(--accent-rose-bg);
+  border-left: 3px solid var(--accent-rose);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+}
+.callout-info {
+  background: var(--accent-cyan-bg);
+  border-left: 3px solid var(--accent-teal);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+}
+
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
+.hero-gradient-text {
+  background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Light mode: a richer hero gradient using the darker variants */
+.light .hero-gradient-text {
+  background: linear-gradient(135deg, #0891b2, #7c3aed, #e11d48);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Light mode hero section bg */
+.light .hero-section-bg {
+  background: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 50%, #f0fdf4 100%);
+}
+
+/* ============================================================
+   STARFIELD / NEURAL GRID — hides in light mode
+   ============================================================ */
+.neural-grid {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+}
+
+.light .neural-grid {
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+
+/* ============================================================
+   CUSTOM SCROLLBAR
+   ============================================================ */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 6px;
+  height: 6px;
 }
-
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: var(--bg-base);
 }
-
 ::-webkit-scrollbar-thumb {
   background: var(--bg-elevated);
-  border-radius: 5px;
-  border: 2px solid var(--bg-primary);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+/* ============================================================
+   UTILITY — hide scrollbar
+   ============================================================ */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

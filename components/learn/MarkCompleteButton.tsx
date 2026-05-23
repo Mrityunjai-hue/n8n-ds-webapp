@@ -7,6 +7,8 @@ import { Button } from '../ui/Button';
 import { useProgressStore } from '@/lib/store/useProgressStore';
 import { useUserStore } from '@/lib/store/useUserStore';
 import { saveTopicCompletion } from '@/lib/firebase/db';
+import { useAchievementStore } from '@/lib/store/useAchievementStore';
+import { getAllSubjects } from '@/lib/content';
 
 interface MarkCompleteButtonProps {
   topicId: string;
@@ -20,6 +22,7 @@ export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({
   nextTopicTitle 
 }) => {
   const { completedTopics, completeTopic } = useProgressStore();
+  const { unlockAchievement } = useAchievementStore();
   const { user } = useUserStore();
   const isCompleted = completedTopics.includes(topicId);
   const [justCompleted, setJustCompleted] = useState(false);
@@ -29,6 +32,36 @@ export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({
     
     completeTopic(topicId);
     setJustCompleted(true);
+
+    // ── Unlock Achievements ───────────────────────────────────────────────
+    // 1. First topic completed (Genesis)
+    unlockAchievement('genesis');
+
+    // 2. 15+ topics completed (Polymath)
+    if (completedTopics.length + 1 >= 15) {
+      unlockAchievement('polymath');
+    }
+
+    // 3. Subject mastery checks
+    const allSubjects = getAllSubjects();
+    const currentSubject = allSubjects.find(s => s.topics.some(t => t.id === topicId));
+    if (currentSubject) {
+      const otherSubjectTopics = currentSubject.topics.filter(t => t.id !== topicId);
+      const allOthersCompleted = otherSubjectTopics.every(t => completedTopics.includes(t.id));
+      if (allOthersCompleted) {
+        if (currentSubject.id === 'sql') {
+          unlockAchievement('sql_commander');
+        } else if (currentSubject.id === 'python') {
+          unlockAchievement('pythonic');
+        }
+      }
+
+      // 4. Mastered first AI/ML topic (AI Vanguard)
+      const aiSubjectIds = ['ml', 'dl', 'genai', 'agentic'];
+      if (aiSubjectIds.includes(currentSubject.id)) {
+        unlockAchievement('ai_vanguard');
+      }
+    }
 
     if (user) {
       await saveTopicCompletion(user.uid, topicId, true);

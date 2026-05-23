@@ -14,48 +14,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 
-const PROJECTS = [
-  {
-    id: 'sql-analytics',
-    title: 'E-commerce SQL Analytics',
-    description: 'Build a complex database schema for an e-commerce platform and write advanced CTEs to analyze customer lifetime value.',
-    difficulty: 'Intermediate',
-    subject: 'SQL',
-    icon: Database,
-    color: 'text-accent-teal',
-    bg: 'bg-accent-teal/10',
-  },
-  {
-    id: 'titanic-ml',
-    title: 'Titanic Survival Predictor',
-    description: 'The classic ML project. Clean the Titanic dataset using Pandas and build a Logistic Regression model to predict survivors.',
-    difficulty: 'Beginner',
-    subject: 'ML Basics',
-    icon: BrainCircuit,
-    color: 'text-accent-blue',
-    bg: 'bg-accent-blue/10',
-  },
-  {
-    id: 'agentic-researcher',
-    title: 'Autonomous Research Agent',
-    description: 'Build an AI Agent using LangChain and OpenAI that can browse the web, summarize papers, and write reports.',
-    difficulty: 'Advanced',
-    subject: 'Agentic AI',
-    icon: Bot,
-    color: 'text-accent-amber',
-    bg: 'bg-accent-amber/10',
-  },
-  {
-    id: 'crypto-dashboard',
-    title: 'Real-time Crypto Dashboard',
-    description: 'Fetch live cryptocurrency prices using Python APIs and visualize them with Matplotlib and Streamlit.',
-    difficulty: 'Intermediate',
-    subject: 'Data Vis',
-    icon: BarChart3,
-    color: 'text-purple-400',
-    bg: 'bg-purple-400/10',
-  }
-];
+import { PROJECTS } from '@/lib/content/projects';
 
 export default function ProjectsPage() {
   return (
@@ -97,7 +56,7 @@ export default function ProjectsPage() {
               </p>
               <div className="flex items-center justify-between pt-6 border-t border-border/50">
                 <span className="text-sm font-bold text-text-primary">{project.subject}</span>
-                <Link href={`/learn/${project.subject === 'SQL' ? 'sql' : project.subject === 'ML Basics' ? 'ml-basics' : project.subject === 'Agentic AI' ? 'agentic-ai' : 'visualization'}`}>
+                <Link href={`/projects/${project.id}`}>
                   <Button variant="secondary" size="sm" className="gap-2">
                     Start Lab <ArrowUpRight className="w-3 h-3" />
                   </Button>

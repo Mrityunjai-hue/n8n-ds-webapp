@@ -4,12 +4,14 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 interface ProgressState {
   completedTopics: string[];
   visitedTopics: string[];
+  reviewedQuestions: string[];
   streak: number;
   lastVisit: string | null;
   
   // Actions
   completeTopic: (topicId: string) => void;
   visitTopic: (topicId: string) => void;
+  toggleReviewedQuestion: (question: string) => void;
   updateStreak: () => void;
   resetProgress: () => void;
 }
@@ -19,6 +21,7 @@ export const useProgressStore = create<ProgressState>()(
     (set, get) => ({
       completedTopics: [],
       visitedTopics: [],
+      reviewedQuestions: [],
       streak: 0,
       lastVisit: null,
 
@@ -32,6 +35,12 @@ export const useProgressStore = create<ProgressState>()(
         visitedTopics: state.visitedTopics.includes(topicId)
           ? state.visitedTopics
           : [...state.visitedTopics, topicId]
+      })),
+
+      toggleReviewedQuestion: (question: string) => set((state) => ({
+        reviewedQuestions: state.reviewedQuestions.includes(question)
+          ? state.reviewedQuestions.filter(q => q !== question)
+          : [...state.reviewedQuestions, question]
       })),
 
       updateStreak: () => {
@@ -52,7 +61,7 @@ export const useProgressStore = create<ProgressState>()(
         }
       },
 
-      resetProgress: () => set({ completedTopics: [], visitedTopics: [], streak: 0, lastVisit: null }),
+      resetProgress: () => set({ completedTopics: [], visitedTopics: [], reviewedQuestions: [], streak: 0, lastVisit: null }),
     }),
     {
       name: 'n8n-progress-storage',
