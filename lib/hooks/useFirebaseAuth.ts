@@ -5,7 +5,6 @@ import {
   onAuthStateChanged, 
   signInWithPopup, 
   GoogleAuthProvider, 
-  GithubAuthProvider,
   signOut as firebaseSignOut 
 } from 'firebase/auth';
 import { auth } from '../firebase/config';
@@ -33,15 +32,7 @@ export const useFirebaseAuth = () => {
     }
   };
 
-  const signInWithGithub = async () => {
-    const provider = new GithubAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error('Error signing in with Github:', error);
-      throw error;
-    }
-  };
+
 
   const signOut = async () => {
     try {
@@ -51,5 +42,5 @@ export const useFirebaseAuth = () => {
     }
   };
 
-  return { signInWithGoogle, signInWithGithub, signOut };
+  return { signInWithGoogle, signOut };
 };
