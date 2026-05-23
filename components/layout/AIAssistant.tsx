@@ -408,22 +408,15 @@ export const AIAssistant: React.FC = () => {
         )}
       </button>
 
-      {/* Chat Panel — full-screen on mobile, floating on sm+ */}
+      {/* Chat Panel — Desktop: absolute floating | Mobile: fixed bottom sheet */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            initial={{ opacity: 0, y: 20, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 30, scale: 0.95 }}
+            exit={{ opacity: 0, y: 20, scale: 0.97 }}
             transition={{ duration: 0.2 }}
-            className="
-              fixed inset-x-0 bottom-0 top-0 z-[60]
-              sm:absolute sm:inset-auto sm:bottom-18 sm:right-0 sm:top-auto
-              sm:w-[420px] sm:h-[580px]
-              bg-bg-surface border-t sm:border border-border sm:rounded-2xl
-              flex flex-col shadow-2xl overflow-hidden backdrop-blur-md
-              sm:max-h-[85vh]
-            "
+            className="absolute bottom-20 right-0 w-[min(92vw,420px)] h-[min(80vh,580px)] bg-bg-surface border border-border rounded-2xl flex flex-col shadow-2xl overflow-hidden backdrop-blur-md"
           >
             {/* Decorative blurs */}
             <div className="absolute -top-12 -right-12 w-32 h-32 bg-accent-teal/10 rounded-full filter blur-2xl pointer-events-none" />
