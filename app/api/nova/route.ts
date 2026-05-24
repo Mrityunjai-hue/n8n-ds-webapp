@@ -1,7 +1,6 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'edge';
-
+// Node.js runtime (default) — edge runtime causes 502 in local dev
 export async function POST(req: NextRequest) {
   try {
     const { messages, userMessage, pageContext } = await req.json();
@@ -12,10 +11,7 @@ export async function POST(req: NextRequest) {
       process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
     if (!apiKey) {
-      return new Response(
-        JSON.stringify({ error: 'Gemini API key not configured' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
+      return NextResponse.json({ error: 'Gemini API key not configured' }, { status: 500 });
     }
 
     // Build topic context block
@@ -63,9 +59,10 @@ STRICT RULES:
 
     history.push({ role: 'user', parts: [{ text: userMessage }] });
 
-    // Call Gemini streaming endpoint
+    // Use non-streaming Gemini endpoint — more reliable across environments
+    // We simulate streaming on the client via chunked transfer
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:streamGenerateContent?key=${apiKey}&alt=sse`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -83,72 +80,61 @@ STRICT RULES:
 
     if (!geminiRes.ok) {
       const errText = await geminiRes.text();
-      return new Response(
-        JSON.stringify({ error: `Gemini error: ${geminiRes.status} — ${errText}` }),
-        { status: 502, headers: { 'Content-Type': 'application/json' } }
+      const status = geminiRes.status;
+      // Surface rate limit errors clearly so client can show a friendly message
+      if (status === 429) {
+        const encoder = new TextEncoder();
+        const msg = 'Nova is catching her breath — free tier quota reached. Try again in a minute! ☕';
+        const stream = new ReadableStream({
+          start(controller) {
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: msg })}\n\n`));
+            controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+            controller.close();
+          }
+        });
+        return new Response(stream, { headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' } });
+      }
+      return NextResponse.json(
+        { error: `Gemini error: ${status}`, detail: errText },
+        { status: 502 }
       );
     }
 
-    // Pipe the SSE stream directly back to the client
-    // Transform Gemini's SSE into our own simple text/event-stream
+    const data = await geminiRes.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+
+    if (!text) {
+      return NextResponse.json({ error: 'No response from Gemini' }, { status: 502 });
+    }
+
+    // Stream response word-by-word via SSE so the client sees typing effect
     const encoder = new TextEncoder();
+    const words = text.split(/(?<=\s)/); // split keeping spaces
 
-    const readable = new ReadableStream({
+    const stream = new ReadableStream({
       async start(controller) {
-        const reader = geminiRes.body?.getReader();
-        if (!reader) {
-          controller.close();
-          return;
+        for (const word of words) {
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify({ text: word })}\n\n`)
+          );
+          // tiny delay to simulate streaming
+          await new Promise(r => setTimeout(r, 8));
         }
-
-        const decoder = new TextDecoder();
-        let buffer = '';
-
-        try {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            buffer += decoder.decode(value, { stream: true });
-            const lines = buffer.split('\n');
-            buffer = lines.pop() ?? '';
-
-            for (const line of lines) {
-              if (!line.startsWith('data: ')) continue;
-              const data = line.slice(6).trim();
-              if (data === '[DONE]') continue;
-
-              try {
-                const parsed = JSON.parse(data);
-                const text = parsed?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
-                if (text) {
-                  controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`));
-                }
-              } catch {
-                // skip malformed chunks
-              }
-            }
-          }
-        } finally {
-          reader.releaseLock();
-          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-          controller.close();
-        }
+        controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+        controller.close();
       },
     });
 
-    return new Response(readable, {
+    return new Response(stream, {
       headers: {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
-        Connection: 'keep-alive',
+        'X-Accel-Buffering': 'no',
       },
     });
+
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown error';
-    return new Response(JSON.stringify({ error: message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
