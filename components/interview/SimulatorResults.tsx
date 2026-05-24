@@ -123,62 +123,111 @@ export default function SimulatorResults() {
                 {/* Expanded evaluation */}
                 {isExpanded && (
                   <div className="border-t border-border p-4 space-y-4">
-                    {/* Student answer */}
-                    <div>
-                      <div className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-1">
-                        Your Answer
+
+                    {/* ── Answer Comparison ── */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {/* Your answer */}
+                      <div className="flex flex-col gap-1.5">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold uppercase tracking-widest text-text-secondary">Your Answer</span>
+                          {!r.skipped && (
+                            <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                              r.score >= 8 ? 'bg-emerald-500/15 text-emerald-400' :
+                              r.score >= 6 ? 'bg-teal-500/15 text-teal-400' :
+                              r.score >= 4 ? 'bg-amber-500/15 text-amber-400' :
+                              'bg-red-500/15 text-red-400'
+                            }`}>
+                              {r.score}/10
+                            </span>
+                          )}
+                        </div>
+                        <div className={`text-sm leading-relaxed rounded-xl p-3 h-full border ${
+                          r.skipped
+                            ? 'bg-bg-elevated border-border text-text-muted italic'
+                            : r.score >= 6
+                            ? 'bg-emerald-500/5 border-emerald-500/20 text-text-primary'
+                            : 'bg-red-500/5 border-red-500/20 text-text-primary'
+                        }`}>
+                          {r.skipped || !r.studentAnswer
+                            ? 'No answer given'
+                            : r.studentAnswer}
+                        </div>
                       </div>
-                      <p className="text-sm text-text-primary bg-bg-elevated rounded-xl p-3 leading-relaxed">
-                        {r.skipped || !r.studentAnswer ? (
-                          <span className="text-text-muted italic">No answer given</span>
-                        ) : r.studentAnswer}
-                      </p>
+
+                      {/* Model answer */}
+                      <div className="flex flex-col gap-1.5">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold uppercase tracking-widest text-accent-teal">Model Answer</span>
+                          <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-accent-teal/10 text-accent-teal border border-accent-teal/20">
+                            ✓ Correct
+                          </span>
+                        </div>
+                        <div className="text-sm leading-relaxed rounded-xl p-3 h-full bg-accent-teal/5 border border-accent-teal/20 text-text-primary">
+                          {r.question.answer}
+                        </div>
+                      </div>
                     </div>
 
-                    {/* AI Evaluation */}
+                    {/* ── AI Evaluation ── */}
                     {r.evaluation && (
                       <>
-                        {/* Verdict */}
-                        <div>
-                          <div className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-1">
-                            Evaluation
+                        {/* Verdict + encouragement */}
+                        <div className="bg-bg-elevated rounded-xl p-3 border border-border">
+                          <div className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-1.5">
+                            AI Verdict
                           </div>
                           <p className="text-sm text-text-primary leading-relaxed">{r.evaluation.verdict}</p>
-                          <p className="text-sm text-accent-teal mt-1">{r.evaluation.encouragement}</p>
+                          <p className="text-sm text-accent-teal mt-1.5 font-medium">{r.evaluation.encouragement}</p>
                         </div>
 
                         {/* Got right / missed */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          {r.evaluation.got_right.length > 0 && (
-                            <div className="bg-emerald-500/8 border border-emerald-500/20 rounded-xl p-3">
-                              <div className="text-xs font-bold text-emerald-400 mb-2">✓ Got Right</div>
-                              <ul className="space-y-1">
-                                {r.evaluation.got_right.map((pt, j) => (
-                                  <li key={j} className="text-xs text-text-secondary">{pt}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                          {r.evaluation.missed.length > 0 && (
-                            <div className="bg-red-500/8 border border-red-500/20 rounded-xl p-3">
-                              <div className="text-xs font-bold text-red-400 mb-2">✗ Missed</div>
-                              <ul className="space-y-1">
-                                {r.evaluation.missed.map((pt, j) => (
-                                  <li key={j} className="text-xs text-text-secondary">{pt}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                        </div>
+                        {(r.evaluation.got_right.length > 0 || r.evaluation.missed.length > 0) && (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {r.evaluation.got_right.length > 0 && (
+                              <div className="bg-emerald-500/8 border border-emerald-500/20 rounded-xl p-3">
+                                <div className="text-xs font-bold text-emerald-400 mb-2">✓ What You Got Right</div>
+                                <ul className="space-y-1.5">
+                                  {r.evaluation.got_right.map((pt, j) => (
+                                    <li key={j} className="text-xs text-text-secondary flex gap-1.5">
+                                      <span className="text-emerald-400 shrink-0 mt-0.5">•</span>
+                                      {pt}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                            {r.evaluation.missed.length > 0 && (
+                              <div className="bg-red-500/8 border border-red-500/20 rounded-xl p-3">
+                                <div className="text-xs font-bold text-red-400 mb-2">✗ What Was Missing</div>
+                                <ul className="space-y-1.5">
+                                  {r.evaluation.missed.map((pt, j) => (
+                                    <li key={j} className="text-xs text-text-secondary flex gap-1.5">
+                                      <span className="text-red-400 shrink-0 mt-0.5">•</span>
+                                      {pt}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        )}
 
-                        {/* Model answer hint */}
-                        <div className="bg-accent-teal/5 border border-accent-teal/20 rounded-xl p-3">
-                          <div className="text-xs font-bold text-accent-teal mb-1">💡 Key Takeaway</div>
+                        {/* Key takeaway */}
+                        <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-3">
+                          <div className="text-xs font-bold text-amber-400 mb-1">💡 Remember This</div>
                           <p className="text-xs text-text-secondary leading-relaxed">
                             {r.evaluation.model_answer_hint}
                           </p>
                         </div>
                       </>
+                    )}
+
+                    {/* Skipped — still show model answer */}
+                    {r.skipped && (
+                      <div className="bg-accent-teal/5 border border-accent-teal/20 rounded-xl p-3">
+                        <div className="text-xs font-bold text-accent-teal mb-1">📖 What You Should Know</div>
+                        <p className="text-sm text-text-secondary leading-relaxed">{r.question.answer}</p>
+                      </div>
                     )}
                   </div>
                 )}
