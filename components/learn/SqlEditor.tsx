@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import { useSqlJs } from '@/lib/hooks/useSqlJs';
 import { Button } from '../ui/Button';
@@ -54,6 +54,22 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({ initialQuery, breakdown = 
     setHintStep(1);
     setActiveTab('results');
   };
+
+  // Listen for Nova "Run in Lab" events (SQL only)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { code: newCode, language } = (e as CustomEvent).detail ?? {};
+      if (!language || !['sql'].includes(language.toLowerCase())) return;
+      if (newCode) {
+        setQuery(newCode);
+        setResults([]);
+        setError(null);
+        setActiveTab('results');
+      }
+    };
+    window.addEventListener('nova-fill-sandbox', handler);
+    return () => window.removeEventListener('nova-fill-sandbox', handler);
+  }, []);
 
   const handleCopy = async () => {
     try {

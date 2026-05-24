@@ -52,6 +52,22 @@ export const InteractiveEditor: React.FC<InteractiveEditorProps> = ({
     setActiveTab('terminal');
   }, [initialCode]);
 
+  // Listen for Nova "Run in Lab" events
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { code: newCode, language } = (e as CustomEvent).detail ?? {};
+      if (language && !['python', 'py'].includes(language.toLowerCase())) return;
+      if (newCode) {
+        setCode(newCode);
+        setOutput('');
+        setError(null);
+        setActiveTab('terminal');
+      }
+    };
+    window.addEventListener('nova-fill-sandbox', handler);
+    return () => window.removeEventListener('nova-fill-sandbox', handler);
+  }, []);
+
   const handleRun = async () => {
     setIsRunning(true);
     setError(null);
