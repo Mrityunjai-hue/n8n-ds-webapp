@@ -44,6 +44,7 @@ import { MarkCompleteButton } from '@/components/learn/MarkCompleteButton';
 import { ELI5Toggle } from '@/components/learn/ELI5Toggle';
 import { BookmarkButton } from '@/components/learn/BookmarkButton';
 import { TopicNotes } from '@/components/learn/TopicNotes';
+import { VideoTile } from '@/components/learn/VideoTile';
 import { ContentSection, ProTip, Warning, KeyPoints } from '@/components/learn/LessonContent';
 import { ComponentsBreakdown } from '@/components/learn/ComponentsBreakdown';
 import { TopicSidebar } from '@/components/learn/TopicSidebar';
@@ -357,6 +358,21 @@ export default function TopicPage() {
                           Key Components
                         </h2>
                         <ComponentsBreakdown items={topic.sections.breakdown.components} />
+                      </div>
+                    )}
+
+                    {/* Interactive Video Resources */}
+                    {topic.sections.resources?.videoResources && topic.sections.resources.videoResources.length > 0 && (
+                      <div className="space-y-6 pt-4">
+                        <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary flex items-center gap-2">
+                          <span className="w-6 h-6 rounded bg-accent-teal/15 text-accent-teal flex items-center justify-center text-xs font-mono">▶</span>
+                          Video Resources
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {topic.sections.resources.videoResources.map((resource, idx) => (
+                            <VideoTile key={idx} resource={resource} />
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>

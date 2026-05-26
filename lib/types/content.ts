@@ -25,6 +25,13 @@ export interface RealWorldItem {
   impact?: string;
 }
 
+export interface VideoResource {
+  title: string;
+  url: string;
+  duration?: string;
+  type: 'youtube' | 'playlist' | 'link';
+}
+
 export interface SectionContent {
   title?: string;
   text?: string;
@@ -42,6 +49,7 @@ export interface SectionContent {
   examNotes?: string[];
   realWorld?: RealWorldItem[];
   quiz?: QuizQuestion[];
+  videoResources?: VideoResource[];
 }
 
 export interface Topic {
