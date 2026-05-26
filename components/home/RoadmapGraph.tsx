@@ -17,7 +17,8 @@ import {
   Sparkles, 
   Bot,
   HelpCircle,
-  Move
+  Move,
+  BookOpen
 } from 'lucide-react';
 import { subjects } from '@/lib/content/subjects';
 import { useProgressStore } from '@/lib/store/useProgressStore';
@@ -34,6 +35,7 @@ const subjectIconMap: Record<string, React.ComponentType<any>> = {
   dl: Network,
   genai: Sparkles,
   agentic: Bot,
+  foundation: BookOpen,
 };
 
 // Map subject IDs to colors
@@ -48,6 +50,7 @@ const subjectColors: Record<string, { border: string; glow: string; text: string
   dl: { border: 'border-purple-500/20 hover:border-purple-500/50', glow: 'shadow-purple-500/10', text: 'text-purple-400', rawHex: '#a855f7' },
   genai: { border: 'border-pink-500/20 hover:border-pink-500/50', glow: 'shadow-pink-500/10', text: 'text-pink-400', rawHex: '#ec4899' },
   agentic: { border: 'border-violet-500/20 hover:border-violet-500/50', glow: 'shadow-violet-500/10', text: 'text-violet-400', rawHex: '#8b5cf6' },
+  foundation: { border: 'border-slate-500/20 hover:border-slate-500/50', glow: 'shadow-slate-500/10', text: 'text-slate-400', rawHex: '#94a3b8' },
 };
 
 interface GraphNode {
@@ -66,19 +69,21 @@ interface GraphEdge {
 }
 
 const graphNodes: GraphNode[] = [
-  { id: 'sql', name: 'SQL Mastery', slug: 'sql', x: 80, y: 280, level: 1, topicsCount: 20 },
-  { id: 'python', name: 'Python for DS', slug: 'python', x: 260, y: 180, level: 2, topicsCount: 18 },
-  { id: 'bi', name: 'Power BI', slug: 'power-bi', x: 260, y: 380, level: 3, topicsCount: 6 },
-  { id: 'numpy', name: 'NumPy Mastery', slug: 'numpy', x: 440, y: 100, level: 4, topicsCount: 10 },
-  { id: 'visualization', name: 'Data Visualization', slug: 'visualization', x: 440, y: 260, level: 4, topicsCount: 8 },
-  { id: 'pandas', name: 'Pandas for Data', slug: 'pandas', x: 620, y: 100, level: 5, topicsCount: 12 },
-  { id: 'ml', name: 'Machine Learning', slug: 'ml-basics', x: 800, y: 180, level: 6, topicsCount: 20 },
-  { id: 'dl', name: 'Deep Learning', slug: 'deep-learning', x: 960, y: 180, level: 8, topicsCount: 14 },
-  { id: 'genai', name: 'Generative AI', slug: 'gen-ai', x: 1120, y: 120, level: 9, topicsCount: 10 },
-  { id: 'agentic', name: 'Agentic AI', slug: 'agentic-ai', x: 1120, y: 300, level: 10, topicsCount: 10 },
+  { id: 'foundation', name: 'Foundation Framework', slug: 'foundation', x: 80, y: 280, level: 0, topicsCount: 4 },
+  { id: 'sql', name: 'SQL Mastery', slug: 'sql', x: 260, y: 280, level: 1, topicsCount: 20 },
+  { id: 'python', name: 'Python for DS', slug: 'python', x: 440, y: 180, level: 2, topicsCount: 18 },
+  { id: 'bi', name: 'Power BI', slug: 'power-bi', x: 440, y: 380, level: 3, topicsCount: 6 },
+  { id: 'numpy', name: 'NumPy Mastery', slug: 'numpy', x: 620, y: 100, level: 4, topicsCount: 10 },
+  { id: 'visualization', name: 'Data Visualization', slug: 'visualization', x: 620, y: 260, level: 4, topicsCount: 8 },
+  { id: 'pandas', name: 'Pandas for Data', slug: 'pandas', x: 800, y: 100, level: 5, topicsCount: 12 },
+  { id: 'ml', name: 'Machine Learning', slug: 'ml-basics', x: 980, y: 180, level: 6, topicsCount: 20 },
+  { id: 'dl', name: 'Deep Learning', slug: 'deep-learning', x: 1140, y: 180, level: 8, topicsCount: 14 },
+  { id: 'genai', name: 'Generative AI', slug: 'gen-ai', x: 1300, y: 120, level: 9, topicsCount: 10 },
+  { id: 'agentic', name: 'Agentic AI', slug: 'agentic-ai', x: 1300, y: 300, level: 10, topicsCount: 10 },
 ];
 
 const graphEdges: GraphEdge[] = [
+  { from: 'foundation', to: 'sql' },
   { from: 'sql', to: 'bi' },
   { from: 'sql', to: 'python' },
   { from: 'python', to: 'numpy' },
@@ -271,7 +276,7 @@ export const RoadmapGraph: React.FC = () => {
         <svg
           width="100%"
           height="100%"
-          viewBox="0 0 1300 500"
+          viewBox="0 0 1500 500"
           className="w-full h-full"
         >
           <g transform={`translate(${pan.x}, ${pan.y}) scale(${scale})`}>

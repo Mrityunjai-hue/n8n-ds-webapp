@@ -8,11 +8,13 @@ import {
   Cpu, 
   Network, 
   Sparkles, 
-  Bot 
+  Bot,
+  BookOpen
 } from 'lucide-react';
 import { SubjectContent } from '../types/content';
 
 // ─── Rich topic content modules ───────────────────────────────────────────────
+import { foundationTopics } from './topics/foundation';
 import { sqlTopics } from './topics/sql';
 import { pythonTopics } from './topics/python';
 import { mlTopics } from './topics/ml';
@@ -25,6 +27,17 @@ import { visualizationTopics } from './topics/visualization';
 import { agenticAITopics } from './topics/agentic-ai';
 
 export const subjects: SubjectContent[] = [
+  {
+    id: 'foundation',
+    slug: 'foundation',
+    name: 'Foundation Framework',
+    description: 'Level 0: Understand the story of data, how computers work, basic math, and the AI roadmap.',
+    icon: BookOpen,
+    color: 'from-gray-500 to-slate-600',
+    level: 0,
+    estimatedHours: 6,
+    topics: foundationTopics,
+  },
   {
     id: 'sql',
     slug: 'sql',
