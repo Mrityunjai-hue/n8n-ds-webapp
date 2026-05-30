@@ -44,6 +44,8 @@ export const viewport = {
   ],
 };
 
+import { SplashScreenWrapper } from '@/components/layout/SplashScreenWrapper';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -60,25 +62,27 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-accent-teal focus:text-white focus:rounded-card focus:font-bold"
-          >
-            Skip to content
-          </a>
-          
-          <Navbar />
-          
-          <AuthProvider>
-            <main id="main-content" className="flex-grow pt-20">
-              {children}
-            </main>
+          <SplashScreenWrapper>
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-accent-teal focus:text-white focus:rounded-card focus:font-bold"
+            >
+              Skip to content
+            </a>
+            
+            <Navbar />
+            
+            <AuthProvider>
+              <main id="main-content" className="flex-grow pt-20">
+                {children}
+              </main>
 
-            <Footer />
-            <AuthModal />
-            <GlobalSearch />
-            <AIAssistant />
-          </AuthProvider>
+              <Footer />
+              <AuthModal />
+              <GlobalSearch />
+              <AIAssistant />
+            </AuthProvider>
+          </SplashScreenWrapper>
         </ThemeProvider>
       </body>
     </html>

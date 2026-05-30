@@ -38,6 +38,7 @@ import { useFirebaseAuth } from '@/lib/hooks/useFirebaseAuth';
 import { useRecentStore } from '@/lib/store/useRecentStore';
 import { useDashboardData } from '@/lib/hooks/useDashboardData';
 import { useAchievementStore } from '@/lib/store/useAchievementStore';
+import { SettingsModal } from '@/components/dashboard/SettingsModal';
 
 // Map subject IDs to Lucide Icons
 const subjectIconMap: Record<string, React.ComponentType<any>> = {
@@ -76,6 +77,7 @@ export default function DashboardPage() {
   const { unlockAchievement } = useAchievementStore();
   const router = useRouter();
   const [greeting, setGreeting] = useState('Welcome back');
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
     const hours = new Date().getHours();
@@ -308,7 +310,10 @@ export default function DashboardPage() {
             <Button variant="secondary" className="gap-2 border-border/40 hover:bg-bg-surface/50" onClick={() => signOut()}>
               <LogOut className="w-4 h-4" /> Sign Out
             </Button>
-            <Button className="gap-2 bg-gradient-to-r from-accent-teal to-accent-purple border-none shadow-lg shadow-accent-teal/20 hover:opacity-90">
+            <Button 
+              className="gap-2 bg-gradient-to-r from-accent-teal to-accent-purple border-none shadow-lg shadow-accent-teal/20 hover:opacity-90"
+              onClick={() => setIsSettingsOpen(true)}
+            >
               <Settings className="w-4 h-4" /> Settings
             </Button>
           </div>
@@ -602,6 +607,11 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+      
+      <SettingsModal 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+      />
     </div>
   );
 }

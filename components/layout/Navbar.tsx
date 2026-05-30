@@ -11,6 +11,7 @@ import { useProgressStore } from '@/lib/store/useProgressStore';
 import { useUserStore } from '@/lib/store/useUserStore';
 import { useSearchStore } from '@/lib/store/useSearchStore';
 import { subjects } from '@/lib/content/subjects';
+import NavLogo from '@/components/NavLogo';
 
 const navLinks = [
   { name: 'Dashboard', href: '/dashboard' },
@@ -59,153 +60,148 @@ export const Navbar = () => {
   const progressPercent = totalTopics > 0 ? Math.round((completedTopics.length / totalTopics) * 100) : 0;
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${
-      scrolled 
-        ? 'bg-bg-surface/85 backdrop-blur-xl border-border-subtle py-3' 
-        : 'bg-bg-base/20 border-transparent py-5'
-    }`}>
-      <div className="container mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2 group" aria-label="Home">
-            <div className="px-2 h-8 min-w-[2rem] rounded-lg bg-gradient-to-tr from-accent-teal to-accent-purple flex items-center justify-center text-white font-extrabold text-[11px] group-hover:rotate-12 transition-transform font-mono tracking-tight">
-              404
-            </div>
-            <span className="font-display font-extrabold text-xl tracking-tight text-text-primary hidden sm:block">
-              404 <span className="bg-gradient-to-r from-accent-teal to-accent-purple bg-clip-text text-transparent">Found</span>
-            </span>
-          </Link>
+    <>
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${
+        scrolled 
+          ? 'bg-bg-surface/85 backdrop-blur-xl border-border-subtle py-3' 
+          : 'bg-bg-base/20 border-transparent py-5'
+      }`}>
+        <div className="container mx-auto px-6 flex items-center justify-between">
+          {/* Logo */}
+          <div className="flex items-center gap-6">
+            <NavLogo href="/" />
 
-          {/* Subjects Mega Menu Trigger (Desktop only) */}
-          <div className="hidden lg:block relative" ref={dropdownRef}>
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="flex items-center gap-1.5 px-3 py-1.5 border border-border/50 hover:border-text-secondary/40 rounded-xl text-xs font-bold text-text-secondary hover:text-white transition-all bg-bg-surface/20 backdrop-blur-sm cursor-pointer"
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>Curriculum</span>
-              <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${menuOpen ? 'rotate-180' : ''}`} />
-            </button>
+            {/* Subjects Mega Menu Trigger (Desktop only) */}
+            <div className="hidden lg:block relative" ref={dropdownRef}>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="flex items-center gap-1.5 px-3 py-1.5 border border-border/50 hover:border-text-secondary/40 rounded-xl text-xs font-bold text-text-secondary hover:text-white transition-all bg-bg-surface/20 backdrop-blur-sm cursor-pointer"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>Curriculum</span>
+                <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${menuOpen ? 'rotate-180' : ''}`} />
+              </button>
 
-            {menuOpen && (
-              <div className="absolute left-0 mt-3 w-[450px] bg-bg-surface border border-border-default rounded-2xl shadow-2xl p-4 grid grid-cols-2 gap-2 animate-fade-in z-50">
-                <div className="col-span-2 border-b border-border/40 pb-2 mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-text-secondary">Explore Subjects</span>
+              {menuOpen && (
+                <div className="absolute left-0 mt-3 w-[450px] bg-bg-surface border border-border-default rounded-2xl shadow-2xl p-4 grid grid-cols-2 gap-2 animate-fade-in z-50">
+                  <div className="col-span-2 border-b border-border/40 pb-2 mb-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-text-secondary">Explore Subjects</span>
+                  </div>
+                  {subjects.map((sub) => {
+                    const SubIcon = sub.icon as any;
+                    return (
+                      <Link
+                        key={sub.id}
+                        href={`/learn/${sub.slug}`}
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-3 p-2 rounded-xl hover:bg-bg-surface/30 group transition-colors"
+                      >
+                        <span className="p-1.5 rounded-lg bg-bg-elevated border border-border-subtle text-text-secondary group-hover:text-accent-teal group-hover:border-accent-teal/20 transition-all shrink-0">
+                          <SubIcon className="w-3.5 h-3.5" />
+                        </span>
+                        <div className="min-w-0">
+                          <span className="text-xs font-bold text-text-primary block group-hover:text-accent-teal transition-colors truncate">
+                            {sub.name}
+                          </span>
+                          <span className="text-[9px] text-text-secondary truncate block">
+                            {sub.topics.length} topics • Level {sub.level}
+                          </span>
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
-                {subjects.map((sub) => {
-                  const SubIcon = sub.icon as any;
-                  return (
-                    <Link
-                      key={sub.id}
-                      href={`/learn/${sub.slug}`}
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-3 p-2 rounded-xl hover:bg-bg-surface/30 group transition-colors"
-                    >
-                      <span className="p-1.5 rounded-lg bg-bg-elevated border border-border-subtle text-text-secondary group-hover:text-accent-teal group-hover:border-accent-teal/20 transition-all shrink-0">
-                        <SubIcon className="w-3.5 h-3.5" />
-                      </span>
-                      <div className="min-w-0">
-                        <span className="text-xs font-bold text-text-primary block group-hover:text-accent-teal transition-colors truncate">
-                          {sub.name}
-                        </span>
-                        <span className="text-[9px] text-text-secondary truncate block">
-                          {sub.topics.length} topics • Level {sub.level}
-                        </span>
-                      </div>
-                    </Link>
-                  );
-                })}
+              )}
+            </div>
+          </div>
+
+          {/* Desktop Links */}
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={`text-sm font-bold transition-colors hover:text-accent-teal ${
+                  pathname === link.href ? 'text-accent-teal' : 'text-text-secondary'
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center gap-4">
+            {/* Global Progress Bar Teaser */}
+            {completedTopics.length > 0 && (
+              <div className="flex flex-col items-end gap-1 shrink-0">
+                <span className="text-[9px] font-bold text-text-secondary uppercase tracking-widest font-mono">
+                  Progress: {completedTopics.length}/{totalTopics}
+                </span>
+                <div className="w-24 h-1.5 bg-border rounded-full overflow-hidden border border-border/40">
+                  <div 
+                    className="h-full bg-gradient-to-r from-accent-teal to-accent-purple"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
               </div>
             )}
-          </div>
-        </div>
 
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className={`text-sm font-bold transition-colors hover:text-accent-teal ${
-                pathname === link.href ? 'text-accent-teal' : 'text-text-secondary'
-              }`}
+            {/* Search Button */}
+            <button
+              onClick={openSearch}
+              className="p-2 text-text-secondary hover:text-text-primary transition-colors flex items-center gap-2 text-sm border border-border-subtle rounded-xl bg-bg-surface/20 hover:bg-bg-surface/40 px-3 cursor-pointer"
+              aria-label="Open search (Ctrl+K)"
             >
-              {link.name}
-            </Link>
-          ))}
-        </div>
+              <Search className="w-4 h-4" />
+              <span className="hidden lg:inline text-xs opacity-50">Ctrl+K</span>
+            </button>
 
-        {/* Desktop Actions */}
-        <div className="hidden md:flex items-center gap-4">
-          {/* Global Progress Bar Teaser */}
-          {completedTopics.length > 0 && (
-            <div className="flex flex-col items-end gap-1 shrink-0">
-              <span className="text-[9px] font-bold text-text-secondary uppercase tracking-widest font-mono">
-                Progress: {completedTopics.length}/{totalTopics}
-              </span>
-              <div className="w-24 h-1.5 bg-border rounded-full overflow-hidden border border-border/40">
-                <div 
-                  className="h-full bg-gradient-to-r from-accent-teal to-accent-purple"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
+            {/* Streak Badge */}
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-accent-amber/15 border border-accent-amber/30 text-accent-amber text-xs font-bold font-mono">
+              <Flame className="w-4 h-4 fill-current animate-pulse text-accent-amber" />
+              <span>{streak}d</span>
             </div>
-          )}
 
-          {/* Search Button */}
-          <button
-            onClick={openSearch}
-            className="p-2 text-text-secondary hover:text-text-primary transition-colors flex items-center gap-2 text-sm border border-border-subtle rounded-xl bg-bg-surface/20 hover:bg-bg-surface/40 px-3 cursor-pointer"
-            aria-label="Open search (Ctrl+K)"
-          >
-            <Search className="w-4 h-4" />
-            <span className="hidden lg:inline text-xs opacity-50">Ctrl+K</span>
-          </button>
+            <DarkModeToggle />
 
-          {/* Streak Badge */}
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-accent-amber/15 border border-accent-amber/30 text-accent-amber text-xs font-bold font-mono">
-            <Flame className="w-4 h-4 fill-current animate-pulse text-accent-amber" />
-            <span>{streak}d</span>
+            {user ? (
+              <Link
+                href="/dashboard"
+                className="w-10 h-10 rounded-xl bg-gradient-to-tr from-accent-teal to-accent-purple flex items-center justify-center text-white font-bold text-sm hover:ring-2 hover:ring-accent-teal/50 transition-all cursor-pointer"
+                aria-label="Go to Dashboard"
+              >
+                {user.displayName?.[0]?.toUpperCase() || <User className="w-5 h-5" />}
+              </Link>
+            ) : (
+              <Button variant="primary" size="sm" onClick={() => openModal('login')} className="rounded-xl px-5 font-bold">
+                Sign In
+              </Button>
+            )}
           </div>
 
-          <DarkModeToggle />
-
-          {user ? (
-            <Link
-              href="/dashboard"
-              className="w-10 h-10 rounded-xl bg-gradient-to-tr from-accent-teal to-accent-purple flex items-center justify-center text-white font-bold text-sm hover:ring-2 hover:ring-accent-teal/50 transition-all cursor-pointer"
-              aria-label="Go to Dashboard"
+          {/* Mobile Menu Toggle */}
+          <div className="flex md:hidden items-center gap-2">
+            <DarkModeToggle />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 text-text-primary rounded-lg hover:bg-bg-surface transition-colors"
+              style={{ WebkitTapHighlightColor: 'transparent' }}
+              aria-label="Toggle Menu"
             >
-              {user.displayName?.[0]?.toUpperCase() || <User className="w-5 h-5" />}
-            </Link>
-          ) : (
-            <Button variant="primary" size="sm" onClick={() => openModal('login')} className="rounded-xl px-5 font-bold">
-              Sign In
-            </Button>
-          )}
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
-
-        {/* Mobile Menu Toggle */}
-        <div className="flex md:hidden items-center gap-2">
-          <DarkModeToggle />
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="p-2 text-text-primary rounded-lg hover:bg-bg-surface transition-colors"
-            style={{ WebkitTapHighlightColor: 'transparent' }}
-            aria-label="Toggle Menu"
-          >
-            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-        </div>
-      </div>
+      </nav>
 
       {/* Mobile Drawer */}
-      <div className={`fixed inset-0 bg-bg-base/98 backdrop-blur-xl z-40 md:hidden transition-transform duration-300 transform overflow-y-auto ${
-        isOpen ? 'translate-x-0' : 'translate-x-full'
+      <div className={`fixed inset-0 bg-bg-base/98 backdrop-blur-xl z-40 md:hidden transition-all duration-300 overflow-y-auto ${
+        isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
       }`}
         style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
-        <div className="flex flex-col p-6 pt-20 gap-2 min-h-full">
+        <div className={`flex flex-col p-6 pt-20 gap-2 min-h-full transition-transform duration-300 ${isOpen ? 'translate-y-0' : '-translate-y-4'}`}>
           {/* Nav Links */}
           <div className="flex flex-col gap-1">
             {navLinks.map((link) => (
@@ -301,7 +297,7 @@ export const Navbar = () => {
           </div>
         </div>
       </div>
-    </nav>
+    </>
   );
 };
 

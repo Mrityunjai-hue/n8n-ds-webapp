@@ -1,308 +1,229 @@
 'use client';
 
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-type Stage = 'hidden' | 'error' | 'glitching' | 'resolving' | 'done';
+type Stage = 'boot' | 'error' | 'glitch' | 'reveal' | 'done';
+
+const BOOT_LOGS = [
+  'kernel: Booting N8N-OS v4.0.4...',
+  'init: Loading Neural Data Modules [OK]',
+  'sys: Connecting to Sandbox Environment [OK]',
+  'net: Fetching user trajectory...',
+  'err: ERR_PATH_UNDEFINED',
+  'err: Searching fallback...',
+];
+
+const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>';
 
 export const GlitchIntro = () => {
-  const [stage, setStage] = useState<Stage>('hidden');
+  const [stage, setStage] = useState<Stage>('boot');
   const [visible, setVisible] = useState(true);
-  const [tick, setTick] = useState(0);
-  const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animRef = useRef<number>(0);
+  const [bootLines, setBootLines] = useState<string[]>([]);
+  const [scrambleText, setScrambleText] = useState('NOT FOUND');
+  const scrambleRef = useRef<number>(0);
 
-  // ── Sequence timing ─────────────────────────────────────────
+  // ── Sequence Orchestration ──
   useEffect(() => {
-    const timers = [
-      setTimeout(() => setStage('error'),     200),
-      setTimeout(() => setStage('glitching'), 1200),
-      setTimeout(() => setStage('resolving'), 2500),
-      setTimeout(() => setStage('done'),      3300),
-      setTimeout(() => setVisible(false),     4000),
-    ];
-    return () => timers.forEach(clearTimeout);
+    let mounted = true;
+    const runSequence = async () => {
+      // Boot Sequence
+      for (let i = 0; i < BOOT_LOGS.length; i++) {
+        await new Promise(r => setTimeout(r, 150));
+        if (!mounted) return;
+        setBootLines(prev => [...prev, BOOT_LOGS[i]]);
+      }
+      
+      await new Promise(r => setTimeout(r, 400));
+      if (!mounted) return;
+      setStage('error');
+      
+      await new Promise(r => setTimeout(r, 800));
+      if (!mounted) return;
+      setStage('glitch');
+      
+      await new Promise(r => setTimeout(r, 1200));
+      if (!mounted) return;
+      setStage('reveal');
+      
+      await new Promise(r => setTimeout(r, 2000));
+      if (!mounted) return;
+      setStage('done');
+      
+      await new Promise(r => setTimeout(r, 800));
+      if (!mounted) return;
+      setVisible(false);
+    };
+    
+    runSequence();
+    return () => { mounted = false; };
   }, []);
 
-  // ── Glitch tick counter ──────────────────────────────────────
+  // ── Text Scrambler during glitch ──
   useEffect(() => {
-    if (stage === 'glitching') {
-      tickRef.current = setInterval(() => setTick(t => t + 1), 40);
-    } else {
-      if (tickRef.current) clearInterval(tickRef.current);
+    if (stage === 'glitch') {
+      const interval = setInterval(() => {
+        let result = '';
+        for (let i = 0; i < 9; i++) {
+          result += SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+        }
+        setScrambleText(result);
+      }, 50);
+      return () => clearInterval(interval);
+    } else if (stage === 'reveal') {
+      setScrambleText('FOUND');
     }
-    return () => { if (tickRef.current) clearInterval(tickRef.current); };
   }, [stage]);
-
-  // ── Noise canvas for glitch texture ─────────────────────────
-  const drawNoise = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const img = ctx.createImageData(canvas.width, canvas.height);
-    for (let i = 0; i < img.data.length; i += 4) {
-      const v = Math.random() > 0.96 ? 180 : 0;
-      img.data[i] = v; img.data[i+1] = v; img.data[i+2] = v;
-      img.data[i+3] = v > 0 ? 40 : 0;
-    }
-    ctx.putImageData(img, 0, 0);
-  }, []);
-
-  useEffect(() => {
-    if (stage === 'glitching') {
-      const loop = () => { drawNoise(); animRef.current = requestAnimationFrame(loop); };
-      animRef.current = requestAnimationFrame(loop);
-    } else {
-      cancelAnimationFrame(animRef.current);
-    }
-    return () => cancelAnimationFrame(animRef.current);
-  }, [stage, drawNoise]);
 
   if (!visible) return null;
 
-  const isGlitching = stage === 'glitching';
-  const isResolving = stage === 'resolving';
-  const isDone      = stage === 'done';
-
-  // Glitch offsets — deterministic from tick
-  const rx = isGlitching ? ((tick * 7)  % 18) - 9  : 0;
-  const ry = isGlitching ? ((tick * 11) % 10) - 5  : 0;
-  const cx = isGlitching ? -((tick * 13) % 16) + 8 : 0;
-  const cy = isGlitching ? -((tick * 5)  % 8)  + 4 : 0;
-  const flicker = isGlitching && tick % 5 === 0;
-
-  // Text colors — NO WebkitTextFillColor, NO background-clip tricks
-  const numColor = isResolving
-    ? '#2dd4bf'
-    : isGlitching
-    ? '#e2e8f0'
-    : '#94a3b8';
-
-  const numFilter = isResolving
-    ? 'drop-shadow(0 0 32px rgba(45,212,191,0.6)) drop-shadow(0 0 64px rgba(129,140,248,0.3))'
-    : isGlitching
-    ? `drop-shadow(0 0 ${6 + (tick % 5) * 3}px rgba(45,212,191,0.4))`
-    : 'none';
-
   return (
     <div
-      aria-hidden="true"
+      className="fixed inset-0 z-[9999] bg-[#03050a] flex items-center justify-center overflow-hidden font-mono"
       style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 9999,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#07090f',
-        opacity: isDone ? 0 : 1,
-        transition: isDone ? 'opacity 0.7s ease' : 'none',
-        pointerEvents: isDone ? 'none' : 'all',
-        overflow: 'hidden',
+        opacity: stage === 'done' ? 0 : 1,
+        transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+        pointerEvents: stage === 'done' ? 'none' : 'all'
       }}
     >
-      {/* Grid overlay */}
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        backgroundImage: [
-          'linear-gradient(rgba(45,212,191,0.04) 1px, transparent 1px)',
-          'linear-gradient(90deg, rgba(45,212,191,0.04) 1px, transparent 1px)',
-        ].join(', '),
-        backgroundSize: '80px 80px',
-      }} />
+      {/* ── SVG Filters for Premium Digital Glitch Tear ── */}
+      <svg className="hidden">
+        <defs>
+          <filter id="glitch-tear">
+            <feTurbulence type="fractalNoise" baseFrequency="0.05 0.95" numOctaves="1" result="noise" />
+            <feColorMatrix type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 5 -2" result="mask" />
+            <feDisplacementMap in="SourceGraphic" in2="mask" scale="40" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
 
-      {/* Ambient glow blobs */}
-      <div style={{
-        position: 'absolute', top: '25%', left: '15%', width: 600, height: 600,
-        borderRadius: '50%', pointerEvents: 'none',
-        background: 'radial-gradient(circle, rgba(45,212,191,0.07) 0%, transparent 65%)',
-        filter: 'blur(60px)',
-        opacity: isResolving ? 1 : 0.4, transition: 'opacity 0.6s',
-      }} />
-      <div style={{
-        position: 'absolute', bottom: '15%', right: '10%', width: 500, height: 500,
-        borderRadius: '50%', pointerEvents: 'none',
-        background: 'radial-gradient(circle, rgba(168,85,247,0.07) 0%, transparent 65%)',
-        filter: 'blur(60px)',
-      }} />
+      {/* ── Ambient Background Mesh ── */}
+      <div 
+        className="absolute inset-0 opacity-20 pointer-events-none"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(45,212,191,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(45,212,191,0.1) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+        }}
+      />
 
-      {/* Noise canvas */}
-      <canvas ref={canvasRef} style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        mixBlendMode: 'screen',
-        opacity: isGlitching ? 1 : 0, transition: 'opacity 0.2s',
-      }} />
+      {/* ── STAGE 1: BOOT & ERROR ── */}
+      <AnimatePresence>
+        {(stage === 'boot' || stage === 'error') && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }}
+            className="absolute top-1/3 left-10 md:left-1/4 max-w-lg text-[#2dd4bf] text-xs sm:text-sm leading-relaxed"
+          >
+            {bootLines.map((line, i) => (
+              <div key={i} className={line.startsWith('err') ? 'text-[#ff3366]' : ''}>
+                {line}
+              </div>
+            ))}
+            {stage === 'error' && (
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: [0, 1, 0, 1] }}
+                transition={{ duration: 0.4 }}
+                className="mt-6 text-[#ff3366] text-4xl sm:text-6xl font-black tracking-tighter"
+              >
+                404 NOT FOUND<span className="animate-pulse">_</span>
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Glitch slice bars */}
-      {isGlitching && [0,1,2,3,4].map(i => (
-        <div key={i} style={{
-          position: 'absolute',
-          top: `${8 + i * 18 + ((tick * (i+2)) % 10)}%`,
-          left: `${(tick * (i*5+3)) % 15}%`,
-          width: `${55 + (tick * (i+1)) % 40}%`,
-          height: `${2 + (tick*(i+1)) % 3}px`,
-          background: i%2===0 ? 'rgba(45,212,191,0.22)' : 'rgba(168,85,247,0.22)',
-          pointerEvents: 'none',
-        }} />
-      ))}
+      {/* ── STAGE 2: THE GLITCH TEAR ── */}
+      <AnimatePresence>
+        {stage === 'glitch' && (
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center bg-[#03050a]"
+            style={{ filter: 'url(#glitch-tear)' }}
+          >
+            {/* Chromatic layers pulling apart */}
+            <div className="relative text-8xl md:text-[15rem] font-black italic tracking-tighter">
+              <span className="absolute top-2 -left-4 text-[#ff3366] mix-blend-screen opacity-80">404</span>
+              <span className="absolute -top-2 left-4 text-[#00ffe0] mix-blend-screen opacity-80">404</span>
+              <span className="text-white relative z-10">{scrambleText}</span>
+            </div>
+            
+            {/* Random tearing scanlines */}
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div 
+                key={i}
+                className="absolute bg-white/10"
+                style={{
+                  top: `${Math.random() * 100}%`,
+                  left: 0, right: 0,
+                  height: `${Math.random() * 10 + 2}px`,
+                  transform: `translateX(${(Math.random() - 0.5) * 100}px)`
+                }}
+              />
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* ── Main content ────────────────────────────────────── */}
-      <div style={{
-        display: 'flex', flexDirection: 'column', alignItems: 'center',
-        opacity: flicker ? 0.6 : 1,
-        transition: isGlitching ? 'none' : 'opacity 0.3s',
-        userSelect: 'none',
-      }}>
+      {/* ── STAGE 3: THE REVEAL ── */}
+      <AnimatePresence>
+        {(stage === 'reveal' || stage === 'done') && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, filter: 'blur(20px)' }}
+            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 flex flex-col items-center justify-center z-20"
+          >
+            {/* Majestic Glow Orbs */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 2 }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] rounded-full bg-[radial-gradient(circle,rgba(45,212,191,0.15)_0%,transparent_60%)] blur-3xl pointer-events-none"
+            />
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 2 }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[600px] max-h-[600px] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.15)_0%,transparent_60%)] blur-3xl pointer-events-none translate-x-[10%]"
+            />
 
-        {/* 404 number with chromatic aberration */}
-        <div style={{ position: 'relative', lineHeight: 1, textAlign: 'center' }}>
+            {/* The 404 Text */}
+            <h1 className="text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/40 text-8xl md:text-[12rem] font-black tracking-tighter drop-shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+              404
+            </h1>
 
-          {/* Red channel — offset behind */}
-          {isGlitching && (
-            <span style={{
-              position: 'absolute', top: ry, left: rx,
-              fontFamily: 'var(--font-jetbrains, "JetBrains Mono", monospace)',
-              fontWeight: 900,
-              fontSize: 'clamp(6rem, 18vw, 14rem)',
-              lineHeight: 1,
-              color: '#ff3060',
-              opacity: 0.5,
-              mixBlendMode: 'screen',
-              whiteSpace: 'nowrap',
-            }}>404</span>
-          )}
+            {/* The FOUND Text */}
+            <motion.div
+              initial={{ y: 20, opacity: 0, letterSpacing: '0em' }}
+              animate={{ y: 0, opacity: 1, letterSpacing: '0.2em' }}
+              transition={{ delay: 0.4, duration: 1, ease: 'easeOut' }}
+              className="text-3xl md:text-6xl font-display font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#2dd4bf] via-[#818cf8] to-[#f472b6] drop-shadow-[0_0_30px_rgba(129,140,248,0.5)] mt-[-10px] md:mt-[-20px]"
+            >
+              Found
+            </motion.div>
 
-          {/* Cyan channel — offset behind */}
-          {isGlitching && (
-            <span style={{
-              position: 'absolute', top: cy, left: cx,
-              fontFamily: 'var(--font-jetbrains, "JetBrains Mono", monospace)',
-              fontWeight: 900,
-              fontSize: 'clamp(6rem, 18vw, 14rem)',
-              lineHeight: 1,
-              color: '#00ffe0',
-              opacity: 0.5,
-              mixBlendMode: 'screen',
-              whiteSpace: 'nowrap',
-            }}>404</span>
-          )}
+            {/* Light beam sweep across */}
+            <motion.div 
+              initial={{ x: '-100%', opacity: 0 }}
+              animate={{ x: '100%', opacity: [0, 1, 0] }}
+              transition={{ duration: 1.5, ease: 'easeInOut' }}
+              className="absolute top-1/2 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white to-transparent shadow-[0_0_20px_#fff]"
+            />
 
-          {/* Main 404 — solid color, no background-clip tricks */}
-          <span style={{
-            display: 'inline-block',
-            fontFamily: 'var(--font-jetbrains, "JetBrains Mono", monospace)',
-            fontWeight: 900,
-            fontSize: 'clamp(6rem, 18vw, 14rem)',
-            lineHeight: 1,
-            letterSpacing: '-0.02em',
-            color: numColor,
-            filter: numFilter,
-            transition: isGlitching ? 'none' : 'color 0.7s ease, filter 0.7s ease',
-            whiteSpace: 'nowrap',
-            position: 'relative',
-            zIndex: 1,
-          }}>
-            404
-          </span>
-        </div>
+            {/* Tagline */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2, duration: 1 }}
+              className="mt-8 text-[#94a3b8] text-xs md:text-sm tracking-[0.2em] uppercase font-medium"
+            >
+              Knowledge was never missing
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        {/* Status word — "Not Found" morphs to "Found" */}
-        <div style={{
-          position: 'relative',
-          height: 'clamp(2rem, 5vw, 4rem)',
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: '0.1em',
-        }}>
-          {/* NOT FOUND */}
-          <span style={{
-            position: 'absolute',
-            fontFamily: 'var(--font-syne, sans-serif)',
-            fontWeight: 800,
-            fontSize: 'clamp(1.2rem, 3vw, 2.8rem)',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            color: '#475569',
-            opacity: isResolving ? 0 : isGlitching && tick % 3 === 0 ? 0.2 : 1,
-            transform: isResolving ? 'translateY(-20px)' : isGlitching ? `translateX(${rx * 1.5}px)` : 'none',
-            transition: isGlitching ? 'none' : 'opacity 0.4s ease, transform 0.4s ease',
-            whiteSpace: 'nowrap',
-          }}>
-            Not Found
-          </span>
-
-          {/* FOUND */}
-          <span style={{
-            position: 'absolute',
-            fontFamily: 'var(--font-syne, sans-serif)',
-            fontWeight: 800,
-            fontSize: 'clamp(1.2rem, 3vw, 2.8rem)',
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: '#2dd4bf',
-            textShadow: isResolving ? '0 0 30px rgba(45,212,191,0.5), 0 0 60px rgba(129,140,248,0.3)' : 'none',
-            opacity: isResolving ? 1 : 0,
-            transform: isResolving ? 'translateY(0)' : 'translateY(24px)',
-            transition: 'opacity 0.5s ease, transform 0.5s ease, text-shadow 0.5s ease',
-            whiteSpace: 'nowrap',
-          }}>
-            Found
-          </span>
-        </div>
-
-        {/* Gradient rule */}
-        <div style={{
-          marginTop: 28,
-          height: 1,
-          width: isResolving ? 220 : 0,
-          background: 'linear-gradient(90deg, transparent, #2dd4bf, #818cf8, transparent)',
-          transition: 'width 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s',
-        }} />
-
-        {/* Tagline */}
-        <p style={{
-          marginTop: 20,
-          fontFamily: 'var(--font-jetbrains, monospace)',
-          fontSize: 'clamp(0.6rem, 1.2vw, 0.8rem)',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-          color: '#334155',
-          opacity: isResolving ? 1 : 0,
-          transform: isResolving ? 'translateY(0)' : 'translateY(10px)',
-          transition: 'opacity 0.5s ease 0.25s, transform 0.5s ease 0.25s',
-          whiteSpace: 'nowrap',
-        }}>
-          Knowledge was never missing — just waiting to be found
-        </p>
-      </div>
-
-      {/* Terminal status bar */}
-      <div style={{
-        position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)',
-        fontFamily: 'var(--font-jetbrains, monospace)',
-        fontSize: '0.62rem', letterSpacing: '0.08em',
-        color: '#334155',
-        display: 'flex', alignItems: 'center', gap: 10,
-        whiteSpace: 'nowrap',
-      }}>
-        <span style={{
-          width: 6, height: 6, borderRadius: '50%',
-          background: isResolving ? '#2dd4bf' : isGlitching ? '#f59e0b' : '#ef4444',
-          boxShadow: `0 0 8px ${isResolving ? '#2dd4bf' : isGlitching ? '#f59e0b' : '#ef4444'}`,
-          transition: 'all 0.3s',
-        }} />
-        <span>
-          {isResolving ? 'STATUS: RESOLVED // 404 FOUND'
-            : isGlitching ? 'STATUS: RECOVERING // REWRITING PATH...'
-            : 'STATUS: 404 // PATH NOT FOUND'}
-        </span>
-      </div>
     </div>
   );
 };

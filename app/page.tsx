@@ -5,7 +5,7 @@ import { HeroSection } from '@/components/home/HeroSection';
 import { StatsBar } from '@/components/home/StatsBar';
 import { RoadmapGraph } from '@/components/home/RoadmapGraph';
 import { SubjectGrid } from '@/components/home/SubjectGrid';
-import { GlitchIntro } from '@/components/home/GlitchIntro';
+
 import { 
   Compass, 
   Cpu, 
@@ -87,8 +87,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col bg-bg-base">
-      {/* Cinematic 404 Not Found → 404 Found intro — plays once, then unmounts */}
-      <GlitchIntro />
+      {/* Legacy intro removed in favor of global LoadingScreen */}
 
       {/* 1. Hero Section */}
       <HeroSection />
@@ -293,9 +292,9 @@ export default function Home() {
           </p>
 
           <div className="pt-4 flex justify-center">
-            <Link href="/learn/sql/intro">
-              <Button size="lg" className="px-10 gap-2 bg-white text-bg-primary hover:bg-opacity-95 font-extrabold transition-all shadow-xl shadow-white/5 border-none">
-                Start Learning Now
+            <Link href="https://discord.gg/jDRYPJQHKW" target="_blank" rel="noopener noreferrer">
+              <Button size="lg" className="px-10 gap-2 bg-white text-black hover:bg-gray-200 font-extrabold transition-all shadow-xl shadow-white/5 border-none">
+                Join Discord Community
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </Link>

@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import N8NLogo from '@/components/N8NLogo';
 
 export const Footer = () => {
   return (
@@ -7,14 +8,7 @@ export const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-6">
-              <div className="px-2 h-8 min-w-[2rem] rounded-lg bg-accent-teal flex items-center justify-center text-white font-bold font-mono text-[11px] tracking-tight">
-                404
-              </div>
-              <span className="font-display font-bold text-xl tracking-tight">
-                404 <span className="text-accent-teal">Found</span>
-              </span>
-            </Link>
+            <N8NLogo variant="default" href="/" animated={true} className="mb-6" />
             <p className="text-text-secondary max-w-sm mb-6 leading-relaxed">
               A free, professional, student-led learning platform covering the full data science stack. 
               Built with ♾️ for students, by students.
