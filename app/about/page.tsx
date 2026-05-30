@@ -43,7 +43,7 @@ export default function AboutPage() {
             Democratizing <span className="text-accent-teal">Data Science</span> Education.
           </h1>
           <p className="text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed">
-            The N8N Data Science Learning Hub is a free, open-source platform designed to take students 
+            The 404 Found Learning Hub is a free, open-source platform designed to take students 
             from fundamentals to building production-ready AI systems.
           </p>
         </div>
@@ -130,7 +130,7 @@ export default function AboutPage() {
           </div>
           <h2 className="text-4xl font-display font-bold mb-6">Open Source at Heart</h2>
           <p className="text-lg text-text-secondary mb-12">
-            This project is part of the N8N Data Science Community. We welcome contributions from everyone — 
+            This project is part of the 404 Found community. We welcome contributions from everyone — 
             whether you&apos;re fixing a bug, adding a new lesson, or improving documentation.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -156,10 +156,10 @@ export default function AboutPage() {
           <div className="flex items-center justify-center gap-2 text-text-secondary text-sm font-bold mb-4">
             <span>Made with</span>
             <Heart className="w-4 h-4 text-danger fill-current" />
-            <span>by N8N Data Science Community</span>
+            <span>by 404 Found Community</span>
           </div>
           <p className="text-xs text-text-secondary opacity-50">
-            &copy; {new Date().getFullYear()} N8N DS Hub. Licensed under MIT.
+            &copy; {new Date().getFullYear()} 404 Found. Licensed under MIT.
           </p>
         </div>
       </footer>

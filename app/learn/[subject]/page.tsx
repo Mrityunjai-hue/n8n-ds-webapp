@@ -110,26 +110,26 @@ export default function SubjectPage() {
             </Link>
           </div>
 
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-12">
-            <div className="flex items-center gap-5 text-left">
-              <div className={`p-4 rounded-2xl bg-[#0c1220] border ${style.border} ${style.accent} shadow-2xl`}>
-                <subject.icon className="w-9 h-9" />
+          <div className="flex flex-col lg:flex-row justify-between gap-8 mb-12">
+            <div className="flex items-start gap-5 text-left min-w-0 flex-1">
+              <div className={`p-4 rounded-2xl bg-[#0c1220] border ${style.border} ${style.accent} shadow-2xl shrink-0`}>
+                <subject.icon className="w-8 h-8 sm:w-9 sm:h-9" />
               </div>
-              <div>
-                <span className={`text-xs font-mono font-bold uppercase tracking-widest ${style.accent} block mb-1`}>
+              <div className="min-w-0 flex-1">
+                <span className={`text-xs font-mono font-bold uppercase tracking-widest ${style.accent} block mb-1 truncate`}>
                   CURRICULUM MODULE
                 </span>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-white leading-tight">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-white leading-tight break-words">
                   {subject.name}
                 </h1>
-                <p className="text-sm sm:text-base text-text-secondary max-w-xl leading-relaxed mt-1">
+                <p className="text-sm sm:text-base text-text-secondary max-w-xl leading-relaxed mt-2">
                   {subject.description}
                 </p>
               </div>
             </div>
 
             {/* Progress indicators ring & XP bar */}
-            <div className="flex items-center gap-6 bg-bg-surface/20 border border-border p-5 rounded-2xl backdrop-blur-sm shadow-xl shrink-0 self-start lg:self-auto">
+            <div className="flex items-center gap-5 sm:gap-6 bg-bg-surface/20 border border-border p-5 rounded-2xl backdrop-blur-sm shadow-xl shrink-0 w-full sm:w-auto self-start lg:self-auto">
               <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
                 <svg className="w-full h-full transform -rotate-90">
                   <circle
@@ -240,16 +240,18 @@ export default function SubjectPage() {
                             {index + 1}
                           </div>
                           
-                          <div className="space-y-1 min-w-0">
+                          <div className="space-y-1.5 min-w-0 flex-1">
                             <div className="flex flex-wrap items-center gap-2">
-                              <h3 className="font-extrabold text-base text-white truncate">{topic.title}</h3>
+                              <h3 className="font-extrabold text-sm sm:text-base text-white break-words leading-snug">
+                                {topic.title}
+                              </h3>
                               {topic.difficulty && (
-                                <span className="px-2 py-0.5 text-[9px] font-bold rounded-full bg-bg-primary border border-border/60 text-text-secondary">
+                                <span className="px-2 py-0.5 text-[9px] font-bold rounded-full bg-bg-primary border border-border/60 text-text-secondary whitespace-nowrap">
                                   {topic.difficulty}
                                 </span>
                               )}
                             </div>
-                            <p className="text-xs text-text-secondary line-clamp-1 leading-relaxed">
+                            <p className="text-xs text-text-secondary line-clamp-2 sm:line-clamp-1 leading-relaxed">
                               {topic.description}
                             </p>
                           </div>

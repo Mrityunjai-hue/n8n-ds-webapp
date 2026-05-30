@@ -28,6 +28,11 @@ const InteractiveEditor = dynamic(
   { loading: () => <Skeleton className="h-[400px] w-full rounded-modal" />, ssr: false }
 );
 
+const VideoTileGrid = dynamic(
+  () => import('@/components/learn/VideoTileGrid'),
+  { loading: () => <Skeleton className="h-[200px] w-full rounded-modal" />, ssr: false }
+);
+
 const SqlEditor = dynamic(
   () => import('@/components/learn/SqlEditor').then(mod => mod.SqlEditor),
   { loading: () => <Skeleton className="h-[400px] w-full rounded-modal" />, ssr: false }
@@ -47,8 +52,8 @@ import { TopicNotes } from '@/components/learn/TopicNotes';
 import { VideoTile } from '@/components/learn/VideoTile';
 import { ContentSection, ProTip, Warning, KeyPoints } from '@/components/learn/LessonContent';
 import { ComponentsBreakdown } from '@/components/learn/ComponentsBreakdown';
-import { TopicSidebar } from '@/components/learn/TopicSidebar';
 import { getTopicBySlug } from '@/lib/content';
+import { getVideosByTopic } from '@/lib/content/videoLessons';
 import { useRecentStore } from '@/lib/store/useRecentStore';
 import { StayTuned } from '@/components/learn/StayTuned';
 
@@ -56,6 +61,7 @@ import { StayTuned } from '@/components/learn/StayTuned';
 import { QuizSection } from '@/components/learn/QuizSection';
 import { ExamNotes } from '@/components/learn/ExamNotes';
 import { RealWorldSection } from '@/components/learn/RealWorldSection';
+import { ProgressBar } from '@/components/ui/ProgressBar';
 
 export default function TopicPage() {
   const params = useParams();
@@ -158,22 +164,182 @@ export default function TopicPage() {
     }
   };
 
-  return (
-    <div className="flex min-h-[calc(100vh-64px)] bg-bg-primary text-text-primary">
-      {/* Sidebar - Desktop/Mobile */}
-      <div className={`
-        fixed inset-y-0 left-0 z-40 w-72 transform border-r border-border bg-bg-primary transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 pt-16
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:hidden'}
-      `}>
-        <TopicSidebar 
-          subjectName={subject.name} 
-          topics={subject.topics.map(t => ({ id: t.id, title: t.title, slug: t.slug, isCompleted: false }))} 
-          currentTopicId={topic.id}
-          subjectSlug={subjectSlug}
-        />
-      </div>
+  const renderLearnContent = () => (
+    <div className="space-y-12">
+      <div className="space-y-16">
+        {/* What is it */}
+        {topic.sections.what && (
+          <div className="space-y-6">
+            <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary flex items-center gap-2">
+              <span className="w-6 h-6 rounded bg-accent-teal/15 text-accent-teal flex items-center justify-center text-xs font-mono">1</span>
+              What is this?
+            </h2>
+            <ContentSection 
+              title="What is this?" 
+              markdownText={isELI5 ? topic.sections.what.eli5 : topic.sections.what.text}
+            />
+            {topic.sections.what.points && <KeyPoints points={topic.sections.what.points} />}
+          </div>
+        )}
 
-      {/* Sidebar Backdrop - Mobile only */}
+        {/* Why does it exist */}
+        {topic.sections.why && (
+          <div className="space-y-6">
+            <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary flex items-center gap-2">
+              <span className="w-6 h-6 rounded bg-accent-teal/15 text-accent-teal flex items-center justify-center text-xs font-mono">2</span>
+              Why does it exist?
+            </h2>
+            <ContentSection 
+              title="Why does it exist?"
+              markdownText={topic.sections.why.text}
+            />
+            {topic.sections.why.tip && <ProTip>{topic.sections.why.tip}</ProTip>}
+          </div>
+        )}
+
+        {/* Pro Tips / Warning custom sections (if in data keys) */}
+        {topic.sections.proTip && (
+          <div className="space-y-4">
+            <ProTip>{topic.sections.proTip.text}</ProTip>
+          </div>
+        )}
+
+        {topic.sections.warning && (
+          <div className="space-y-4">
+            <Warning>{topic.sections.warning.text}</Warning>
+          </div>
+        )}
+
+        {/* Visual Flow Diagram */}
+        {topic.sections.diagram?.chart && (
+          <div className="space-y-6">
+            <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary flex items-center gap-2">
+              <span className="w-6 h-6 rounded bg-accent-teal/15 text-accent-teal flex items-center justify-center text-xs font-mono">3</span>
+              Visual Flow Diagram
+            </h2>
+            <MermaidDiagram chart={topic.sections.diagram.chart} />
+          </div>
+        )}
+
+        {/* Components Breakdown */}
+        {topic.sections.breakdown?.components && (
+          <div className="space-y-6">
+            <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary flex items-center gap-2">
+              <span className="w-6 h-6 rounded bg-accent-teal/15 text-accent-teal flex items-center justify-center text-xs font-mono">4</span>
+              Key Components
+            </h2>
+            <ComponentsBreakdown items={topic.sections.breakdown.components} />
+          </div>
+        )}
+
+        {/* Interactive Video Resources (existing data-driven tiles) */}
+        {topic.sections.resources?.videoResources && topic.sections.resources.videoResources.length > 0 && (
+          <div className="space-y-6 pt-4">
+            <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary flex items-center gap-2">
+              <span className="w-6 h-6 rounded bg-accent-teal/15 text-accent-teal flex items-center justify-center text-xs font-mono">▶</span>
+              Video Resources
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {topic.sections.resources.videoResources.map((resource, idx) => (
+                <VideoTile key={idx} resource={resource} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Krish Naik Video Lessons ──────────────────────────── */}
+        {(() => {
+          const topicVideos = getVideosByTopic(subjectSlug, topicSlug);
+          if (!topicVideos) return null;
+          return (
+            <VideoTileGrid
+              videos={topicVideos.videos}
+              title="Video Lessons by Krish Naik"
+            />
+          );
+        })()}
+      </div>
+    </div>
+  );
+
+  const renderInteractiveContent = () => (
+    <div className="space-y-8 animate-in fade-in duration-300">
+      {topic.sections.code && (
+        <>
+          <div className="h-[600px] xl:h-[700px] w-full relative">
+            {subjectSlug === 'sql' ? (
+              <SqlEditor 
+                initialQuery={topic.sections.code.code || ''} 
+                breakdown={topic.sections.code.breakdown}
+                hint={topic.sections.code.hint || topic.sections.why?.tip}
+              />
+            ) : (
+              <InteractiveEditor 
+                initialCode={topic.sections.code.code || ''} 
+                breakdown={topic.sections.code.breakdown}
+                hint={topic.sections.code.hint || topic.sections.why?.tip}
+              />
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+
+  const renderPrepContent = () => (
+    <div className="space-y-12 animate-in fade-in duration-300">
+      {/* Exam Notes */}
+      {topic.sections.examNotes?.examNotes && (
+        <div>
+          <ExamNotes notes={topic.sections.examNotes.examNotes} />
+        </div>
+      )}
+
+      {/* Real World Applications */}
+      {topic.sections.realWorld?.realWorld && (
+        <div>
+          <RealWorldSection items={topic.sections.realWorld.realWorld} />
+        </div>
+      )}
+
+      {/* Interview Questions */}
+      {topic.interviewQuestions && topic.interviewQuestions.length > 0 && (
+        <div className="space-y-6">
+          <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
+            <span className="w-6 h-6 rounded bg-accent-purple/15 text-accent-purple flex items-center justify-center text-xs font-mono">❓</span>
+            Interview Prep Q&A
+          </h3>
+          <div className="space-y-6">
+            {topic.interviewQuestions.map((q, i) => (
+              <InterviewQuestionCard key={i} {...q} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  const renderQuizContent = () => (
+    <div className="space-y-6 animate-in fade-in duration-300">
+      {topic.sections.quiz?.quiz && <QuizSection questions={topic.sections.quiz.quiz} />}
+    </div>
+  );
+
+  const currentStepIndex = tabs.findIndex(t => t.id === activeTab);
+  const currentProgress = tabs.length > 0 ? Math.round(((currentStepIndex) / tabs.length) * 100) : 0;
+
+  const handleContinue = () => {
+    if (currentStepIndex < tabs.length - 1) {
+      setActiveTab(tabs[currentStepIndex + 1].id);
+      window.scrollTo(0, 0);
+    } else if (nextTopic) {
+      router.push(`/learn/${subjectSlug}/${nextTopic.slug}`);
+    }
+  };
+
+  return (
+    <div className="flex flex-col lg:flex-row min-h-screen bg-bg-primary text-text-primary">
+      {/* Sidebar Overlay for Mobile */}
       {sidebarOpen && (
         <button 
           className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden w-full h-full cursor-pointer border-none"
@@ -182,322 +348,256 @@ export default function TopicPage() {
         />
       )}
 
-      {/* Main Content Area */}
-      <div className="flex-grow flex flex-col min-w-0">
-        {/* Sticky Header */}
-        <header className="sticky top-16 z-30 border-b border-border bg-bg-primary/80 backdrop-blur-md">
-          <div className="flex h-14 sm:h-16 items-center justify-between px-3 sm:px-6">
-            <div className="flex items-center gap-1 sm:gap-2">
-              <Link 
-                href={`/learn/${subjectSlug}`}
-                className="p-2 hover:bg-bg-surface rounded-lg text-text-secondary hover:text-text-primary transition-colors flex items-center justify-center"
-                title={`Back to ${subject.name}`}
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </Link>
-              <button 
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="p-2 hover:bg-bg-surface rounded-lg text-text-secondary lg:hidden"
-              >
-                <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
-              <div className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold uppercase tracking-widest text-text-secondary">
-                <Link href={`/learn/${subjectSlug}`} className="hover:text-accent-teal transition-colors hidden sm:block">
-                  {subject.name}
-                </Link>
-                <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 hidden sm:block" />
-                <span className="text-text-primary truncate max-w-[140px] sm:max-w-[200px] md:max-w-none">{topic.title}</span>
-              </div>
+      {/* Sidebar: Shows Steps of the Topic */}
+      <div className={`
+        fixed inset-y-0 left-0 z-40 w-72 transform border-r border-border bg-bg-primary transition-transform duration-300 ease-in-out lg:static lg:translate-x-0
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:hidden'}
+      `}>
+         <div className="flex flex-col h-full p-6">
+            {/* Progress Card */}
+            <div className="bg-bg-surface/50 rounded-xl p-4 mb-6">
+               <h3 className="font-bold text-sm mb-2">Your Progress</h3>
+               <div className="flex justify-between text-xs text-text-secondary mb-2">
+                 <span>{currentProgress}% complete</span>
+                 <span>Step {currentStepIndex + 1} of {tabs.length}</span>
+               </div>
+               <ProgressBar progress={currentProgress} />
             </div>
-
-            <div className="flex items-center gap-2 sm:gap-3">
-              <ELI5Toggle isELI5={isELI5} setIsELI5={setIsELI5} />
-              <BookmarkButton topicId={topic.id} />
-            </div>
-          </div>
-        </header>
-
-        {/* Dynamic Navigation Tabs */}
-        <div className="sticky top-[112px] sm:top-[128px] z-20 border-b border-border bg-bg-primary/95 backdrop-blur-sm px-2 sm:px-6">
-          <div className="flex gap-1 sm:gap-2 overflow-x-auto no-scrollbar py-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  style={{ WebkitTapHighlightColor: 'transparent' }}
-                  className={`
-                    flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold rounded-xl border transition-all shrink-0 cursor-pointer
-                    ${isActive 
-                      ? 'border-accent-teal text-accent-teal bg-accent-teal/5 shadow-lg shadow-accent-teal/5' 
-                      : 'border-transparent text-text-secondary hover:text-text-primary hover:bg-bg-surface'}
-                  `}
-                >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span className="hidden sm:inline">{tab.label.split(' ').slice(1).join(' ')}</span>
-                  <span className="sm:hidden">{tab.label.split(' ').slice(1, 2).join('')}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Content Container */}
-        <main className="flex-grow mx-auto max-w-4xl w-full px-4 sm:px-6 py-6 sm:py-10 flex flex-col">
-          {/* Hero/Intro Section */}
-          <div className="mb-8">
-            <div className="flex flex-wrap items-center gap-3 mb-4">
-              {topic.difficulty && (
-                <span className={`px-2.5 py-1 text-xs font-bold rounded-full border ${getDifficultyColor(topic.difficulty)}`}>
-                  {topic.difficulty}
-                </span>
-              )}
-              {topic.estimatedMinutes && (
-                <span className="flex items-center gap-1.5 text-xs text-text-secondary font-mono">
-                  <Clock className="w-3.5 h-3.5" />
-                  {topic.estimatedMinutes} min read
-                </span>
-              )}
-            </div>
-
-            <h1 className="mb-4 text-3xl sm:text-4xl font-display font-bold tracking-tight bg-gradient-to-r from-text-primary to-text-secondary bg-clip-text text-transparent">
-              {topic.title}
-            </h1>
             
-            {/* Concept at a Glance Summary Card */}
-            <div className="p-5 bg-bg-surface/30 border border-border rounded-2xl relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-accent-teal to-accent-purple" />
-              <h3 className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-2">Concept at a Glance</h3>
-              <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
-                {topic.description}
-              </p>
-            </div>
-          </div>
-
-          {/* Main Tab Content */}
-          <div className="flex-grow py-6">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                transition={{ duration: 0.25 }}
-                className="space-y-12"
-              >
-                {/* 1. LEARN TAB */}
-                {activeTab === 'learn' && (
-                  <div className="space-y-16">
-                    {/* What is it */}
-                    {topic.sections.what && (
-                      <div className="space-y-6">
-                        <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary flex items-center gap-2">
-                          <span className="w-6 h-6 rounded bg-accent-teal/15 text-accent-teal flex items-center justify-center text-xs font-mono">1</span>
-                          What is this?
-                        </h2>
-                        <ContentSection title="What is this?">
-                          <div className="space-y-4 text-base">
-                            {(isELI5 ? topic.sections.what.eli5 : topic.sections.what.text)?.split('\n\n').map((paragraph: string, idx: number) => (
-                              <p key={idx} className="leading-relaxed">{paragraph}</p>
-                            ))}
-                          </div>
-                          {topic.sections.what.points && <KeyPoints points={topic.sections.what.points} />}
-                        </ContentSection>
-                      </div>
-                    )}
-
-                    {/* Why does it exist */}
-                    {topic.sections.why && (
-                      <div className="space-y-6">
-                        <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary flex items-center gap-2">
-                          <span className="w-6 h-6 rounded bg-accent-teal/15 text-accent-teal flex items-center justify-center text-xs font-mono">2</span>
-                          Why does it exist?
-                        </h2>
-                        <ContentSection title="Why does it exist?">
-                          <div className="space-y-4 text-base">
-                            {topic.sections.why.text?.split('\n\n').map((paragraph: string, idx: number) => (
-                              <p key={idx} className="leading-relaxed">{paragraph}</p>
-                            ))}
-                          </div>
-                          {topic.sections.why.tip && <ProTip>{topic.sections.why.tip}</ProTip>}
-                        </ContentSection>
-                      </div>
-                    )}
-
-                    {/* Pro Tips / Warning custom sections (if in data keys) */}
-                    {topic.sections.proTip && (
-                      <div className="space-y-4">
-                        <ProTip>{topic.sections.proTip.text}</ProTip>
-                      </div>
-                    )}
-
-                    {topic.sections.warning && (
-                      <div className="space-y-4">
-                        <Warning>{topic.sections.warning.text}</Warning>
-                      </div>
-                    )}
-
-                    {/* Visual Flow Diagram */}
-                    {topic.sections.diagram?.chart && (
-                      <div className="space-y-6">
-                        <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary flex items-center gap-2">
-                          <span className="w-6 h-6 rounded bg-accent-teal/15 text-accent-teal flex items-center justify-center text-xs font-mono">3</span>
-                          Visual Flow Diagram
-                        </h2>
-                        <MermaidDiagram chart={topic.sections.diagram.chart} />
-                      </div>
-                    )}
-
-                    {/* Components Breakdown */}
-                    {topic.sections.breakdown?.components && (
-                      <div className="space-y-6">
-                        <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary flex items-center gap-2">
-                          <span className="w-6 h-6 rounded bg-accent-teal/15 text-accent-teal flex items-center justify-center text-xs font-mono">4</span>
-                          Key Components
-                        </h2>
-                        <ComponentsBreakdown items={topic.sections.breakdown.components} />
-                      </div>
-                    )}
-
-                    {/* Interactive Video Resources */}
-                    {topic.sections.resources?.videoResources && topic.sections.resources.videoResources.length > 0 && (
-                      <div className="space-y-6 pt-4">
-                        <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary flex items-center gap-2">
-                          <span className="w-6 h-6 rounded bg-accent-teal/15 text-accent-teal flex items-center justify-center text-xs font-mono">▶</span>
-                          Video Resources
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {topic.sections.resources.videoResources.map((resource, idx) => (
-                            <VideoTile key={idx} resource={resource} />
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* 2. INTERACTIVE LAB TAB */}
-                {activeTab === 'lab' && topic.sections.code && (
-                  <div className="space-y-8">
-                    <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary flex items-center gap-2">
-                      <span className="w-6 h-6 rounded bg-accent-teal/15 text-accent-teal flex items-center justify-center text-xs font-mono">⚡</span>
-                      Interactive Code Lab
-                    </h2>
-                    <div className="space-y-8">
-                      {subjectSlug === 'sql' ? (
-                        <>
-                          <SqlEditor 
-                            initialQuery={topic.sections.code.code || ''} 
-                            breakdown={topic.sections.code.breakdown}
-                            hint={topic.sections.code.hint || topic.sections.why?.tip}
+            {/* Steps */}
+            <nav className="flex-grow space-y-1">
+              {tabs.map((tab, idx) => {
+                const isActive = activeTab === tab.id;
+                const isCompleted = currentStepIndex > idx;
+                const Icon = tab.icon;
+                return (
+                   <button 
+                     key={tab.id}
+                     onClick={() => setActiveTab(tab.id)}
+                     className={`relative w-full flex items-center gap-3 px-4 py-4 rounded-2xl text-sm transition-all duration-300 group ${!isActive && 'text-text-secondary hover:text-text-primary hover:bg-white/5'}`}
+                   >
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeSidebarTab"
+                          className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#0d1424] to-[#131d30] border border-accent-teal/20 shadow-[0_0_20px_rgba(45,212,191,0.15)] overflow-hidden"
+                          initial={false}
+                          transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                        >
+                          {/* Soothing lava-lamp blobs */}
+                          <motion.div 
+                             className="absolute -left-8 -top-8 w-24 h-24 bg-accent-teal/20 rounded-full blur-2xl"
+                             animate={{ x: [0, 40, 0], y: [0, 20, 0] }}
+                             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                           />
-                        </>
-                      ) : (
-                        <InteractiveEditor 
-                          initialCode={topic.sections.code.code || ''} 
-                          breakdown={topic.sections.code.breakdown}
-                          hint={topic.sections.code.hint || topic.sections.why?.tip}
-                        />
+                          <motion.div 
+                             className="absolute -right-8 -bottom-8 w-24 h-24 bg-accent-purple/20 rounded-full blur-2xl"
+                             animate={{ x: [0, -40, 0], y: [0, -20, 0] }}
+                             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                          />
+                        </motion.div>
                       )}
-                    </div>
-                  </div>
-                )}
-
-                {/* 3. EXAM & INTERVIEW TAB */}
-                {activeTab === 'prep' && (
-                  <div className="space-y-12">
-                    {/* Exam Notes */}
-                    {topic.sections.examNotes?.examNotes && (
-                      <div>
-                        <ExamNotes notes={topic.sections.examNotes.examNotes} />
+                      
+                      <div className="relative z-10 flex items-center gap-3 w-full">
+                        {isCompleted && !isActive ? (
+                          <CheckCircle className="w-4 h-4 shrink-0 text-accent-teal" />
+                        ) : (
+                          <Icon className={`w-4 h-4 shrink-0 transition-all duration-500 ${isActive ? 'text-accent-teal scale-110 drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]' : 'group-hover:scale-110'}`} />
+                        )}
+                        <span className={`transition-all duration-300 ${isActive ? 'text-white font-extrabold tracking-wide' : ''}`}>
+                          {tab.label.split(' ').slice(1).join(' ')}
+                        </span>
                       </div>
-                    )}
+                   </button>
+                )
+              })}
+            </nav>
 
-                    {/* Real World Applications */}
-                    {topic.sections.realWorld?.realWorld && (
-                      <div>
-                        <RealWorldSection items={topic.sections.realWorld.realWorld} />
-                      </div>
-                    )}
+            <div className="mt-auto pt-6 border-t border-border flex items-center text-xs text-text-secondary font-mono">
+               <Clock className="w-4 h-4 mr-2" />
+               About {topic.estimatedMinutes} min
+            </div>
+         </div>
+      </div>
+      
+      {/* Main Area */}
+      <div className="flex-grow flex flex-col min-w-0 min-h-screen">
+         {/* Top bar */}
+         <header className="sticky top-0 z-20 bg-bg-primary/95 backdrop-blur-md px-4 sm:px-6 py-4 flex items-center justify-between border-b border-border">
+            <div className="flex items-center gap-3 text-sm text-text-secondary">
+               <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden mr-2 p-1 hover:bg-bg-surface rounded-lg">
+                 <Menu className="w-5 h-5 text-text-primary" />
+               </button>
+               <Link href={`/learn/${subjectSlug}`} className="hover:text-accent-teal transition-colors flex items-center font-medium">
+                 <ChevronLeft className="w-4 h-4 mr-1" />
+                 <span className="hidden sm:inline">Back to Course</span>
+               </Link>
+               <span className="hidden sm:inline text-border">|</span>
+               <span className="hidden md:inline text-xs font-mono uppercase tracking-widest truncate max-w-[300px]">
+                 Courses &gt; {subject.name} &gt; <span className="text-text-primary font-bold">{topic.title}</span>
+               </span>
+            </div>
+            <div className="flex items-center gap-3">
+               <ELI5Toggle isELI5={isELI5} setIsELI5={setIsELI5} />
+               <BookmarkButton topicId={topic.id} />
+               {nextTopic ? (
+                 <Link 
+                   href={`/learn/${subjectSlug}/${nextTopic.slug}`}
+                   className="hidden sm:flex items-center gap-1 text-sm font-bold text-text-secondary hover:text-text-primary border border-border hover:bg-bg-surface transition-colors px-3 py-1.5 rounded-lg"
+                 >
+                   Skip Lesson <ChevronRight className="w-4 h-4" /> 
+                 </Link>
+               ) : (
+                 <button 
+                   disabled
+                   className="hidden sm:flex items-center gap-1 text-sm font-bold text-text-secondary border border-border px-3 py-1.5 rounded-lg opacity-50 cursor-not-allowed"
+                 >
+                   Skip Lesson <ChevronRight className="w-4 h-4" /> 
+                 </button>
+               )}
+            </div>
+         </header>
 
-                    {/* Interview Questions */}
-                    {topic.interviewQuestions && topic.interviewQuestions.length > 0 && (
-                      <div className="space-y-6">
-                        <h3 className="text-lg font-bold text-text-primary flex items-center gap-2">
-                          <span className="w-6 h-6 rounded bg-accent-purple/15 text-accent-purple flex items-center justify-center text-xs font-mono">❓</span>
-                          Interview Prep Q&A
-                        </h3>
-                        <div className="space-y-6">
-                          {topic.interviewQuestions.map((q, i) => (
-                            <InterviewQuestionCard key={i} {...q} />
-                          ))}
-                        </div>
-                      </div>
-                    )}
+         <main className="flex-grow w-full max-w-5xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
+            {/* Header Area */}
+            <div className="mb-8 space-y-4">
+               <div className="flex flex-wrap items-center gap-3">
+                 <span className="px-2.5 py-1 text-xs font-bold uppercase tracking-widest rounded-lg bg-bg-surface text-text-secondary border border-border flex items-center gap-1.5">
+                   Lesson {currentTopicIndex + 1}
+                 </span>
+                 {topic.difficulty && (
+                   <span className={`px-2.5 py-1 text-xs font-bold rounded-lg border ${getDifficultyColor(topic.difficulty)}`}>
+                     {topic.difficulty}
+                   </span>
+                 )}
+               </div>
+
+               <h1 className="text-3xl sm:text-5xl font-display font-bold text-text-primary tracking-tight break-words">
+                 {topic.title}
+               </h1>
+            </div>
+
+            {/* Content Card Wrapper */}
+            <div className="bg-bg-surface/20 border border-border rounded-2xl sm:rounded-3xl p-6 sm:p-10 relative overflow-hidden shadow-xl shadow-black/5">
+               {/* Decorative Gradient Line */}
+               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent-teal via-accent-purple to-accent-amber" />
+               
+               {/* Tab Header inside the Card */}
+               <div className="flex items-center gap-4 mb-8 pb-8 border-b border-border/50">
+                  <div className="w-14 h-14 rounded-2xl bg-bg-surface border border-border text-accent-teal flex items-center justify-center shrink-0 shadow-inner">
+                     {React.createElement(tabs.find(t => t.id === activeTab)?.icon || BookOpen, { className: "w-6 h-6" })}
                   </div>
-                )}
-
-                {/* 4. PRACTICE QUIZ TAB */}
-                {activeTab === 'quiz' && topic.sections.quiz?.quiz && (
-                  <div className="space-y-6">
-                    <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary flex items-center gap-2">
-                      <span className="w-6 h-6 rounded bg-accent-teal/15 text-accent-teal flex items-center justify-center text-xs font-mono">🧠</span>
-                      Topic Quiz
-                    </h2>
-                    <QuizSection questions={topic.sections.quiz.quiz} />
+                  <div>
+                     <h2 className="text-xl sm:text-2xl font-bold font-display text-text-primary">
+                       {tabs.find(t => t.id === activeTab)?.label.split(' ').slice(1).join(' ')}
+                     </h2>
+                     <p className="text-text-secondary text-sm mt-1">Take your time to understand the concept</p>
                   </div>
-                )}
+               </div>
 
-                {/* Topic Completed / Mark Complete Button (shows in all tabs except maybe Quiz where they finish quiz) */}
-                <div className="pt-10 border-t border-border/40 mt-12 space-y-12">
-                  <MarkCompleteButton 
-                    topicId={topic.id}
-                    nextTopicHref={nextTopic ? `/learn/${subjectSlug}/${nextTopic.slug}` : undefined}
-                    nextTopicTitle={nextTopic?.title}
-                  />
-                  <TopicNotes />
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+               {/* Render actual content block based on activeTab */}
+               <div className="min-h-[400px]">
+                 <AnimatePresence mode="wait">
+                   <motion.div
+                     key={activeTab}
+                     initial={{ opacity: 0, y: 10 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     exit={{ opacity: 0, y: -10 }}
+                     transition={{ duration: 0.2 }}
+                   >
+                     {activeTab === 'learn' && renderLearnContent()}
+                     {activeTab === 'lab' && renderInteractiveContent()}
+                     {activeTab === 'prep' && renderPrepContent()}
+                     {activeTab === 'quiz' && renderQuizContent()}
+                   </motion.div>
+                 </AnimatePresence>
+               </div>
 
-          {/* Footer Navigation */}
-          <footer className="mt-auto pt-8 border-t border-border flex items-center justify-between gap-4">
-            <button 
-              onClick={() => prevTopic && router.push(`/learn/${subjectSlug}/${prevTopic.slug}`)}
-              disabled={!prevTopic}
-              className={`
-                flex items-center gap-3 px-6 py-3 rounded-xl border border-border font-bold transition-all cursor-pointer
-                ${!prevTopic ? 'opacity-30 cursor-not-allowed' : 'hover:bg-bg-surface hover:border-accent-teal'}
-              `}
-            >
-              <ChevronLeft className="w-5 h-5" />
-              <div className="text-left hidden sm:block">
-                <div className="text-[10px] uppercase tracking-widest text-text-secondary">Previous</div>
-                <div className="text-sm truncate max-w-[150px]">{prevTopic?.title}</div>
-              </div>
-            </button>
+               {/* Continue Button */}
+               <div className="mt-12 pt-8 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <p className="text-sm text-text-secondary">
+                    {currentStepIndex < tabs.length - 1 ? 'Ready for the next step?' : 'Great job completing this lesson!'}
+                  </p>
+                  <motion.button 
+                    onClick={handleContinue} 
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full sm:w-auto relative group overflow-hidden rounded-2xl p-[2px] transition-all shadow-[0_0_30px_rgba(45,212,191,0.1)] hover:shadow-[0_0_50px_rgba(139,92,246,0.2)]"
+                  >
+                     {/* Spinning comet tail 1 */}
+                     <motion.div 
+                       className="absolute inset-[-100%] w-[300%] h-[300%] bg-[conic-gradient(from_0deg,transparent_70%,#2dd4bf_100%)]"
+                       animate={{ rotate: 360 }}
+                       transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                     />
+                     {/* Spinning comet tail 2 */}
+                     <motion.div 
+                       className="absolute inset-[-100%] w-[300%] h-[300%] bg-[conic-gradient(from_180deg,transparent_70%,#a78bfa_100%)]"
+                       animate={{ rotate: 360 }}
+                       transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                     />
+                     
+                     {/* Inner core */}
+                     <div className="relative flex items-center justify-center gap-3 bg-[#050b14] hover:bg-[#08101f] transition-colors duration-500 text-white font-extrabold py-4 px-10 rounded-2xl w-full h-full">
+                       <span className="bg-gradient-to-r from-white to-[#cbd5e1] bg-clip-text text-transparent text-base">
+                         {currentStepIndex < tabs.length - 1 ? 'Continue Journey' : 'Complete Topic'}
+                       </span> 
+                       <motion.div
+                         animate={{ x: [0, 6, 0] }}
+                         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                       >
+                         <ChevronRight className="w-5 h-5 text-accent-teal" />
+                       </motion.div>
+                     </div>
+                  </motion.button>
+               </div>
+            </div>
 
-            <button 
-              onClick={() => nextTopic && router.push(`/learn/${subjectSlug}/${nextTopic.slug}`)}
-              disabled={!nextTopic}
-              className={`
-                flex items-center gap-3 px-6 py-3 rounded-xl border border-border font-bold transition-all cursor-pointer
-                ${!nextTopic ? 'opacity-30 cursor-not-allowed' : 'hover:bg-bg-surface hover:border-accent-teal'}
-              `}
-            >
-              <div className="text-right hidden sm:block">
-                <div className="text-[10px] uppercase tracking-widest text-text-secondary">Next</div>
-                <div className="text-sm truncate max-w-[150px]">{nextTopic?.title}</div>
-              </div>
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </footer>
-        </main>
+            {/* Topic Complete Action (Only show at the very end of topic) */}
+            {currentStepIndex === tabs.length - 1 && (
+               <div className="mt-12">
+                 <MarkCompleteButton 
+                   topicId={topic.id}
+                   nextTopicHref={nextTopic ? `/learn/${subjectSlug}/${nextTopic.slug}` : undefined}
+                   nextTopicTitle={nextTopic?.title}
+                 />
+               </div>
+            )}
+
+            <div className="flex justify-between items-center mt-12 pt-8 border-t border-border gap-4">
+               <Link 
+                  href={`/learn/${subjectSlug}`}
+                  className="px-6 py-4 rounded-xl border border-border hover:bg-bg-surface hover:border-accent-teal/50 transition-colors flex flex-col items-start gap-1 w-[48%]"
+               >
+                  <span className="text-[10px] sm:text-xs text-text-secondary uppercase tracking-widest font-bold flex items-center gap-1">
+                    <ChevronLeft className="w-3 h-3"/> Back to Course
+                  </span>
+                  <span className="font-bold text-sm sm:text-base truncate w-full text-left text-text-primary">Course Overview</span>
+               </Link>
+               
+               {nextTopic ? (
+                 <Link 
+                    href={`/learn/${subjectSlug}/${nextTopic.slug}`}
+                    className="px-6 py-4 rounded-xl border border-border transition-colors flex flex-col items-end gap-1 w-[48%] hover:bg-bg-surface hover:border-accent-teal/50"
+                 >
+                    <span className="text-[10px] sm:text-xs text-text-secondary uppercase tracking-widest font-bold flex items-center gap-1">
+                      Next <ChevronRight className="w-3 h-3"/>
+                    </span>
+                    <span className="font-bold text-sm sm:text-base line-clamp-2 sm:truncate w-full text-right text-text-primary break-words">{nextTopic.title}</span>
+                 </Link>
+               ) : (
+                 <button 
+                    disabled
+                    className="px-6 py-4 rounded-xl border border-border transition-colors flex flex-col items-end gap-1 w-[48%] opacity-50 cursor-not-allowed"
+                 >
+                    <span className="text-[10px] sm:text-xs text-text-secondary uppercase tracking-widest font-bold flex items-center gap-1">
+                      Next <ChevronRight className="w-3 h-3"/>
+                    </span>
+                    <span className="font-bold text-sm sm:text-base line-clamp-2 sm:truncate w-full text-right text-text-primary break-words">Course Complete</span>
+                 </button>
+               )}
+            </div>
+         </main>
       </div>
     </div>
   );
 }
-

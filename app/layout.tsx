@@ -28,9 +28,9 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'N8N Data Science Community Learning Hub',
-  description: 'Free. Structured. Built by students, for students. From SQL to Agentic AI.',
-  keywords: ['Data Science', 'Learning', 'SQL', 'Python', 'Machine Learning', 'AI', 'N8N'],
+  title: '404 Found — Data Science Learning Hub',
+  description: 'Free. Structured. We were not found — until now. From SQL to Agentic AI.',
+  keywords: ['Data Science', 'Learning', 'SQL', 'Python', 'Machine Learning', 'AI', '404 Found'],
 };
 
 export const viewport = {

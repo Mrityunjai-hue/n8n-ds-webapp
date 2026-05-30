@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { QuizQuestion } from '@/lib/types/content';
 import { Check, X, HelpCircle, RefreshCw, Award, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CosmicButton } from '../ui/CosmicButton';
 
 interface QuizSectionProps {
   questions: QuizQuestion[];
@@ -103,15 +104,22 @@ export const QuizSection: React.FC<QuizSectionProps> = ({ questions }) => {
                 }
 
                 return (
-                  <button
+                  <motion.button
                     key={idx}
                     onClick={() => handleOptionClick(idx)}
                     disabled={isAnswered}
+                    animate={
+                      isAnswered && idx === currentQuestion.correctIndex 
+                        ? { scale: [1, 1.02, 1], transition: { duration: 0.3 } }
+                        : isAnswered && idx === selectedIdx && idx !== currentQuestion.correctIndex
+                        ? { x: [-5, 5, -5, 5, 0], transition: { duration: 0.3 } }
+                        : {}
+                    }
                     className={`w-full flex items-center justify-between p-4 border rounded-xl transition-all duration-200 text-left text-sm ${btnStyle}`}
                   >
                     <span>{option}</span>
                     {icon}
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
@@ -135,13 +143,13 @@ export const QuizSection: React.FC<QuizSectionProps> = ({ questions }) => {
             {/* Next / Submit Button */}
             {isAnswered && (
               <div className="flex justify-end pt-2">
-                <button
+                <CosmicButton
                   onClick={handleNext}
-                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-accent-teal to-accent-purple text-bg-primary rounded-xl font-bold hover:opacity-90 transition-opacity"
+                  size="md"
+                  icon={<ArrowRight className="w-5 h-5 text-[#38bdf8]" />}
                 >
-                  <span>{currentIdx < questions.length - 1 ? 'Next Question' : 'View Results'}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                  {currentIdx < questions.length - 1 ? 'Next Question' : 'View Results'}
+                </CosmicButton>
               </div>
             )}
           </motion.div>

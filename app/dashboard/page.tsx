@@ -124,7 +124,9 @@ export default function DashboardPage() {
           </div>
           <h1 className="text-3xl font-display font-bold text-text-primary">Access Restricted</h1>
           <p className="text-text-secondary text-sm">Please sign in to access your personal AI learning command center.</p>
-          <Button onClick={() => router.push('/')} className="w-full py-3">Return Home</Button>
+          <Link href="/">
+            <Button className="w-full py-3">Return Home</Button>
+          </Link>
         </div>
       </div>
     );
@@ -295,11 +297,11 @@ export default function DashboardPage() {
                 {user.displayName?.[0] || 'S'}
               </div>
             </div>
-            <div>
-              <h1 className="text-3xl lg:text-4xl font-display font-bold tracking-tight">
-                {greeting}, <span className="text-accent-teal">{user.displayName?.split(' ')[0] || 'Student'}</span>!
+            <div className="min-w-0 flex-1">
+              <h1 className="text-3xl lg:text-4xl font-display font-bold tracking-tight break-words">
+                {greeting}, <span className="text-accent-teal inline-block">{user.displayName?.split(' ')[0] || 'Student'}</span>!
               </h1>
-              <p className="text-text-secondary mt-1">Learning Operating System is online. Ready to build skills?</p>
+              <p className="text-text-secondary mt-1 break-words">Learning Operating System is online. Ready to build skills?</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -358,8 +360,8 @@ export default function DashboardPage() {
                       <span className="text-xs font-bold text-text-secondary uppercase tracking-wider">{recommendedSubject?.name}</span>
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold group-hover:text-accent-teal transition-colors duration-200">{recommendedTopic.title}</h3>
-                      <p className="text-text-secondary text-sm max-w-md mt-2 leading-relaxed">{recommendedTopic.description}</p>
+                      <h3 className="text-2xl font-bold group-hover:text-accent-teal transition-colors duration-200 break-words">{recommendedTopic.title}</h3>
+                      <p className="text-text-secondary text-sm max-w-md mt-2 leading-relaxed break-words">{recommendedTopic.description}</p>
                     </div>
                     <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
                       <Link href={`/learn/${recommendedSubject?.slug}/${recommendedTopic.slug}`}>
@@ -457,7 +459,7 @@ export default function DashboardPage() {
                   const Icon = subjectIconMap[subject.id] || BookOpen;
 
                   return (
-                    <div key={subject.id} onClick={() => router.push(`/learn/${subject.slug}`)}>
+                    <Link key={subject.id} href={`/learn/${subject.slug}`} className="block">
                       <Card className={`p-5 flex items-center justify-between group transition-all duration-300 cursor-pointer bg-bg-surface/30 backdrop-blur-sm border ${colors.border}`}>
                         <div className="flex items-center gap-4">
                           <div className={`p-3 rounded-xl border border-transparent transition-all duration-300 ${colors.text} ${colors.bg} group-hover:scale-105`}>
@@ -499,7 +501,7 @@ export default function DashboardPage() {
                           </div>
                         </div>
                       </Card>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>
@@ -525,7 +527,7 @@ export default function DashboardPage() {
                     // Try to find subject details
                     let topicSubject = allSubjects.find(s => s.topics.some(t => t.id === topic.id));
                     return (
-                      <div key={topic.id} onClick={() => router.push(`/learn/${topicSubject?.slug || 'sql'}/${topic.slug}`)}>
+                      <Link key={topic.id} href={`/learn/${topicSubject?.slug || 'sql'}/${topic.slug}`} className="block">
                         <Card className="p-4 flex items-center justify-between group cursor-pointer hover:border-accent-teal/40 bg-bg-surface/30 backdrop-blur-sm border-border/40 transition-all duration-300">
                           <div className="flex items-center gap-3.5 min-w-0">
                             <div className="w-9 h-9 rounded-lg bg-accent-amber/10 flex items-center justify-center text-accent-amber border border-accent-amber/20 shrink-0">
@@ -538,7 +540,7 @@ export default function DashboardPage() {
                           </div>
                           <ChevronRight className="w-4 h-4 text-text-secondary/40 group-hover:text-accent-teal transition-colors shrink-0" />
                         </Card>
-                      </div>
+                      </Link>
                     );
                   })
                 ) : (

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import { usePyodide } from '@/lib/hooks/usePyodide';
 import { Button } from '../ui/Button';
+import { CosmicButton } from '../ui/CosmicButton';
 import { 
   Play, 
   RotateCcw, 
@@ -146,17 +147,16 @@ export const InteractiveEditor: React.FC<InteractiveEditorProps> = ({
             <RotateCcw className="w-3 h-3" /> Reset
           </Button>
           
-          <Button 
-            variant="primary" 
+          <CosmicButton 
             size="sm" 
             onClick={handleRun}
             isLoading={isRunning}
             disabled={isPyodideLoading}
-            className="h-8 px-4 text-xs gap-1.5 bg-gradient-to-r from-accent-teal to-accent-purple border-none shadow-md shadow-accent-teal/10 hover:opacity-95"
+            className="h-8"
+            icon={<Play className="w-3 h-3 fill-current text-accent-teal" />}
           >
-            <Play className="w-3 h-3 fill-current text-text-inverse" /> 
-            <span className="text-text-inverse">Run Code</span>
-          </Button>
+            Run Code
+          </CosmicButton>
         </div>
       </div>
 

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
 import { CheckCircle, ArrowRight, PartyPopper } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { CosmicButton } from '../ui/CosmicButton';
 import { useProgressStore } from '@/lib/store/useProgressStore';
 import { useUserStore } from '@/lib/store/useUserStore';
 import { saveTopicCompletion } from '@/lib/firebase/db';
@@ -78,14 +79,14 @@ export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({
   return (
     <div className="w-full">
       {!isCompleted ? (
-        <Button 
+        <CosmicButton 
           size="lg" 
-          className="w-full py-8 text-xl gap-4 group"
+          className="w-full"
           onClick={handleComplete}
+          icon={<CheckCircle className="w-6 h-6 text-[#38bdf8]" />}
         >
-          <CheckCircle className="w-6 h-6 group-hover:scale-125 transition-transform" />
           Mark Topic as Complete
-        </Button>
+        </CosmicButton>
       ) : (
         <div className="space-y-6 animate-scale-up">
           <div className="p-8 bg-accent-teal/10 border border-accent-teal/20 rounded-modal text-center">
@@ -98,14 +99,13 @@ export const MarkCompleteButton: React.FC<MarkCompleteButtonProps> = ({
 
           {nextTopicHref && (
             <a href={nextTopicHref} className="block w-full">
-              <Button 
-                variant="secondary" 
+              <CosmicButton 
                 size="lg" 
-                className="w-full py-6 text-lg gap-4 group hover:border-accent-teal"
+                className="w-full"
+                icon={<ArrowRight className="w-5 h-5 text-[#38bdf8]" />}
               >
-                <span>Up Next: <span className="text-text-primary">{nextTopicTitle}</span></span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-              </Button>
+                Up Next: {nextTopicTitle}
+              </CosmicButton>
             </a>
           )}
         </div>

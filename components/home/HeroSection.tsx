@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Code2, Database, Brain, Sparkles, Terminal, Play, CheckCircle } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { CosmicButton } from '../ui/CosmicButton';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TYPING_WORDS = [
@@ -255,10 +256,9 @@ export const HeroSection = () => {
             {/* Main Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center sm:items-start">
               <Link href="/learn/sql/intro" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto px-6 sm:px-8 gap-2 bg-gradient-to-r from-accent-teal to-accent-purple border-none text-text-inverse font-extrabold hover:opacity-90 transition-opacity">
+                <CosmicButton icon={<ArrowRight className="w-5 h-5 text-[#38bdf8]" />}>
                   Start Interactive Journey
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
+                </CosmicButton>
               </Link>
               <Link href="/roadmap" className="w-full sm:w-auto">
                 <button className="w-full sm:w-auto px-6 py-3 border border-border-subtle hover:border-border-default rounded-xl font-bold text-sm text-text-secondary hover:text-text-primary transition-all bg-bg-surface/20 backdrop-blur-sm cursor-pointer">

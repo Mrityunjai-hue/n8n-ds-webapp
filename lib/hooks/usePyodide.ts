@@ -79,6 +79,7 @@ export const usePyodide = () => {
       if (code.includes('import numpy') || code.includes('import  numpy')) packages.push('numpy');
       if (code.includes('import matplotlib') || code.includes('import  matplotlib')) packages.push('matplotlib');
       if (code.includes('import sklearn') || code.includes('from sklearn')) packages.push('scikit-learn');
+      if (code.includes('import scipy') || code.includes('from scipy')) packages.push('scipy');
       
       if (packages.length > 0) {
         setIsLoading(true);
@@ -87,12 +88,26 @@ export const usePyodide = () => {
       }
 
       // Check for unsupported native libraries
-      const unsupported = ['chromadb', 'google.generativeai', 'tensorflow', 'torch', 'xgboost', 'sentence_transformers'];
-      const foundUnsupported = unsupported.find(pkg => code.includes(`import ${pkg}`) || code.includes(`from ${pkg}`));
+      const unsupportedMap: Record<string, string> = {
+        'chromadb': 'chromadb requires native C++ bindings and cannot run in the browser sandbox.',
+        'google.generativeai': 'Google Generative AI requires network API access, which is restricted in the browser sandbox.',
+        'tensorflow': 'TensorFlow requires native C++ bindings. Use TensorFlow.js for browser-based ML.',
+        'torch': 'PyTorch requires native CUDA/C++ bindings and cannot run in the WASM browser sandbox.',
+        'xgboost': 'XGBoost is not yet available in Pyodide\'s WASM package registry. It runs perfectly in a standard Python environment.',
+        'sentence_transformers': 'sentence-transformers requires PyTorch and model downloads, which are not supported in the browser sandbox.',
+        'gensim': 'Gensim (Word2Vec) requires native C extensions and large model files that cannot be loaded in the browser sandbox.',
+        'mlflow': 'MLflow requires a running server and filesystem access, which are not available in the browser sandbox.',
+        'bentoml': 'BentoML is a server-side model serving framework and cannot run in the browser sandbox.',
+        'nltk': 'NLTK corpus downloads (nltk.download) require network access to the NLTK data server, which is blocked in the browser sandbox.',
+      };
+
+      const foundUnsupported = Object.keys(unsupportedMap).find(
+        pkg => code.includes(`import ${pkg}`) || code.includes(`from ${pkg}`)
+      );
       
       if (foundUnsupported) {
         return {
-          output: `[Simulator Note]\nThe library '${foundUnsupported}' requires native C/C++ bindings or network access, which cannot be executed directly in this browser-based WASM sandbox.\n\nHowever, the syntax is valid and would execute successfully in a standard Python environment!`,
+          output: `[Browser Sandbox Note]\n${unsupportedMap[foundUnsupported]}\n\nThis code is syntactically correct and will run perfectly in a local Python environment (e.g., after running: pip install ${foundUnsupported})`,
           error: null
         };
       }

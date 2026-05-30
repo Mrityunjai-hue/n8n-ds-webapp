@@ -107,15 +107,28 @@ export const RoadmapGraph: React.FC = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Set initial scale/pan for mobile
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setScale(0.6); // Smaller scale for mobile
+      setPan({ x: window.innerWidth / 2 - 80, y: 150 }); // Center the first node
+    }
+  }, []);
+
   // Zoom limits
-  const minZoom = 0.5;
+  const minZoom = 0.3;
   const maxZoom = 2;
 
   const handleZoomIn = () => setScale(s => Math.min(maxZoom, s + 0.15));
   const handleZoomOut = () => setScale(s => Math.max(minZoom, s - 0.15));
   const handleReset = () => {
-    setScale(0.85);
-    setPan({ x: 30, y: 50 });
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setScale(0.6);
+      setPan({ x: window.innerWidth / 2 - 80, y: 150 });
+    } else {
+      setScale(0.85);
+      setPan({ x: 30, y: 50 });
+    }
   };
 
   // Drag-to-pan handlers
@@ -276,8 +289,7 @@ export const RoadmapGraph: React.FC = () => {
         <svg
           width="100%"
           height="100%"
-          viewBox="0 0 1500 500"
-          className="w-full h-full"
+          className="w-full h-full touch-none"
         >
           <g transform={`translate(${pan.x}, ${pan.y}) scale(${scale})`}>
             {/* 1. Connection lines (rendered below nodes) */}

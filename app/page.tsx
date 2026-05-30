@@ -5,6 +5,7 @@ import { HeroSection } from '@/components/home/HeroSection';
 import { StatsBar } from '@/components/home/StatsBar';
 import { RoadmapGraph } from '@/components/home/RoadmapGraph';
 import { SubjectGrid } from '@/components/home/SubjectGrid';
+import { GlitchIntro } from '@/components/home/GlitchIntro';
 import { 
   Compass, 
   Cpu, 
@@ -86,6 +87,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col bg-bg-base">
+      {/* Cinematic 404 Not Found → 404 Found intro — plays once, then unmounts */}
+      <GlitchIntro />
+
       {/* 1. Hero Section */}
       <HeroSection />
       

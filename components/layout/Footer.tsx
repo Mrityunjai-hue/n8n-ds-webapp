@@ -8,11 +8,11 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 rounded-lg bg-accent-teal flex items-center justify-center text-white font-bold">
-                N
+              <div className="px-2 h-8 min-w-[2rem] rounded-lg bg-accent-teal flex items-center justify-center text-white font-bold font-mono text-[11px] tracking-tight">
+                404
               </div>
               <span className="font-display font-bold text-xl tracking-tight">
-                N8N <span className="text-accent-teal">DS Hub</span>
+                404 <span className="text-accent-teal">Found</span>
               </span>
             </Link>
             <p className="text-text-secondary max-w-sm mb-6 leading-relaxed">
@@ -51,7 +51,7 @@ export const Footer = () => {
         </div>
 
         <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-text-secondary">
-          <p>© {new Date().getFullYear()} N8N Data Science Community. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} 404 Found — Data Science Hub. All rights reserved.</p>
           <div className="flex gap-8">
             <span className="text-text-secondary/40 cursor-default">Privacy Policy</span>
             <span className="text-text-secondary/40 cursor-default">Terms of Service</span>

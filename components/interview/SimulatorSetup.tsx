@@ -2,6 +2,8 @@
 
 import { useInterviewStore } from '@/lib/store/useInterviewStore';
 import { subjects } from '@/lib/content/subjects';
+import { CosmicButton } from '../ui/CosmicButton';
+import { ArrowRight } from 'lucide-react';
 
 export default function SimulatorSetup() {
   const { config, setConfig, startSession } = useInterviewStore();
@@ -90,12 +92,14 @@ export default function SimulatorSetup() {
         </div>
       </label>
 
-      <button
+      <CosmicButton
         onClick={startSession}
-        className="w-full py-4 bg-gradient-to-r from-accent-teal to-accent-purple text-text-inverse font-extrabold text-base rounded-2xl hover:opacity-90 transition-opacity border-none cursor-pointer shadow-lg shadow-accent-teal/20"
+        size="lg"
+        className="w-full"
+        icon={<ArrowRight className="w-5 h-5 text-[#38bdf8]" />}
       >
-        Start Interview →
-      </button>
+        Start Interview
+      </CosmicButton>
 
       <p className="text-xs text-text-secondary text-center mt-4">
         AI evaluation powered by Gemini · Results saved locally

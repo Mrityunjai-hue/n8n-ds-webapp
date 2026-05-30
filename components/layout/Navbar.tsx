@@ -17,6 +17,7 @@ const navLinks = [
   { name: 'Roadmap', href: '/roadmap' },
   { name: 'Projects', href: '/projects' },
   { name: 'Interview', href: '/interview' },
+  { name: 'Videos', href: '/videos' },
   { name: 'About', href: '/about' },
 ];
 
@@ -67,11 +68,11 @@ export const Navbar = () => {
         {/* Logo */}
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2 group" aria-label="Home">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-accent-teal to-accent-purple flex items-center justify-center text-white font-extrabold text-xl group-hover:rotate-12 transition-transform">
-              N
+            <div className="px-2 h-8 min-w-[2rem] rounded-lg bg-gradient-to-tr from-accent-teal to-accent-purple flex items-center justify-center text-white font-extrabold text-[11px] group-hover:rotate-12 transition-transform font-mono tracking-tight">
+              404
             </div>
             <span className="font-display font-extrabold text-xl tracking-tight text-text-primary hidden sm:block">
-              N8N <span className="bg-gradient-to-r from-accent-teal to-accent-purple bg-clip-text text-transparent">DS OS</span>
+              404 <span className="bg-gradient-to-r from-accent-teal to-accent-purple bg-clip-text text-transparent">Found</span>
             </span>
           </Link>
 
@@ -170,13 +171,13 @@ export const Navbar = () => {
           <DarkModeToggle />
 
           {user ? (
-            <button
-              onClick={() => router.push('/dashboard')}
+            <Link
+              href="/dashboard"
               className="w-10 h-10 rounded-xl bg-gradient-to-tr from-accent-teal to-accent-purple flex items-center justify-center text-white font-bold text-sm hover:ring-2 hover:ring-accent-teal/50 transition-all cursor-pointer"
               aria-label="Go to Dashboard"
             >
               {user.displayName?.[0]?.toUpperCase() || <User className="w-5 h-5" />}
-            </button>
+            </Link>
           ) : (
             <Button variant="primary" size="sm" onClick={() => openModal('login')} className="rounded-xl px-5 font-bold">
               Sign In
@@ -282,12 +283,13 @@ export const Navbar = () => {
               </div>
             )}
             {user ? (
-              <button
-                className="w-full py-4 rounded-2xl bg-bg-surface border border-border font-bold text-text-primary"
-                onClick={() => { setIsOpen(false); router.push('/dashboard'); }}
+              <Link
+                href="/dashboard"
+                className="w-full py-4 rounded-2xl bg-bg-surface border border-border font-bold text-text-primary text-center block"
+                onClick={() => setIsOpen(false)}
               >
                 Go to Dashboard
-              </button>
+              </Link>
             ) : (
               <button
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-accent-teal to-accent-purple font-bold text-text-inverse border-none"

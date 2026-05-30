@@ -23,13 +23,13 @@ function initMermaid() {
     startOnLoad: false,
     theme: 'base',
     themeVariables: {
-      primaryColor: '#1E293B',
-      primaryTextColor: '#F1F5F9',
-      primaryBorderColor: '#2DD4BF',
-      lineColor: '#2DD4BF',
-      secondaryColor: '#0F172A',
-      tertiaryColor: '#0F172A',
-      edgeLabelBackground: '#0F172A',
+      primaryColor: '#FAF9F6',
+      primaryTextColor: '#1C1917',
+      primaryBorderColor: '#A8A29E',
+      lineColor: '#44403C',
+      secondaryColor: '#F5F5F4',
+      tertiaryColor: '#E7E5E4',
+      edgeLabelBackground: '#FAF9F6',
       fontSize: '14px',
       fontFamily: 'Inter, ui-sans-serif, sans-serif',
     },
@@ -152,7 +152,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ chart }) => {
   }
 
   return (
-    <div className="relative group rounded-2xl border border-border/40 overflow-hidden bg-bg-surface/30 backdrop-blur-sm">
+    <div className="relative group rounded-2xl border border-border/40 overflow-hidden bg-[#FAF9F6] shadow-inner">
       
       {/* Zoom and Pan Toolbar */}
       <div className="absolute top-4 right-4 z-10 flex items-center gap-1 bg-bg-surface/80 backdrop-blur-sm border border-border/60 p-1.5 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">

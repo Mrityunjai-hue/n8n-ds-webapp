@@ -25,6 +25,7 @@ import { pandasTopics } from './topics/pandas';
 import { powerBITopics } from './topics/power-bi';
 import { visualizationTopics } from './topics/visualization';
 import { agenticAITopics } from './topics/agentic-ai';
+import { mathTopics } from './topics/math';
 
 export const subjects: SubjectContent[] = [
   {
@@ -92,6 +93,17 @@ export const subjects: SubjectContent[] = [
     level: 5,
     estimatedHours: 15,
     topics: pandasTopics,
+  },
+  {
+    id: 'math',
+    slug: 'math',
+    name: 'Mathematics for DS',
+    description: 'Learn Statistics, Probability, Distributions, Inferential Stats, Feature Engineering, and EDA.',
+    icon: Binary,
+    color: 'from-pink-500 to-rose-600',
+    level: 6,
+    estimatedHours: 15,
+    topics: mathTopics,
   },
   {
     id: 'ml',
