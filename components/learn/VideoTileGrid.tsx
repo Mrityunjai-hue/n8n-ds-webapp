@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { VideoLesson, getYTThumb, getYTEmbed } from '@/lib/content/videoLessons';
+import { VideoLesson, getYTThumb, getYTEmbed, getYTPlaylistUrl } from '@/lib/content/videoLessons';
 import { Play, X, ExternalLink, Video } from 'lucide-react';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -93,9 +93,23 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
 
         {/* Footer */}
         <div
-          className="flex items-center justify-end px-4 py-2"
+          className="flex items-center justify-between px-4 py-2"
           style={{ background: 'var(--bg-surface)', borderTop: '1px solid var(--border-subtle)' }}
         >
+          <div className="flex items-center gap-4">
+            {video.playlistId && (
+              <a
+                href={getYTPlaylistUrl(video.playlistId)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-xs font-semibold transition-colors hover:opacity-80 no-min-h"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                <Video className="w-3 h-3" />
+                View Full Playlist
+              </a>
+            )}
+          </div>
           <a
             href={`https://www.youtube.com/watch?v=${video.id}`}
             target="_blank"

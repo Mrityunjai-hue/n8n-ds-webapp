@@ -24,12 +24,19 @@ export function getYTThumb(videoId: string): string {
   return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
 }
 
-/** Returns the YouTube embed URL, optionally scoped to a playlist */
-export function getYTEmbed(videoId: string, playlistId?: string): string {
-  const base = `https://www.youtube.com/embed/${videoId}`;
-  return playlistId
-    ? `${base}?list=${playlistId}&autoplay=1`
-    : `${base}?autoplay=1`;
+/** Returns the YouTube embed URL for a specific video.
+ *  NOTE: We intentionally do NOT pass `list=PLAYLIST_ID` here because
+ *  YouTube's embed player overrides the videoId and always starts at
+ *  video #1 of the playlist when `list` is present. Each tile must
+ *  play its own unique video.
+ */
+export function getYTEmbed(videoId: string, _playlistId?: string): string {
+  return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+}
+
+/** Returns the full YouTube playlist URL (for "View Playlist" links) */
+export function getYTPlaylistUrl(playlistId: string): string {
+  return `https://www.youtube.com/playlist?list=${playlistId}`;
 }
 
 // ─── Verified Playlist IDs ────────────────────────────────────────────────────
