@@ -117,11 +117,11 @@ export const HeroSection = () => {
         this.size = Math.random() * 2 + 0.6;
         this.speedX = Math.random() * 0.4 - 0.2;
         this.speedY = Math.random() * 0.4 - 0.2;
-        // Color code based on subject tracks
+        // Color code based on new palette
         const colors = [
-          'rgba(0, 229, 255, 0.4)',  // Cyan
-          'rgba(124, 58, 237, 0.4)', // Violet
-          'rgba(244, 63, 94, 0.4)'   // Rose
+          'rgba(200, 241, 53, 0.4)',  // Lime
+          'rgba(0, 255, 224, 0.3)',   // Acid cyan
+          'rgba(255, 184, 48, 0.3)'   // Warning amber
         ];
         this.color = colors[Math.floor(Math.random() * colors.length)];
       }
@@ -167,7 +167,7 @@ export const HeroSection = () => {
 
           if (distance < 140) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(124, 58, 237, ${0.12 - distance / 1200})`;
+            ctx.strokeStyle = `rgba(200, 241, 53, ${0.08 - distance / 1800})`;
             ctx.lineWidth = 0.5;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -206,90 +206,96 @@ export const HeroSection = () => {
   const simulation = CODE_SIMULATIONS[activeCodeLang];
 
   return (
-    <section className="relative overflow-hidden pt-24 pb-16 lg:pt-36 lg:pb-28 bg-bg-base neural-grid">
-      {/* Background Animated Gradient Mesh */}
-      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-accent-teal/5 rounded-full filter blur-[150px] pointer-events-none animate-pulse" />
-      <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-accent-purple/5 rounded-full filter blur-[150px] pointer-events-none" />
+    <section className="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24">
+      {/* Background Animated Gradient Highlight */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full filter blur-[120px] pointer-events-none opacity-40" style={{ backgroundColor: 'var(--yellow-tint)' }} />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full filter blur-[120px] pointer-events-none opacity-30" style={{ backgroundColor: 'var(--blue-tint)' }} />
 
       {/* Connection lines canvas — hidden on mobile for performance */}
       <canvas
         ref={canvasRef}
-        className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-60 hidden sm:block"
+        className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-30 hidden sm:block"
       />
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Text/Content Column */}
           <div className="lg:col-span-7 space-y-6 sm:space-y-8 text-center sm:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-accent-teal/10 border border-accent-teal/20 text-accent-teal text-[11px] sm:text-xs font-bold font-mono">
-              <span className="w-2 h-2 rounded-full bg-accent-teal animate-pulse shrink-0" />
-              <span className="truncate">AI-POWERED INTERACTIVE LEARNING ENGINE</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl border text-[11px] sm:text-xs font-medium font-mono" style={{ backgroundColor: 'var(--yellow-tint)', borderColor: 'var(--canvas-border)', color: 'var(--ink)' }}>
+              <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: 'var(--yellow)' }} />
+              <span className="truncate">INTERACTIVE DATA SCIENCE NOTEBOOK &amp; PRACTICE</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-display font-extrabold leading-tight tracking-tight text-text-primary">
-              The OS to master
-              <span className="block bg-gradient-to-r from-accent-teal via-accent-purple to-accent-rose bg-clip-text text-transparent min-h-[1.2em]">
-                {displayText}<span className="text-text-primary animate-pulse">|</span>
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold leading-none" style={{ fontFamily: 'var(--font-heading)', color: 'var(--ink)' }}>
+              The scratchpad to master
+              <span className="block min-h-[1.2em] underline decoration-[var(--yellow)] decoration-wavy" style={{ color: 'var(--blue)' }}>
+                {displayText}<span className="animate-pulse" style={{ color: 'var(--ink)' }}>|</span>
               </span>
             </h1>
 
-            <p className="text-sm sm:text-lg text-text-secondary leading-relaxed max-w-xl mx-auto sm:mx-0">
-              An immersive interactive platform providing live-compiler sandboxes, visual mapping diagrams, real-world case studies, and customized exams for developers and scientists.
+            <p className="text-base sm:text-lg leading-relaxed max-w-xl mx-auto sm:mx-0" style={{ color: 'var(--ink-2)', fontFamily: 'var(--font-body)' }}>
+              A hands-on notebook platform with live in-browser SQL sandboxes, data science coding challenges, visual study guides, and interview prep.
             </p>
 
             {/* Platform Statistics */}
-            <div className="grid grid-cols-3 gap-2 sm:gap-4 py-4 border-y border-border-subtle max-w-lg mx-auto sm:mx-0">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 py-4 max-w-lg mx-auto sm:mx-0" style={{ borderTop: '1px solid var(--canvas-border)', borderBottom: '1px solid var(--canvas-border)' }}>
               <div className="text-center sm:text-left">
-                <span className="text-xl sm:text-3xl font-extrabold text-text-primary font-mono block">150+</span>
-                <span className="text-[11px] sm:text-xs text-text-secondary">Core Topics</span>
+                <span className="text-2xl sm:text-3xl font-bold font-mono block" style={{ color: 'var(--ink)' }}>155+</span>
+                <span className="text-[12px] font-mono uppercase" style={{ color: 'var(--ink-3)' }}>Practice Problems</span>
               </div>
               <div className="text-center sm:text-left">
-                <span className="text-xl sm:text-3xl font-extrabold text-text-primary font-mono block">10</span>
-                <span className="text-[11px] sm:text-xs text-text-secondary">Deep Modules</span>
+                <span className="text-2xl sm:text-3xl font-bold font-mono block" style={{ color: 'var(--ink)' }}>10</span>
+                <span className="text-[12px] font-mono uppercase" style={{ color: 'var(--ink-3)' }}>Curriculum Tracks</span>
               </div>
               <div className="text-center sm:text-left">
-                <span className="text-xl sm:text-3xl font-extrabold text-text-primary font-mono block">100%</span>
-                <span className="text-[11px] sm:text-xs text-text-secondary">Browser-based</span>
+                <span className="text-2xl sm:text-3xl font-bold font-mono block" style={{ color: 'var(--ink)' }}>100%</span>
+                <span className="text-[12px] font-mono uppercase" style={{ color: 'var(--ink-3)' }}>In-Browser WASM</span>
               </div>
             </div>
 
             {/* Main Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center sm:items-start">
-              <Link href="/learn/sql/intro" className="w-full sm:w-auto">
-                <CosmicButton icon={<ArrowRight className="w-5 h-5 text-[#38bdf8]" />}>
-                  Start Interactive Journey
+              <Link href="/code" className="w-full sm:w-auto">
+                <CosmicButton icon={<ArrowRight className="w-5 h-5 text-white" />}>
+                  Start Solving SQL
                 </CosmicButton>
               </Link>
-              <Link href="/roadmap" className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto px-6 py-3 border border-border-subtle hover:border-border-default rounded-xl font-bold text-sm text-text-secondary hover:text-text-primary transition-all bg-bg-surface/20 backdrop-blur-sm cursor-pointer">
-                  View Core Roadmap
+              <Link href="/learn" className="w-full sm:w-auto">
+                <button className="btn-ghost w-full sm:w-auto px-6 py-3 rounded-xl font-medium text-base cursor-pointer">
+                  Explore Curriculum
                 </button>
               </Link>
             </div>
           </div>
 
-          {/* Code Execution Preview Column — hidden on small mobile, shown sm+ */}
-          <div className="hidden sm:block lg:col-span-5">
-            <div className="w-full bg-bg-elevated/80 border border-border-subtle rounded-2xl overflow-hidden shadow-2xl relative">
+            {/* Code Execution Preview Column */}
+            <div className="block lg:col-span-5 w-full max-w-full mt-4 lg:mt-0">
+            <div className="w-full border-2 rounded-2xl overflow-hidden shadow-[var(--shadow-md)] relative doodle-card bg-[var(--canvas-sunken)] dark:bg-[#12082a] border-[var(--canvas-border)]">
+              {/* Tape Accent on Top */}
+              <div
+                className="absolute -top-3 right-10 w-24 h-5 rounded-[2px] opacity-80 transform rotate-1 border border-black/10 z-10"
+                style={{ backgroundColor: 'var(--yellow)' }}
+              />
+
               {/* Header block controls */}
-              <div className="flex items-center justify-between px-4 py-3 bg-bg-elevated border-b border-border-subtle">
+              <div className="flex items-center justify-between px-4 py-3 border-b bg-[var(--canvas-raised)] border-[var(--canvas-border)]">
                 <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#ef4444]" />
-                  <div className="w-3 h-3 rounded-full bg-[#eab308]" />
-                  <div className="w-3 h-3 rounded-full bg-[#22c55e]" />
+                  <div className="w-3 h-3 rounded-full bg-[var(--red)] border border-black/10" />
+                  <div className="w-3 h-3 rounded-full bg-[var(--yellow)] border border-black/10" />
+                  <div className="w-3 h-3 rounded-full bg-[var(--green)] border border-black/10" />
                 </div>
                 
                 {/* Tabs */}
-                <div className="flex border border-border-subtle rounded-lg overflow-hidden bg-bg-base/20 p-0.5">
+                <div className="flex border rounded-lg overflow-hidden p-0.5 bg-[var(--canvas)] border-[var(--canvas-border)]">
                   <button
                     onClick={() => { setActiveCodeLang('python'); setShowCodeOutput(false); }}
-                    className={`px-3 py-1 text-xs font-mono font-bold rounded cursor-pointer transition-colors ${activeCodeLang === 'python' ? 'bg-bg-base text-accent-teal' : 'text-text-secondary'}`}
+                    className={`px-3 py-1 text-xs font-mono font-bold rounded cursor-pointer transition-colors ${activeCodeLang === 'python' ? 'bg-[var(--yellow)] text-[var(--ink)] shadow-sm' : 'text-[var(--ink-3)]'}`}
                   >
                     Python
                   </button>
                   <button
                     onClick={() => { setActiveCodeLang('sql'); setShowCodeOutput(false); }}
-                    className={`px-3 py-1 text-xs font-mono font-bold rounded cursor-pointer transition-colors ${activeCodeLang === 'sql' ? 'bg-bg-base text-accent-teal' : 'text-text-secondary'}`}
+                    className={`px-3 py-1 text-xs font-mono font-bold rounded cursor-pointer transition-colors ${activeCodeLang === 'sql' ? 'bg-[var(--yellow)] text-[var(--ink)] shadow-sm' : 'text-[var(--ink-3)]'}`}
                   >
                     SQL
                   </button>
@@ -297,54 +303,54 @@ export const HeroSection = () => {
               </div>
 
               {/* Code Section */}
-              <div className="p-4 font-mono text-xs text-text-secondary leading-relaxed bg-bg-elevated h-52 overflow-y-auto text-left relative">
-                <div className="text-[10px] text-accent-purple/60 absolute top-2 right-4 uppercase font-bold">
-                  Workspace Sandbox
+              <div className="p-4 font-mono text-xs leading-relaxed h-52 overflow-y-auto text-left relative text-[var(--ink)]">
+                <div className="text-[10px] absolute top-2 right-4 uppercase font-bold font-mono px-2 py-0.5 rounded border border-[var(--canvas-border)] bg-[var(--canvas)] text-[var(--ink-3)]">
+                  ✏️ Live WASM
                 </div>
-                <pre className="text-text-primary overflow-x-auto whitespace-pre">
+                <pre className="overflow-x-auto whitespace-pre font-mono font-medium">
                   {simulation.code}
                 </pre>
               </div>
 
               {/* Compile and Run button */}
-              <div className="px-4 py-2 border-t border-b border-border-subtle bg-bg-elevated flex items-center justify-between">
-                <span className="text-[10px] text-text-secondary font-mono flex items-center gap-1">
-                  <Terminal className="w-3 h-3 text-accent-teal" />
+              <div className="px-4 py-2 border-t border-b flex items-center justify-between bg-[var(--canvas-raised)] border-[var(--canvas-border)]">
+                <span className="text-[10px] font-mono flex items-center gap-1 text-[var(--ink-2)]">
+                  <Terminal className="w-3 h-3 text-[var(--blue)]" />
                   {simulation.title}
                 </span>
 
                 <button
                   onClick={handleRunCode}
                   disabled={isRunningCode}
-                  className="flex items-center gap-1.5 px-3 py-1 bg-accent-teal text-text-inverse text-xs font-bold rounded-lg hover:opacity-95 transition-opacity disabled:opacity-50 cursor-pointer"
+                  className="btn-doodle-primary text-xs px-3 py-1 rounded-lg font-mono font-bold flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
                 >
-                  <Play className="w-3 h-3 fill-current" />
+                  <Play className="w-3 h-3 fill-current text-white" />
                   <span>Run Code</span>
                 </button>
               </div>
 
               {/* Console Output Terminal */}
-              <div className="bg-bg-base p-4 min-h-[140px] font-mono text-[11px] text-left relative flex flex-col justify-between">
-                <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">
-                  Terminal Output
+              <div className="p-4 min-h-[140px] font-mono text-[11px] text-left relative flex flex-col justify-between bg-[var(--canvas)] border-t border-[var(--canvas-border)]">
+                <div className="text-[10px] font-bold uppercase tracking-widest mb-2 text-[var(--ink-3)] flex items-center gap-1">
+                  <span>Terminal Output</span>
                 </div>
 
                 <div className="flex-grow">
                   {isRunningCode ? (
-                    <div className="flex items-center gap-2 text-accent-teal">
-                      <span className="w-3 h-3 rounded-full border-2 border-accent-teal border-t-transparent animate-spin" />
-                      <span>Compiling modules &amp; running in browser WASM sandbox...</span>
+                    <div className="flex items-center gap-2 text-[var(--orange)]">
+                      <span className="w-3 h-3 rounded-full border-2 border-t-transparent animate-spin border-[var(--orange)]" />
+                      <span>Executing in isolated browser sandbox...</span>
                     </div>
                   ) : showCodeOutput ? (
                     <motion.pre 
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="text-text-primary whitespace-pre overflow-x-auto"
+                      className="whitespace-pre overflow-x-auto text-[var(--green)] font-bold"
                     >
                       {simulation.output}
                     </motion.pre>
                   ) : (
-                    <span className="text-text-secondary/50 italic">Click &quot;Run Code&quot; to compile and execute instantly.</span>
+                    <span className="italic text-[var(--ink-4)] font-mono">Click &quot;Run Code&quot; to execute SQL/Python in browser.</span>
                   )}
                 </div>
               </div>
@@ -354,38 +360,38 @@ export const HeroSection = () => {
 
         {/* Level Quick Start Row */}
         <div className="mt-12 sm:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-left max-w-4xl mx-auto">
-          <div className="p-6 bg-bg-surface/10 border border-border-subtle rounded-2xl backdrop-blur-sm hover:border-accent-teal/30 transition-all group">
-            <span className="w-10 h-10 rounded-xl bg-accent-teal/10 text-accent-teal flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <div className="p-6 border rounded-2xl paper-card transition-all group">
+            <span className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ backgroundColor: 'var(--yellow-tint)', color: 'var(--ink)' }}>
               <Database className="w-5 h-5" />
             </span>
-            <h3 className="text-base font-bold text-text-primary mb-2">Beginner Track</h3>
-            <p className="text-xs text-text-secondary mb-4">Master relational SQL databases, clean Python coding, NumPy structures, and tabular Pandas formatting.</p>
-            <Link href="/learn/sql/intro" className="text-xs text-accent-teal font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
-              <span>Start from base level</span>
+            <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--ink)' }}>404-Found-Code</h3>
+            <p className="text-sm mb-4" style={{ color: 'var(--ink-2)' }}>155 real-world interview SQL problems. Practice Joins, CTEs, Window Functions, and Query Optimization.</p>
+            <Link href="/code" className="text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all" style={{ color: 'var(--blue)' }}>
+              <span>Open Problem Board</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          <div className="p-6 bg-bg-surface/10 border border-border-subtle rounded-2xl backdrop-blur-sm hover:border-accent-purple/30 transition-all group">
-            <span className="w-10 h-10 rounded-xl bg-accent-purple/10 text-accent-purple flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <div className="p-6 border rounded-2xl paper-card transition-all group">
+            <span className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ backgroundColor: 'var(--blue-tint)', color: 'var(--blue)' }}>
               <Brain className="w-5 h-5" />
             </span>
-            <h3 className="text-base font-bold text-text-primary mb-2">Intermediate Track</h3>
-            <p className="text-xs text-text-secondary mb-4">Build statistical machine learning systems, data visualizations, random forests, and deep learning backprop models.</p>
-            <Link href="/learn/ml/intro" className="text-xs text-accent-purple font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
-              <span>Explore ML concepts</span>
+            <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--ink)' }}>Data Science Curriculum</h3>
+            <p className="text-sm mb-4" style={{ color: 'var(--ink-2)' }}>Interactive lessons covering Python, NumPy, Pandas, Machine Learning, Deep Learning, and GenAI.</p>
+            <Link href="/learn" className="text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all" style={{ color: 'var(--blue)' }}>
+              <span>Explore Curriculum</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          <div className="p-6 bg-bg-surface/10 border border-border-subtle rounded-2xl backdrop-blur-sm hover:border-accent-rose/30 transition-all group">
-            <span className="w-10 h-10 rounded-xl bg-accent-rose/10 text-accent-rose flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <div className="p-6 border rounded-2xl paper-card transition-all group">
+            <span className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style={{ backgroundColor: 'var(--orange-tint)', color: 'var(--orange)' }}>
               <Sparkles className="w-5 h-5" />
             </span>
-            <h3 className="text-base font-bold text-text-primary mb-2">Advanced Track</h3>
-            <p className="text-xs text-text-secondary mb-4">Construct custom Large Language Models, Generative RAG structures, function-calling agents, and MCP ecosystems.</p>
-            <Link href="/learn/gen-ai/transformers-intro" className="text-xs text-accent-rose font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
-              <span>Advance to GenAI/Agents</span>
+            <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--ink)' }}>Interview Prep &amp; Q&amp;A</h3>
+            <p className="text-sm mb-4" style={{ color: 'var(--ink-2)' }}>Technical questions, active recall flashcards, and step-by-step solutions tested at top tech companies.</p>
+            <Link href="/interview" className="text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all" style={{ color: 'var(--orange)' }}>
+              <span>Practice Questions</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

@@ -22,9 +22,9 @@ export const SplashScreenWrapper = ({ children }: { children: React.ReactNode })
     setLoaded(true);
   };
 
-  // Avoid hydration mismatch by rendering nothing until mounted
+  // Avoid hydration mismatch by rendering canvas background until mounted
   if (!mounted) {
-    return <div className="invisible h-screen w-screen bg-black" />;
+    return <div className="invisible h-screen w-screen bg-[var(--canvas,#f5f0e8)]" />;
   }
 
   return (

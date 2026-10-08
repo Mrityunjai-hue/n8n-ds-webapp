@@ -1,4 +1,5 @@
 'use client';
+// Force webpack chunk hash invalidation to clear browser cache
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter, notFound } from 'next/navigation';
@@ -338,7 +339,7 @@ export default function TopicPage() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-bg-primary text-text-primary">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-[var(--canvas)] text-[var(--ink)]">
       {/* Sidebar Overlay for Mobile */}
       {sidebarOpen && (
         <button 
@@ -350,14 +351,14 @@ export default function TopicPage() {
 
       {/* Sidebar: Shows Steps of the Topic */}
       <div className={`
-        fixed inset-y-0 left-0 z-40 w-72 transform border-r border-border bg-bg-primary transition-transform duration-300 ease-in-out lg:static lg:translate-x-0
+        fixed inset-y-0 left-0 z-40 w-72 transform border-r border-[var(--canvas-border)] bg-[var(--canvas-raised)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:hidden'}
       `}>
          <div className="flex flex-col h-full p-6">
             {/* Progress Card */}
-            <div className="bg-bg-surface/50 rounded-xl p-4 mb-6">
-               <h3 className="font-bold text-sm mb-2">Your Progress</h3>
-               <div className="flex justify-between text-xs text-text-secondary mb-2">
+            <div className="bg-[var(--canvas-sunken)] border border-[var(--canvas-border)] rounded-xl p-4 mb-6 doodle-card">
+               <h3 className="font-bold text-sm mb-2 text-[var(--ink)] font-heading">Your Progress</h3>
+               <div className="flex justify-between text-xs text-[var(--ink-3)] mb-2 font-mono">
                  <span>{currentProgress}% complete</span>
                  <span>Step {currentStepIndex + 1} of {tabs.length}</span>
                </div>
@@ -365,7 +366,7 @@ export default function TopicPage() {
             </div>
             
             {/* Steps */}
-            <nav className="flex-grow space-y-1">
+            <nav className="flex-grow space-y-1.5">
               {tabs.map((tab, idx) => {
                 const isActive = activeTab === tab.id;
                 const isCompleted = currentStepIndex > idx;
@@ -374,36 +375,19 @@ export default function TopicPage() {
                    <button 
                      key={tab.id}
                      onClick={() => setActiveTab(tab.id)}
-                     className={`relative w-full flex items-center gap-3 px-4 py-4 rounded-2xl text-sm transition-all duration-300 group ${!isActive && 'text-text-secondary hover:text-text-primary hover:bg-white/5'}`}
+                     className={`relative w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm transition-all duration-200 group border
+                       ${isActive 
+                         ? 'bg-[var(--yellow)] text-[#111111] font-bold border-black/20 shadow-sm' 
+                         : 'bg-transparent border-transparent text-[var(--ink-2)] hover:bg-[var(--canvas-sunken)] hover:text-[var(--ink)]'
+                       }`}
                    >
-                      {isActive && (
-                        <motion.div
-                          layoutId="activeSidebarTab"
-                          className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#0d1424] to-[#131d30] border border-accent-teal/20 shadow-[0_0_20px_rgba(45,212,191,0.15)] overflow-hidden"
-                          initial={false}
-                          transition={{ type: 'spring', stiffness: 400, damping: 35 }}
-                        >
-                          {/* Soothing lava-lamp blobs */}
-                          <motion.div 
-                             className="absolute -left-8 -top-8 w-24 h-24 bg-accent-teal/20 rounded-full blur-2xl"
-                             animate={{ x: [0, 40, 0], y: [0, 20, 0] }}
-                             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                          />
-                          <motion.div 
-                             className="absolute -right-8 -bottom-8 w-24 h-24 bg-accent-purple/20 rounded-full blur-2xl"
-                             animate={{ x: [0, -40, 0], y: [0, -20, 0] }}
-                             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                          />
-                        </motion.div>
-                      )}
-                      
                       <div className="relative z-10 flex items-center gap-3 w-full">
                         {isCompleted && !isActive ? (
-                          <CheckCircle className="w-4 h-4 shrink-0 text-accent-teal" />
+                          <CheckCircle className="w-4 h-4 shrink-0 text-[var(--green)]" />
                         ) : (
-                          <Icon className={`w-4 h-4 shrink-0 transition-all duration-500 ${isActive ? 'text-accent-teal scale-110 drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]' : 'group-hover:scale-110'}`} />
+                          <Icon className={`w-4 h-4 shrink-0 transition-transform duration-200 ${isActive ? 'text-[#111111] scale-110' : 'text-[var(--ink-3)] group-hover:scale-110'}`} />
                         )}
-                        <span className={`transition-all duration-300 ${isActive ? 'text-white font-extrabold tracking-wide' : ''}`}>
+                        <span className={`font-medium ${isActive ? 'text-[#111111] font-bold' : 'text-[var(--ink-2)]'}`}>
                           {tab.label.split(' ').slice(1).join(' ')}
                         </span>
                       </div>
@@ -412,7 +396,7 @@ export default function TopicPage() {
               })}
             </nav>
 
-            <div className="mt-auto pt-6 border-t border-border flex items-center text-xs text-text-secondary font-mono">
+            <div className="mt-auto pt-6 border-t border-[var(--canvas-border)] flex items-center text-xs text-[var(--ink-3)] font-mono">
                <Clock className="w-4 h-4 mr-2" />
                About {topic.estimatedMinutes} min
             </div>
@@ -422,18 +406,18 @@ export default function TopicPage() {
       {/* Main Area */}
       <div className="flex-grow flex flex-col min-w-0 min-h-screen">
          {/* Top bar */}
-         <header className="sticky top-0 z-20 bg-bg-primary/95 backdrop-blur-md px-4 sm:px-6 py-4 flex items-center justify-between border-b border-border">
-            <div className="flex items-center gap-3 text-sm text-text-secondary">
-               <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden mr-2 p-1 hover:bg-bg-surface rounded-lg">
-                 <Menu className="w-5 h-5 text-text-primary" />
+         <header className="sticky top-0 z-20 bg-[var(--canvas-raised)]/95 backdrop-blur-md px-4 sm:px-6 py-4 flex items-center justify-between border-b border-[var(--canvas-border)]">
+            <div className="flex items-center gap-3 text-sm text-[var(--ink-3)]">
+               <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden mr-2 p-1 hover:bg-[var(--canvas-sunken)] rounded-lg">
+                 <Menu className="w-5 h-5 text-[var(--ink)]" />
                </button>
-               <Link href={`/learn/${subjectSlug}`} className="hover:text-accent-teal transition-colors flex items-center font-medium">
+               <Link href={`/learn/${subjectSlug}`} className="hover:text-[var(--blue)] transition-colors flex items-center font-bold text-[var(--ink-2)]">
                  <ChevronLeft className="w-4 h-4 mr-1" />
                  <span className="hidden sm:inline">Back to Course</span>
                </Link>
-               <span className="hidden sm:inline text-border">|</span>
+               <span className="hidden sm:inline text-[var(--canvas-border)]">|</span>
                <span className="hidden md:inline text-xs font-mono uppercase tracking-widest truncate max-w-[300px]">
-                 Courses &gt; {subject.name} &gt; <span className="text-text-primary font-bold">{topic.title}</span>
+                 Courses &gt; {subject.name} &gt; <span className="text-[var(--ink)] font-bold">{topic.title}</span>
                </span>
             </div>
             <div className="flex items-center gap-3">
@@ -471,7 +455,7 @@ export default function TopicPage() {
                  )}
                </div>
 
-               <h1 className="text-3xl sm:text-5xl font-display font-bold text-text-primary tracking-tight break-words">
+               <h1 className="text-3xl sm:text-5xl font-display font-bold text-text-primary break-words">
                  {topic.title}
                </h1>
             </div>

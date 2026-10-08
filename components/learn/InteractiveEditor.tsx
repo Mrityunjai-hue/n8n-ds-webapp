@@ -1,4 +1,5 @@
 'use client';
+// Force webpack chunk hash invalidation for editor cache
 
 import React, { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
@@ -53,7 +54,7 @@ export const InteractiveEditor: React.FC<InteractiveEditorProps> = ({
     setActiveTab('terminal');
   }, [initialCode]);
 
-  // Listen for Nova "Run in Lab" events
+  // Listen for IDE "Run in Lab" events
   useEffect(() => {
     const handler = (e: Event) => {
       const { code: newCode, language } = (e as CustomEvent).detail ?? {};
@@ -65,8 +66,8 @@ export const InteractiveEditor: React.FC<InteractiveEditorProps> = ({
         setActiveTab('terminal');
       }
     };
-    window.addEventListener('nova-fill-sandbox', handler);
-    return () => window.removeEventListener('nova-fill-sandbox', handler);
+    window.addEventListener('ide-fill-sandbox', handler);
+    return () => window.removeEventListener('ide-fill-sandbox', handler);
   }, []);
 
   const handleRun = async () => {

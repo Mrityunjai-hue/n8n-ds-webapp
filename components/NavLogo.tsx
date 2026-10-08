@@ -1,271 +1,274 @@
 'use client';
 
-import { useState, useRef } from "react";
-
-const css = `
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=JetBrains+Mono:wght@700&display=swap');
-
-  .nl-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    cursor: pointer;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .nl-icon {
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-    position: relative;
-  }
-
-  .nl-wordmark {
-    display: flex;
-    align-items: baseline;
-    gap: 0px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 17px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1;
-  }
-
-  .nl-four {
-    color: #ffffff;
-    transition: color 0.2s ease;
-  }
-
-  .nl-found {
-    background: linear-gradient(90deg, #22d3ee, #6366f1, #a855f7);
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    transition: background-position 0.6s ease;
-    background-position: 100% 0;
-  }
-
-  .nl-wrap:hover .nl-found {
-    background-position: 0% 0;
-  }
-
-  .nl-scanline-cross {
-    transition: opacity 0.3s ease;
-  }
-
-  .nl-ring {
-    transition: r 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-                stroke 0.25s ease,
-                opacity 0.25s ease;
-  }
-
-  .nl-x {
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    transform-origin: 14px 14px;
-  }
-
-  .nl-check {
-    transition: opacity 0.25s ease 0.1s, transform 0.25s cubic-bezier(0.34,1.56,0.64,1) 0.1s;
-    transform-origin: 14px 14px;
-  }
-
-  @keyframes nl-border-rotate {
-    0%   { stroke-dashoffset: 0; }
-    100% { stroke-dashoffset: -120; }
-  }
-
-  @keyframes nl-idle-pulse {
-    0%, 100% { opacity: 0.9; }
-    50%       { opacity: 0.5; }
-  }
-
-  @keyframes nl-scan-h {
-    0%   { transform: translateY(0px); }
-    50%  { transform: translateY(1px); }
-    100% { transform: translateY(0px); }
-  }
-
-  @keyframes nl-scan-v {
-    0%   { transform: translateX(0px); }
-    50%  { transform: translateX(1px); }
-    100% { transform: translateX(0px); }
-  }
-
-  .nl-scan-h { animation: nl-scan-h 3s ease-in-out infinite; }
-  .nl-scan-v { animation: nl-scan-v 3.5s ease-in-out infinite; }
-  .nl-pulse   { animation: nl-idle-pulse 2.4s ease-in-out infinite; }
-
-  .nl-border-dash {
-    animation: nl-border-rotate 3s linear infinite;
-  }
-`;
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 interface NavLogoProps {
   href?: string;
+  size?: 'sm' | 'md' | 'lg';
+  showTag?: boolean;
 }
 
-export default function NavLogo({ href = "/" }: NavLogoProps) {
-  const [hovered, setHovered] = useState(false);
-  const [locked, setLocked] = useState(false);
-  const [glitchLabel, setGlitchLabel] = useState("404");
-  const glitchRef = useRef(false);
+export default function NavLogo({
+  href = '/',
+  size = 'md',
+  showTag = true,
+}: NavLogoProps) {
+  const [isHovered, setIsHovered] = useState(false);
 
-  const GLITCH_FRAMES = ["4Ø4", "█04", "40█", "4Ø4", "404"];
-
-  const runGlitch = async () => {
-    if (glitchRef.current) return;
-    glitchRef.current = true;
-    for (const frame of GLITCH_FRAMES) {
-      setGlitchLabel(frame);
-      await new Promise((r) => setTimeout(r, 55));
-    }
-    setGlitchLabel("404");
-    glitchRef.current = false;
-  };
-
-  const handleEnter = () => {
-    setHovered(true);
-    runGlitch();
-    setTimeout(() => setLocked(true), 280);
-  };
-
-  const handleLeave = () => {
-    setHovered(false);
-    setTimeout(() => setLocked(false), 150);
-  };
-
-  // Ring radius: locked = small (4), default = medium (7)
-  const ringR = locked ? 4 : 7;
-  const ringStroke = locked ? "#22c55e" : "#22d3ee";
-  const ringOpacity = hovered ? 1 : 0.7;
-
-  // X opacity: hidden when locked
-  const xOpacity = locked ? 0 : 1;
-  const xScale = locked ? 0.3 : 1;
-
-  // Check opacity: visible when locked
-  const checkOpacity = locked ? 1 : 0;
-  const checkScale = locked ? 1 : 0.3;
+  const isSmall = size === 'sm';
+  const isLarge = size === 'lg';
 
   return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: css }} />
-      <a
-        href={href}
-        className="nl-wrap"
-        onMouseEnter={handleEnter}
-        onMouseLeave={handleLeave}
-        aria-label="404 Found — Home"
+    <Link
+      href={href}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="inline-flex items-center gap-3 select-none group cursor-pointer transition-transform duration-200 hover:scale-[1.03]"
+      aria-label="404 Found — Home"
+    >
+      {/* ── DESIGNER DOODLE NOTEBOOK & PENCIL BADGE ── */}
+      <div
+        className={`relative shrink-0 flex items-center justify-center ${
+          isSmall ? 'w-8 h-8' : isLarge ? 'w-12 h-12' : 'w-10 h-10'
+        }`}
       >
-        {/* SVG Icon Mark */}
+        {/* Washi Tape on Top Left of Emblem */}
+        <motion.div
+          animate={{
+            rotate: isHovered ? [-10, -14, -8, -10] : -10,
+            y: isHovered ? -1 : 0,
+          }}
+          transition={{ duration: 0.4 }}
+          className="absolute -top-1.5 -left-1.5 w-5 h-2.5 rounded-[1px] opacity-90 border border-black/15 shadow-sm z-20 pointer-events-none"
+          style={{ backgroundColor: 'var(--yellow)' }}
+        />
+
+        {/* Spiral Notebook SVG Sheet */}
         <svg
-          className="nl-icon"
-          width="28"
-          height="28"
-          viewBox="0 0 28 28"
+          viewBox="0 0 44 44"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          className="w-full h-full transform transition-all duration-300 group-hover:rotate-[-2.5deg]"
         >
-          <defs>
-            <linearGradient id="nl-border-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%"   stopColor="#6366f1" />
-              <stop offset="50%"  stopColor="#22d3ee" />
-              <stop offset="100%" stopColor="#a855f7" />
-            </linearGradient>
-          </defs>
-
-          {/* Background fill */}
-          <rect x="1" y="1" width="26" height="26" rx="6" fill="#0a0a1a" />
-
-          {/* Animated gradient border */}
+          {/* Paper Drop Shadow */}
           <rect
-            x="1" y="1" width="26" height="26" rx="6"
-            fill="none"
-            stroke="url(#nl-border-grad)"
+            x="6"
+            y="6"
+            width="34"
+            height="34"
+            rx="6"
+            fill="var(--canvas-border)"
+            opacity="0.75"
+          />
+
+          {/* Main Paper Sheet with warm paper fill */}
+          <rect
+            x="4"
+            y="4"
+            width="34"
+            height="34"
+            rx="6"
+            fill="var(--canvas-raised)"
+            stroke="var(--ink)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* Notebook Grid / Ruled Lines */}
+          <line
+            x1="12"
+            y1="12"
+            x2="32"
+            y2="12"
+            stroke="var(--canvas-border)"
             strokeWidth="1.5"
-            strokeDasharray="30 70"
-            className="nl-border-dash"
-            opacity={hovered ? 1 : 0.7}
+            strokeLinecap="round"
+          />
+          <line
+            x1="12"
+            y1="18"
+            x2="32"
+            y2="18"
+            stroke="var(--canvas-border)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <line
+            x1="12"
+            y1="24"
+            x2="32"
+            y2="24"
+            stroke="var(--canvas-border)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <line
+            x1="12"
+            y1="30"
+            x2="32"
+            y2="30"
+            stroke="var(--canvas-border)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
           />
 
-          {/* Static border underneath */}
-          <rect
-            x="1" y="1" width="26" height="26" rx="6"
-            fill="none"
-            stroke="#6366f1"
-            strokeWidth="1"
-            opacity="0.25"
-          />
+          {/* Spiral Binding Loops on Left Margin */}
+          {[10, 16, 22, 28, 34].map((yPos, i) => (
+            <g key={i}>
+              <circle cx="5" cy={yPos} r="1.5" fill="var(--canvas)" stroke="var(--ink)" strokeWidth="1.2" />
+              <path
+                d={`M2,${yPos - 1} C2,${yPos - 3} 6,${yPos - 3} 6,${yPos}`}
+                stroke="var(--ink)"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+              />
+            </g>
+          ))}
 
-          {/* Crosshair horizontal */}
-          <g className="nl-scan-h">
-            <line
-              x1="3" y1="14" x2="25" y2="14"
-              stroke="#22d3ee" strokeWidth="0.7" opacity="0.35"
-              className="nl-scanline-cross"
-            />
-          </g>
-
-          {/* Crosshair vertical */}
-          <g className="nl-scan-v">
-            <line
-              x1="14" y1="3" x2="14" y2="25"
-              stroke="#22d3ee" strokeWidth="0.7" opacity="0.35"
-              className="nl-scanline-cross"
-            />
-          </g>
-
-          {/* Lock-on ring */}
-          <circle
-            cx="14" cy="14"
-            r={ringR}
-            fill="none"
-            stroke={ringStroke}
-            strokeWidth="1.2"
-            opacity={ringOpacity}
-            className="nl-ring nl-pulse"
-          />
-
-          {/* X mark (error state) */}
-          <g
-            className="nl-x"
-            style={{
-              opacity: xOpacity,
-              transform: `scale(${xScale})`,
+          {/* Cute Doodle Pencil drawing across */}
+          <motion.g
+            animate={{
+              rotate: isHovered ? [0, 8, -4, 0] : 0,
+              x: isHovered ? [0, 2, -1, 0] : 0,
+              y: isHovered ? [0, -2, 1, 0] : 0,
             }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+            style={{ transformOrigin: '24px 22px' }}
           >
-            <line x1="11" y1="11" x2="17" y2="17" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round" />
-            <line x1="17" y1="11" x2="11" y2="17" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round" />
-          </g>
-
-          {/* Checkmark (locked/found state) */}
-          <g
-            className="nl-check"
-            style={{
-              opacity: checkOpacity,
-              transform: `scale(${checkScale})`,
-            }}
-          >
-            <polyline
-              points="10.5,14 13,16.5 17.5,11.5"
-              stroke="#22c55e"
-              strokeWidth="1.5"
-              strokeLinecap="round"
+            {/* Pencil Body (Yellow hexagon barrel) */}
+            <path
+              d="M17,29 L28,14 L32,17 L21,32 Z"
+              fill="var(--yellow)"
+              stroke="var(--ink)"
+              strokeWidth="1.6"
               strokeLinejoin="round"
-              fill="none"
             />
-          </g>
-        </svg>
+            {/* Ferrule (Metal band) */}
+            <path
+              d="M28,14 L30,11.5 L34,14.5 L32,17 Z"
+              fill="var(--canvas-border)"
+              stroke="var(--ink)"
+              strokeWidth="1.2"
+            />
+            {/* Pink Eraser */}
+            <path
+              d="M30,11.5 L32,9 L36,12 L34,14.5 Z"
+              fill="var(--red)"
+              stroke="var(--ink)"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
+            />
+            {/* Wooden Tip */}
+            <polygon
+              points="17,29 13,34 21,32"
+              fill="#e6c280"
+              stroke="var(--ink)"
+              strokeWidth="1.4"
+              strokeLinejoin="round"
+            />
+            {/* Graphite Lead Tip */}
+            <polygon points="13,34 11.5,36 15,35" fill="var(--ink)" />
+          </motion.g>
 
-        {/* Wordmark */}
-        <span className="nl-wordmark">
-          <span className="nl-four">{glitchLabel}&nbsp;</span>
-          <span className="nl-found">Found</span>
-        </span>
-      </a>
-    </>
+          {/* Mini Hand-Drawn Sparkle / Star */}
+          <motion.path
+            d="M32,7 L33.2,9.8 L36,10.2 L33.8,12.2 L34.4,15 L32,13.6 L29.6,15 L30.2,12.2 L28,10.2 L30.8,9.8 Z"
+            fill="var(--yellow)"
+            stroke="var(--ink)"
+            strokeWidth="0.8"
+            animate={{
+              scale: isHovered ? [1, 1.25, 1] : 1,
+              rotate: isHovered ? [0, 45, 0] : 0,
+            }}
+            transition={{ duration: 0.4 }}
+            style={{ transformOrigin: '32px 11px' }}
+          />
+        </svg>
+      </div>
+
+      {/* ── HAND-LETTERED WORDMARK ── */}
+      <div className="flex flex-col">
+        <div className="flex items-baseline gap-1.5 leading-none">
+          {/* "404" Crayon Heading */}
+          <span
+            className={`font-bold tracking-tight crayon-heading ${
+              isSmall ? 'text-xl' : isLarge ? 'text-3xl' : 'text-2xl sm:text-[26px]'
+            }`}
+            style={{
+              fontFamily: 'var(--font-heading)',
+              color: 'var(--ink)',
+            }}
+          >
+            404
+          </span>
+
+          {/* Hand-Drawn Pencil Dash */}
+          <span
+            className="font-bold text-sm select-none"
+            style={{ color: 'var(--orange)' }}
+          >
+            ~
+          </span>
+
+          {/* "Found" in Ballpoint Blue with Animated Highlighter */}
+          <span className="relative inline-block">
+            <span
+              className={`font-bold tracking-tight ${
+                isSmall ? 'text-xl' : isLarge ? 'text-3xl' : 'text-2xl sm:text-[26px]'
+              }`}
+              style={{
+                fontFamily: 'var(--font-heading)',
+                color: 'var(--blue)',
+              }}
+            >
+              Found
+            </span>
+
+            {/* Hand-drawn Highlighter Swish Stroke on Hover */}
+            <motion.svg
+              className="absolute -bottom-1.5 left-0 w-full h-2.5 pointer-events-none opacity-85"
+              viewBox="0 0 54 10"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              initial={{ pathLength: 0.7 }}
+              animate={{
+                pathLength: isHovered ? 1 : 0.75,
+                scaleY: isHovered ? 1.2 : 1,
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <path
+                d="M1,6 Q27,2 53,5.5"
+                stroke="var(--yellow)"
+                strokeWidth="4"
+                strokeLinecap="round"
+              />
+            </motion.svg>
+          </span>
+
+          {/* Optional CODE / DS Stamp Tag */}
+          {showTag && (
+            <span
+              className="ml-1.5 px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider rounded border border-[var(--canvas-border)] bg-[var(--yellow-tint)] text-[var(--ink)] shadow-[0.5px_0.5px_0_var(--ink)] transform -rotate-2 group-hover:rotate-0 transition-transform"
+            >
+              CODE
+            </span>
+          )}
+        </div>
+
+        {/* Hand-written Subtitle (Only on large / desktop logo) */}
+        {isLarge && (
+          <span
+            className="text-xs font-mono text-[var(--ink-3)] -mt-0.5 tracking-tight"
+            style={{ fontFamily: 'var(--font-mono)' }}
+          >
+            data science &bull; interview &bull; wasm
+          </span>
+        )}
+      </div>
+    </Link>
   );
 }

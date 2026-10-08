@@ -181,30 +181,30 @@ export const InterviewQuestionCard: React.FC<InterviewQuestionCardProps> = ({
 
   return (
     <Card 
-      className={`overflow-hidden transition-all duration-300 bg-bg-surface/30 backdrop-blur-sm border
+      className={`overflow-hidden transition-all duration-300 bg-[var(--canvas-raised)] border-2 doodle-card shadow-[var(--shadow-sm)]
         ${isReviewed 
-          ? 'border-accent-teal/40 hover:border-accent-teal/80 shadow-md shadow-accent-teal/5' 
-          : 'border-border/40 hover:border-accent-teal/30'
+          ? 'border-[var(--green)] hover:border-[var(--green)]' 
+          : 'border-[var(--canvas-border)] hover:border-[var(--blue)]'
         }
       `}
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 select-none">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-bg-primary border border-border/40 text-accent-teal">
+          <div className="p-2 rounded-xl bg-[var(--canvas-sunken)] border border-[var(--canvas-border)] text-[var(--blue)]">
             <BrainCircuit className="w-5 h-5" />
           </div>
           {subjectName && topicName ? (
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--ink-3)] font-mono">
                 {subjectName}
               </span>
-              <span className="text-[10px] text-text-secondary/70 truncate max-w-[200px]">
+              <span className="text-[10px] text-[var(--ink-3)] truncate max-w-[200px] font-mono">
                 {topicName}
               </span>
             </div>
           ) : (
-            <span className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--ink-3)] font-mono">
               Interview Prep
             </span>
           )}
@@ -215,10 +215,10 @@ export const InterviewQuestionCard: React.FC<InterviewQuestionCardProps> = ({
           {/* Mark Reviewed Toggle */}
           <button
             onClick={() => toggleReviewedQuestion(question)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[10px] font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[10px] font-bold tracking-wider uppercase font-mono transition-all duration-200 cursor-pointer
               ${isReviewed 
-                ? 'bg-accent-teal/15 border-accent-teal/30 text-accent-teal' 
-                : 'bg-bg-surface/40 border-border/40 text-text-secondary hover:border-accent-teal/40 hover:text-text-primary'
+                ? 'bg-[var(--green-tint)] border-[var(--green)] text-[var(--green)]' 
+                : 'bg-[var(--canvas-sunken)] border-[var(--canvas-border)] text-[var(--ink-3)] hover:border-[var(--blue)] hover:text-[var(--ink)]'
               }
             `}
           >
@@ -232,7 +232,7 @@ export const InterviewQuestionCard: React.FC<InterviewQuestionCardProps> = ({
       </div>
 
       {/* Question Headline */}
-      <h4 className="text-lg font-bold mb-6 leading-tight text-text-primary">
+      <h4 className="text-lg font-bold mb-6 leading-tight text-[var(--ink)] font-heading">
         {question}
       </h4>
 
@@ -241,13 +241,13 @@ export const InterviewQuestionCard: React.FC<InterviewQuestionCardProps> = ({
         <button
           onClick={() => setIsRevealed(!isRevealed)}
           className={`
-            w-full flex items-center justify-between px-5 py-3 rounded-xl font-bold text-sm transition-all duration-250 cursor-pointer border-none
+            w-full flex items-center justify-between px-5 py-3 rounded-xl font-bold text-sm font-mono transition-all duration-200 cursor-pointer border
             ${isRevealed 
-              ? 'bg-bg-primary text-text-primary border border-border/60' 
-              : 'bg-gradient-to-r from-accent-teal to-accent-purple text-text-inverse hover:opacity-90 shadow-md shadow-accent-teal/10'}
+              ? 'bg-[var(--canvas-sunken)] text-[var(--ink)] border-[var(--canvas-border)]' 
+              : 'bg-[var(--blue)] text-white border-[var(--blue-dim)] hover:bg-[var(--blue-dim)] shadow-[var(--shadow-sm)]'}
           `}
         >
-          <span>{isRevealed ? 'Hide Baseline Answer' : 'Reveal recommended Answer'}</span>
+          <span>{isRevealed ? 'Hide Baseline Answer' : 'Reveal Recommended Answer'}</span>
           {isRevealed ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
 
@@ -261,31 +261,33 @@ export const InterviewQuestionCard: React.FC<InterviewQuestionCardProps> = ({
               transition={{ duration: 0.25 }}
               className="overflow-hidden"
             >
-              <div className="p-6 bg-bg-surface/50 border border-border/60 rounded-xl space-y-6">
+              <div className="p-6 bg-[var(--canvas-sunken)] border border-[var(--canvas-border)] rounded-xl space-y-6">
                 
                 {/* Baseline Answer text */}
-                <div className="prose prose-invert prose-sm max-w-none text-text-secondary leading-relaxed text-sm">
+                <div className="prose dark:prose-invert prose-neutral max-w-none text-[var(--ink-2)] leading-relaxed text-sm font-body">
                   {answer.split('\n\n').map((para, i) => <p key={i}>{para}</p>)}
                 </div>
 
                 {/* AI Extension Section */}
-                <div className="border-t border-border/40 pt-5 space-y-4">
+                <div className="border-t-2 border-[var(--canvas-border)] pt-5 space-y-4">
                   {!aiExplanation ? (
                     <Button
                       onClick={handleAskAI}
                       disabled={isAiLoading}
                       variant="secondary"
-                      className="w-full text-xs py-2 bg-gradient-to-r hover:from-accent-teal/5 hover:to-accent-purple/5 border-border/60 hover:border-accent-teal/40 text-text-primary gap-2"
+                      className="w-full text-xs py-2.5 bg-[var(--canvas-sunken)] hover:bg-[var(--canvas)] border-2 border-[var(--canvas-border)] text-[var(--ink)] gap-2.5 font-bold shadow-xs cursor-pointer"
                     >
                       {isAiLoading ? (
                         <>
-                          <Loader2 className="w-4 h-4 animate-spin text-accent-teal" />
-                          <span>Generating AI explanation...</span>
+                          <Loader2 className="w-4 h-4 animate-spin text-[var(--blue)]" />
+                          <span>Generating conceptual deep-dive breakdown...</span>
                         </>
                       ) : (
                         <>
-                          <Bot className="w-4 h-4 text-accent-purple" />
-                          <span>Ask AI Tutor to Explain More</span>
+                          <div className="w-5 h-5 rounded-full bg-[var(--blue-tint)] border border-[var(--blue)] flex items-center justify-center text-[var(--blue)]">
+                            <Sparkles className="w-3 h-3" />
+                          </div>
+                          <span>Explore Deep-Dive Conceptual Breakdown</span>
                         </>
                       )}
                     </Button>
@@ -293,12 +295,14 @@ export const InterviewQuestionCard: React.FC<InterviewQuestionCardProps> = ({
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="p-5 bg-gradient-to-br from-bg-surface/40 to-bg-surface/10 border border-border/60 rounded-xl space-y-3"
+                      className="p-5 bg-[var(--canvas-sunken)] border-2 border-[var(--canvas-border)] rounded-2xl space-y-3 shadow-inner"
                     >
-                      <div className="flex items-center justify-between pb-2 border-b border-border/20">
-                        <div className="flex items-center gap-2 text-xs font-bold text-accent-purple uppercase tracking-wider">
-                          <Sparkles className="w-4 h-4 text-accent-teal" />
-                          <span>AI Tutor Deep Dive</span>
+                      <div className="flex items-center justify-between pb-2 border-b border-[var(--canvas-border)]">
+                        <div className="flex items-center gap-2 text-xs font-bold text-[var(--blue)] uppercase tracking-wider">
+                          <div className="w-5 h-5 rounded-full bg-[var(--yellow-tint)] border border-[var(--yellow)] flex items-center justify-center text-[var(--ink)]">
+                            <Sparkles className="w-3 h-3 text-[var(--blue)]" />
+                          </div>
+                          <span>Detailed Concept Breakdown</span>
                         </div>
                         <button
                           onClick={() => setAiExplanation(null)}

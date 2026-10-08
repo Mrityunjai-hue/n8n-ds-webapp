@@ -44,47 +44,37 @@ export default function SubjectPage() {
   // Find next topic to study (first incomplete topic)
   const nextTopicToStudy = subject.topics.find(t => !completedTopics.includes(t.id));
 
-  // Determine dynamic gradient background based on subject slug
+  // Determine dynamic accent styling based on subject slug
   const getSubjectHeroStyles = (slug: string) => {
     switch (slug) {
       case 'sql':
         return {
-          bg: 'from-[#05131a] via-[#040e14] to-[#030712]',
-          glow: 'bg-accent-teal/10',
-          accent: 'text-accent-teal',
-          border: 'border-accent-teal/30',
+          accentColor: 'var(--green)',
+          accentBg: 'var(--green-tint)',
           outcomes: ['Write complex analytical queries using window functions and CTEs', 'Structure database layouts with indexes for 10x query performance', 'Implement robust transactional operations compliant with ACID principles']
         };
       case 'python':
         return {
-          bg: 'from-[#051026] via-[#040b1b] to-[#030712]',
-          glow: 'bg-accent-blue/10',
-          accent: 'text-accent-blue',
-          border: 'border-accent-blue/30',
+          accentColor: 'var(--blue)',
+          accentBg: 'var(--blue-tint)',
           outcomes: ['Develop scalable data parsing frameworks using Python collections', 'Master class constructors and inheritance hierarchies in OOP', 'Build concurrent pipelines utilizing generators and custom decorators']
         };
       case 'power-bi':
         return {
-          bg: 'from-[#191105] via-[#120c04] to-[#030712]',
-          glow: 'bg-accent-amber/10',
-          accent: 'text-accent-amber',
-          border: 'border-accent-amber/30',
+          accentColor: 'var(--orange)',
+          accentBg: 'var(--orange-tint)',
           outcomes: ['Connect, model, and calculate Year-over-Year variables using DAX functions', 'Design premium interactive dashboards optimized for executive stakeholders', 'Configure secure sharing systems using Power BI Service environments']
         };
       case 'deep-learning':
         return {
-          bg: 'from-[#1a060e] via-[#13040a] to-[#030712]',
-          glow: 'bg-accent-rose/10',
-          accent: 'text-accent-rose',
-          border: 'border-accent-rose/30',
+          accentColor: 'var(--red)',
+          accentBg: 'var(--red-tint)',
           outcomes: ['Construct neural net architectures from perceptrons to CNN filters', 'Manually implement backprop calculations and weights updates', 'Train sequence prediction pipelines using LSTMs and transformers']
         };
       default:
         return {
-          bg: 'from-[#11051a] via-[#0c0413] to-[#030712]',
-          glow: 'bg-accent-purple/10',
-          accent: 'text-accent-purple',
-          border: 'border-accent-purple/30',
+          accentColor: 'var(--blue)',
+          accentBg: 'var(--blue-tint)',
           outcomes: ['Build Retrieval Augmented Generation (RAG) models using vector indexes', 'Leverage LangGraph state machines for multi-agent coordination loops', 'Incorporate Model Context Protocol (MCP) integrations in agent workflows']
         };
     }
@@ -93,50 +83,53 @@ export default function SubjectPage() {
   const style = getSubjectHeroStyles(subjectSlug);
 
   return (
-    <div className="min-h-screen pb-24 bg-[#030712] neural-grid">
-      {/* ── Cinematic Hero Section ────────────────────────────────────────── */}
-      <div className={`relative overflow-hidden pt-32 pb-16 border-b border-border/40 bg-gradient-to-b ${style.bg}`}>
-        {/* Glow effect */}
-        <div className={`absolute top-1/2 right-10 w-96 h-96 ${style.glow} rounded-full filter blur-[120px] pointer-events-none`} />
-
+    <div className="min-h-screen pb-24 doodle-canvas">
+      {/* ── Subject Header Section ────────────────────────────────────────── */}
+      <div className="relative overflow-hidden pt-28 pb-14 border-b border-[var(--canvas-border)] bg-[var(--canvas-raised)]">
         <div className="container mx-auto px-6 relative z-10">
-          {/* Back to Dashboard */}
+          {/* Back to Learn */}
           <div className="mb-6">
             <Link 
-              href="/dashboard" 
-              className="inline-flex items-center gap-2 text-xs font-mono font-bold text-text-secondary hover:text-white transition-colors group"
+              href="/learn" 
+              className="inline-flex items-center gap-2 text-xs font-mono font-bold text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors group"
             >
-              <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> BACK TO DASHBOARD
+              <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> BACK TO ALL COURSES
             </Link>
           </div>
 
-          <div className="flex flex-col lg:flex-row justify-between gap-8 mb-12">
+          <div className="flex flex-col lg:flex-row justify-between gap-8 mb-10">
             <div className="flex items-start gap-5 text-left min-w-0 flex-1">
-              <div className={`p-4 rounded-2xl bg-[#0c1220] border ${style.border} ${style.accent} shadow-2xl shrink-0`}>
+              <div 
+                className="p-4 rounded-2xl border-2 border-[var(--canvas-border)] shadow-md shrink-0"
+                style={{ backgroundColor: style.accentBg, color: style.accentColor }}
+              >
                 <subject.icon className="w-8 h-8 sm:w-9 sm:h-9" />
               </div>
               <div className="min-w-0 flex-1">
-                <span className={`text-xs font-mono font-bold uppercase tracking-widest ${style.accent} block mb-1 truncate`}>
+                <span 
+                  className="text-xs font-mono font-bold uppercase tracking-widest block mb-1 truncate"
+                  style={{ color: style.accentColor }}
+                >
                   CURRICULUM MODULE
                 </span>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-white leading-tight break-words">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-[var(--ink)] leading-tight break-words">
                   {subject.name}
                 </h1>
-                <p className="text-sm sm:text-base text-text-secondary max-w-xl leading-relaxed mt-2">
+                <p className="text-sm sm:text-base text-[var(--ink-2)] max-w-xl leading-relaxed mt-2 font-body">
                   {subject.description}
                 </p>
               </div>
             </div>
 
             {/* Progress indicators ring & XP bar */}
-            <div className="flex items-center gap-5 sm:gap-6 bg-bg-surface/20 border border-border p-5 rounded-2xl backdrop-blur-sm shadow-xl shrink-0 w-full sm:w-auto self-start lg:self-auto">
+            <div className="flex items-center gap-5 sm:gap-6 bg-[var(--canvas)] border-2 border-[var(--canvas-border)] p-5 rounded-2xl shadow-[var(--shadow-sm)] shrink-0 w-full sm:w-auto self-start lg:self-auto doodle-card">
               <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
                 <svg className="w-full h-full transform -rotate-90">
                   <circle
                     cx="32"
                     cy="32"
                     r="26"
-                    className="stroke-border/40"
+                    stroke="var(--canvas-border)"
                     strokeWidth="5"
                     fill="transparent"
                   />
@@ -144,7 +137,8 @@ export default function SubjectPage() {
                     cx="32"
                     cy="32"
                     r="26"
-                    className={`transition-all duration-500 stroke-accent-teal`}
+                    className="transition-all duration-500"
+                    stroke={style.accentColor}
                     strokeWidth="5"
                     fill="transparent"
                     strokeDasharray={2 * Math.PI * 26}
@@ -152,55 +146,58 @@ export default function SubjectPage() {
                     strokeLinecap="round"
                   />
                 </svg>
-                <div className="absolute text-sm font-mono font-bold text-white">
+                <div className="absolute text-sm font-mono font-bold text-[var(--ink)]">
                   {progressPercent}%
                 </div>
               </div>
 
               <div>
-                <span className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-widest block mb-0.5">
+                <span className="text-[10px] font-mono font-bold text-[var(--ink-3)] uppercase tracking-widest block mb-0.5">
                   XP EARNED
                 </span>
-                <span className="text-xl font-extrabold text-white block font-mono">
-                  {totalXP} <span className="text-xs font-normal text-text-secondary">/ {subject.topics.length * 100} XP</span>
+                <span className="text-xl font-extrabold text-[var(--ink)] block font-mono">
+                  {totalXP} <span className="text-xs font-normal text-[var(--ink-3)]">/ {subject.topics.length * 100} XP</span>
                 </span>
-                <span className="text-[10px] font-bold text-accent-teal block mt-1 uppercase tracking-tighter">
+                <span 
+                  className="text-[10px] font-bold block mt-1 uppercase tracking-tighter"
+                  style={{ color: style.accentColor }}
+                >
                   {completedCount} of {subject.topics.length} topics finished
                 </span>
               </div>
             </div>
           </div>
           
-          <div className="flex flex-wrap gap-8 border-t border-border/30 pt-8 text-white font-mono text-xs">
+          <div className="flex flex-wrap gap-8 border-t border-[var(--canvas-border)] pt-6 text-[var(--ink-2)] font-mono text-xs">
             <div className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-text-secondary" />
+              <BookOpen className="w-4 h-4 text-[var(--ink-3)]" />
               <span>{subject.topics.length} LESSONS</span>
             </div>
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-text-secondary" />
+              <Clock className="w-4 h-4 text-[var(--ink-3)]" />
               <span>{subject.estimatedHours} HOURS STUDY</span>
             </div>
             <div className="flex items-center gap-2">
-              <BrainCircuit className="w-4 h-4 text-text-secondary" />
+              <BrainCircuit className="w-4 h-4 text-[var(--ink-3)]" />
               <span>LEVEL {subject.level} TRACK</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <div className="container mx-auto px-6 py-14">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           {/* ── Left Column: Learning Timeline Path ─────────────────────────────────────────── */}
-          <div className="lg:col-span-8 space-y-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl sm:text-2xl font-display font-extrabold text-white flex items-center gap-2">
-                <GraduationCap className="w-6 h-6 text-accent-teal" />
+          <div className="lg:col-span-8 space-y-6">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-2xl font-display font-extrabold text-[var(--ink)] flex items-center gap-2">
+                <GraduationCap className="w-6 h-6" style={{ color: style.accentColor }} />
                 Learning Timeline
               </h2>
             </div>
 
-            {/* Vertical timeline timeline */}
-            <div className="space-y-6 relative pl-6 border-l border-border/80">
+            {/* Vertical timeline */}
+            <div className="space-y-4 relative pl-6 border-l-2 border-[var(--canvas-border)]">
               {subject.topics.map((topic, index) => {
                 const isCompleted = completedTopics.includes(topic.id);
                 const isActiveResume = nextTopicToStudy?.id === topic.id;
@@ -210,48 +207,48 @@ export default function SubjectPage() {
                     {/* Node Dot indicator */}
                     <div className={`absolute -left-[31px] top-6 w-4 h-4 rounded-full border-2 transition-all flex items-center justify-center
                       ${isCompleted 
-                        ? 'bg-accent-teal border-accent-teal text-bg-primary' 
+                        ? 'bg-[var(--green)] border-[var(--green)] text-white' 
                         : isActiveResume
-                          ? 'bg-accent-purple border-accent-purple animate-pulse'
-                          : 'bg-bg-primary border-border group-hover:border-text-secondary/40'
+                          ? 'bg-[var(--blue)] border-[var(--blue)] animate-pulse'
+                          : 'bg-[var(--canvas-raised)] border-[var(--canvas-border)] group-hover:border-[var(--ink-3)]'
                       }`}
                     >
-                      {isCompleted && <span className="w-1.5 h-1.5 bg-bg-primary rounded-full" />}
+                      {isCompleted && <span className="w-1.5 h-1.5 bg-white rounded-full" />}
                     </div>
 
                     <Link href={`/learn/${subject.slug}/${topic.slug}`}>
-                      <div className={`p-5 rounded-2xl border transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 cursor-pointer text-left
+                      <div className={`p-5 rounded-2xl border-2 transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 cursor-pointer text-left doodle-card
                         ${isCompleted 
-                          ? 'bg-[#0c1220]/30 border-border/50 hover:border-accent-teal/40' 
+                          ? 'bg-[var(--canvas-raised)] border-[var(--canvas-border)] hover:border-[var(--green)]' 
                           : isActiveResume
-                            ? 'bg-[#0f1126]/60 border-accent-purple/40 shadow-lg shadow-accent-purple/5 hover:border-accent-purple'
-                            : 'bg-bg-surface/20 border-border/50 hover:border-text-secondary/30'
+                            ? 'bg-[var(--canvas-raised)] border-[var(--blue)] shadow-[var(--shadow-md)]'
+                            : 'bg-[var(--canvas-raised)] border-[var(--canvas-border)] hover:border-[var(--ink-3)]'
                         }`}
                       >
                         <div className="flex items-start gap-4">
                           <div className={`w-8 h-8 rounded-xl font-bold font-mono text-sm flex items-center justify-center shrink-0 border
                             ${isCompleted 
-                              ? 'bg-accent-teal/10 border-accent-teal/20 text-accent-teal' 
+                              ? 'bg-[var(--green-tint)] border-[var(--green)] text-[var(--green)]' 
                               : isActiveResume
-                                ? 'bg-accent-purple/10 border-accent-purple/20 text-accent-purple'
-                                : 'bg-bg-primary border-border/60 text-text-secondary'
+                                ? 'bg-[var(--blue-tint)] border-[var(--blue)] text-[var(--blue)]'
+                                : 'bg-[var(--canvas-sunken)] border-[var(--canvas-border)] text-[var(--ink-3)]'
                             }`}
                           >
                             {index + 1}
                           </div>
                           
-                          <div className="space-y-1.5 min-w-0 flex-1">
+                          <div className="space-y-1 min-w-0 flex-1">
                             <div className="flex flex-wrap items-center gap-2">
-                              <h3 className="font-extrabold text-sm sm:text-base text-white break-words leading-snug">
+                              <h3 className="font-extrabold text-base text-[var(--ink)] break-words leading-snug font-heading">
                                 {topic.title}
                               </h3>
                               {topic.difficulty && (
-                                <span className="px-2 py-0.5 text-[9px] font-bold rounded-full bg-bg-primary border border-border/60 text-text-secondary whitespace-nowrap">
+                                <span className="px-2 py-0.5 text-[9px] font-bold font-mono rounded-full bg-[var(--canvas-sunken)] border border-[var(--canvas-border)] text-[var(--ink-2)] whitespace-nowrap">
                                   {topic.difficulty}
                                 </span>
                               )}
                             </div>
-                            <p className="text-xs text-text-secondary line-clamp-2 sm:line-clamp-1 leading-relaxed">
+                            <p className="text-xs text-[var(--ink-3)] line-clamp-2 sm:line-clamp-1 leading-relaxed font-body">
                               {topic.description}
                             </p>
                           </div>
@@ -259,25 +256,25 @@ export default function SubjectPage() {
 
                         <div className="flex items-center gap-4 self-end sm:self-auto shrink-0">
                           {isCompleted ? (
-                            <div className="flex items-center gap-1.5 text-xs text-accent-teal font-mono">
+                            <div className="flex items-center gap-1.5 text-xs text-[var(--green)] font-mono">
                               <CheckCircle2 className="w-4 h-4 shrink-0" />
                               <span className="hidden sm:inline font-bold">COMPLETED</span>
                             </div>
                           ) : isActiveResume ? (
-                            <div className="flex items-center gap-1.5 text-xs text-accent-purple font-mono font-bold animate-pulse">
+                            <div className="flex items-center gap-1.5 text-xs text-[var(--blue)] font-mono font-bold animate-pulse">
                               <Sparkles className="w-4 h-4 shrink-0" />
                               <span className="hidden sm:inline">NEXT UP</span>
                             </div>
                           ) : (
-                            <span className="text-[10px] text-text-secondary font-mono">READY</span>
+                            <span className="text-[10px] text-[var(--ink-4)] font-mono">READY</span>
                           )}
 
-                          <div className={`w-9 h-9 rounded-xl border flex items-center justify-center transition-all duration-300
+                          <div className={`w-9 h-9 rounded-xl border-2 flex items-center justify-center transition-all duration-300
                             ${isCompleted
-                              ? 'bg-accent-teal/10 border-accent-teal/20 text-accent-teal'
+                              ? 'bg-[var(--green-tint)] border-[var(--green)] text-[var(--green)]'
                               : isActiveResume
-                                ? 'bg-accent-purple/10 border-accent-purple/20 text-accent-purple group-hover:scale-105'
-                                : 'bg-bg-primary border-border/80 text-text-secondary group-hover:border-text-secondary/40'
+                                ? 'bg-[var(--blue-tint)] border-[var(--blue)] text-[var(--blue)] group-hover:scale-105'
+                                : 'bg-[var(--canvas-sunken)] border-[var(--canvas-border)] text-[var(--ink-3)] group-hover:border-[var(--ink-3)]'
                             }`}
                           >
                             <Play className="w-3.5 h-3.5 fill-current shrink-0" />
@@ -292,42 +289,41 @@ export default function SubjectPage() {
           </div>
 
           {/* ── Right Column: Resume Card & Outcome Box ─────────────────────────────────────────── */}
-          <div className="lg:col-span-4 space-y-8 text-left">
+          <div className="lg:col-span-4 space-y-6 text-left">
             {/* Quick Resume studying box */}
             {nextTopicToStudy && (
-              <div className="p-6 bg-gradient-to-br from-[#0c1220] to-[#0f1126] border border-accent-purple/20 rounded-2xl shadow-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-accent-purple/5 rounded-bl-full pointer-events-none" />
-                <h3 className="text-xs font-bold text-accent-purple uppercase tracking-widest mb-3 flex items-center gap-1.5">
+              <div className="p-6 bg-[var(--canvas-raised)] border-2 border-[var(--blue)] rounded-2xl shadow-[var(--shadow-md)] relative overflow-hidden doodle-card">
+                <h3 className="text-xs font-bold text-[var(--blue)] uppercase tracking-widest mb-3 flex items-center gap-1.5 font-mono">
                   <Sparkles className="w-3.5 h-3.5" />
                   Resume Studying
                 </h3>
-                <h4 className="text-base font-extrabold text-white mb-2 leading-tight">
+                <h4 className="text-lg font-extrabold text-[var(--ink)] mb-2 leading-tight font-heading">
                   {nextTopicToStudy.title}
                 </h4>
-                <p className="text-xs text-text-secondary leading-relaxed mb-6">
+                <p className="text-xs text-[var(--ink-2)] leading-relaxed mb-6 font-body">
                   {nextTopicToStudy.description}
                 </p>
 
                 <Link href={`/learn/${subject.slug}/${nextTopicToStudy.slug}`}>
-                  <button className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-accent-teal to-accent-purple text-bg-primary font-bold text-xs rounded-xl hover:opacity-90 transition-opacity cursor-pointer border-none">
+                  <button className="w-full flex items-center justify-center gap-2 py-3 bg-[var(--blue)] text-white font-bold text-sm rounded-xl hover:bg-[var(--blue-dim)] transition-colors cursor-pointer border-none shadow-[var(--shadow-sm)] font-mono">
                     <span>Resume Now</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
               </div>
             )}
 
             {/* Outcome master list box */}
-            <div className="p-6 bg-bg-surface/20 border border-border/80 rounded-2xl space-y-6">
-              <div className="flex items-center gap-2 pb-4 border-b border-border/40">
-                <Award className="w-5 h-5 text-accent-teal" />
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider">What you will master</h3>
+            <div className="p-6 bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] rounded-2xl space-y-5 doodle-card">
+              <div className="flex items-center gap-2 pb-4 border-b border-[var(--canvas-border)]">
+                <Award className="w-5 h-5 text-[var(--green)]" />
+                <h3 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider font-mono">What you will master</h3>
               </div>
 
-              <ul className="space-y-4">
+              <ul className="space-y-3.5">
                 {style.outcomes.map((outcome, i) => (
-                  <li key={i} className="flex gap-3 items-start text-xs text-text-secondary leading-relaxed">
-                    <span className="p-0.5 rounded bg-accent-teal/10 border border-accent-teal/20 text-accent-teal mt-0.5 shrink-0">
+                  <li key={i} className="flex gap-3 items-start text-xs text-[var(--ink-2)] leading-relaxed font-body">
+                    <span className="p-0.5 rounded bg-[var(--green-tint)] border border-[var(--green)] text-[var(--green)] mt-0.5 shrink-0">
                       <CheckCircle2 className="w-3 h-3" />
                     </span>
                     <span>{outcome}</span>

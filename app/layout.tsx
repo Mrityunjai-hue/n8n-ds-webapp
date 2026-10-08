@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Syne, Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
+import { Caveat, Patrick_Hand, Fragment_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Navbar } from '@/components/layout/Navbar';
@@ -7,28 +7,33 @@ import { Footer } from '@/components/layout/Footer';
 import { AuthModal } from '@/components/layout/AuthModal';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import { GlobalSearch } from '@/components/search/GlobalSearch';
-import { AIAssistant } from '@/components/layout/AIAssistant';
+import { ButtonAnimations } from '@/components/layout/ButtonAnimations';
+import { SplashScreenWrapper } from '@/components/layout/SplashScreenWrapper';
 
-const syne = Syne({
+const caveat = Caveat({
   subsets: ['latin'],
-  variable: '--font-syne',
+  variable: '--font-caveat',
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
 });
 
-const jakarta = Plus_Jakarta_Sans({
+const patrickHand = Patrick_Hand({
   subsets: ['latin'],
-  variable: '--font-jakarta',
+  variable: '--font-patrick-hand',
+  weight: ['400'],
   display: 'swap',
 });
 
-const jetbrains = JetBrains_Mono({
+const fragmentMono = Fragment_Mono({
   subsets: ['latin'],
-  variable: '--font-jetbrains',
+  variable: '--font-fragment-mono',
+  weight: ['400'],
+  style: ['normal', 'italic'],
   display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: '404 Found — Data Science Learning Hub',
+  title: '404 Found — Data Science Learning Hub & Practice Platform',
   description: 'Free. Structured. We were not found — until now. From SQL to Agentic AI.',
   keywords: ['Data Science', 'Learning', 'SQL', 'Python', 'Machine Learning', 'AI', '404 Found'],
 };
@@ -39,12 +44,10 @@ export const viewport = {
   maximumScale: 5,
   viewportFit: 'cover',
   themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#070b14' },
-    { media: '(prefers-color-scheme: light)', color: '#f8faff' },
+    { media: '(prefers-color-scheme: dark)', color: '#1a0a2e' },
+    { media: '(prefers-color-scheme: light)', color: '#f5f0e8' },
   ],
 };
-
-import { SplashScreenWrapper } from '@/components/layout/SplashScreenWrapper';
 
 export default function RootLayout({
   children,
@@ -52,20 +55,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${caveat.variable} ${patrickHand.variable} ${fragmentMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body
-        className={`${syne.variable} ${jakarta.variable} ${jetbrains.variable} font-body bg-bg-primary text-text-primary antialiased min-h-screen flex flex-col`}
+        className={`${caveat.variable} ${patrickHand.variable} ${fragmentMono.variable} antialiased min-h-screen flex flex-col doodle-canvas`}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange={false}
         >
           <SplashScreenWrapper>
             <a
               href="#main-content"
-              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-accent-teal focus:text-white focus:rounded-card focus:font-bold"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-card focus:font-bold border border-[var(--canvas-border)] shadow-[var(--shadow-md)]"
+              style={{ backgroundColor: 'var(--yellow)', color: 'var(--ink)' }}
             >
               Skip to content
             </a>
@@ -80,10 +92,53 @@ export default function RootLayout({
               <Footer />
               <AuthModal />
               <GlobalSearch />
-              <AIAssistant />
             </AuthProvider>
+
+            <ButtonAnimations />
           </SplashScreenWrapper>
         </ThemeProvider>
+
+        {/* Global SVG Filters for Authentic Crayon on Paper Texture & Hand-Drawn Strokes */}
+        <svg
+          aria-hidden="true"
+          className="fixed pointer-events-none -top-[9999px] -left-[9999px] w-0 h-0"
+        >
+          <defs>
+            {/* Crayon Wax Displacement & Grain */}
+            <filter id="crayon-roughness" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.045 0.08"
+                numOctaves="3"
+                result="noise"
+              />
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="noise"
+                scale="1.8"
+                xChannelSelector="R"
+                yChannelSelector="G"
+              />
+            </filter>
+
+            {/* Subtle Pencil Graphite Jitter */}
+            <filter id="pencil-jitter" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence
+                type="turbulence"
+                baseFrequency="0.03"
+                numOctaves="2"
+                result="turbulence"
+              />
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="turbulence"
+                scale="1.1"
+                xChannelSelector="R"
+                yChannelSelector="G"
+              />
+            </filter>
+          </defs>
+        </svg>
       </body>
     </html>
   );

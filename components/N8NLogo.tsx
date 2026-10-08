@@ -1,5 +1,4 @@
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800;900&display=swap');
 
   .n8n-wrap {
     display: inline-flex;
@@ -22,29 +21,30 @@ const css = `
   }
 
   .n8n-name {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 900;
-    letter-spacing: 0.05em;
+    font-family: 'Bebas Neue', 'Space Grotesk', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.04em;
     line-height: 1;
+    text-transform: uppercase;
   }
 
   .n8n-name .n-char {
-    color: #ffffff;
+    color: #f0f0fa;
   }
 
   .n8n-name .eight-char {
-    background: linear-gradient(135deg, #6366f1, #22d3ee);
+    background: linear-gradient(135deg, #c8f135, #00ffe0);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .n8n-tagline {
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-family: var(--font-mono), 'Fragment Mono', monospace;
     font-size: 7px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #64748b;
+    color: #5a5a78;
     white-space: nowrap;
   }
 
@@ -88,15 +88,15 @@ export default function N8NLogo({
   const isIconOnly = variant === "icon";
 
   // Colors
-  const leftNodeFill  = mono ? "#ffffff" : "#6366f1";
-  const rightNodeFill = mono ? "#ffffff" : "#22d3ee";
-  const nodeTextFill  = mono ? "#000000" : "#ffffff";
+  const leftNodeFill  = mono ? "#ffffff" : "#c8f135";
+  const rightNodeFill = mono ? "#ffffff" : "#00ffe0";
+  const nodeTextFill  = mono ? "#000000" : "#07070e";
   const dotColor      = mono ? "#ffffff" : "#ffffff";
 
   // The 8 pipeline node colors (indigo → cyan gradient)
   const pipeColors = mono
     ? Array(8).fill("#ffffff")
-    : ["#6366f1","#818cf8","#a78bfa","#c084fc","#e879f9","#f0abfc","#67e8f9","#22d3ee"];
+    : ["#c8f135","#b8e02a","#a8d41e","#7ecf5a","#4ecf8a","#2ecfaa","#00dfca","#00ffe0"];
 
   // SVG dimensions scale with iconH
   const H = cfg.iconH;
@@ -155,8 +155,8 @@ export default function N8NLogo({
         >
           <defs>
             <linearGradient id="n8n-pipe-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%"   stopColor={mono ? "#ffffff" : "#6366f1"} />
-              <stop offset="100%" stopColor={mono ? "#ffffff" : "#22d3ee"} />
+              <stop offset="0%"   stopColor={mono ? "#ffffff" : "#c8f135"} />
+              <stop offset="100%" stopColor={mono ? "#ffffff" : "#00ffe0"} />
             </linearGradient>
           </defs>
 
@@ -207,7 +207,7 @@ export default function N8NLogo({
             fill={nodeTextFill}
             fontSize={nodeFontSize}
             fontWeight="800"
-            fontFamily="'Space Grotesk', sans-serif"
+            fontFamily="'Bebas Neue', 'Space Grotesk', sans-serif"
           >
             N
           </text>

@@ -1,8 +1,42 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { VideoLesson, getYTThumb, getYTEmbed, getYTPlaylistUrl } from '@/lib/content/videoLessons';
-import { Play, X, ExternalLink, Video } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  VideoLesson,
+  getYTThumb,
+  getYTEmbed,
+  getYTPlaylistUrl,
+} from "@/lib/content/videoLessons";
+import { Play, X, ExternalLink, Video } from "lucide-react";
+
+const getCreatorConfig = (creator?: string) => {
+  const c = (creator || "").toLowerCase();
+
+  if (c.includes("codebasics")) {
+    return { label: creator, bg: "rgba(59, 130, 246, 0.15)", text: "#60A5FA" };
+  } else if (c.includes("campusx")) {
+    return { label: creator, bg: "rgba(16, 185, 129, 0.15)", text: "#34D399" };
+  } else if (c.includes("codewithharry")) {
+    return { label: creator, bg: "rgba(249, 115, 22, 0.15)", text: "#F97316" };
+  } else if (c.includes("krish")) {
+    return {
+      label: creator,
+      bg: "var(--accent-cyan-bg)",
+      text: "var(--accent-cyan)",
+    };
+  } else if (c.includes("gate smashers")) {
+    return { label: creator, bg: "rgba(239, 68, 68, 0.15)", text: "#F87171" }; // Red
+  } else if (c.includes("dream maths")) {
+    return { label: creator, bg: "rgba(236, 72, 153, 0.15)", text: "#F472B6" }; // Pink
+  } else {
+    // Default style for any unknown creator
+    return {
+      label: creator || "@unknown",
+      bg: "rgba(167, 139, 250, 0.15)",
+      text: "#A78BFA",
+    }; // Purple
+  }
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // VideoModal — fullscreen overlay YouTube embed
@@ -16,16 +50,18 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
   // Close on Escape key
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
   }, [onClose]);
 
   // Prevent body scroll while modal is open
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, []);
 
   return (
@@ -35,32 +71,41 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
       aria-label={`Playing: ${video.title}`}
       onClick={onClose}
       className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 lg:p-10"
-      style={{ background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(10px)' }}
+      style={{ background: "rgba(0,0,0,0.92)", backdropFilter: "blur(10px)" }}
     >
       {/* Stop click from propagating to backdrop */}
       <div
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-4xl flex flex-col"
         style={{
-          borderRadius: '16px',
-          overflow: 'hidden',
-          border: '1px solid rgba(255,255,255,0.08)',
-          boxShadow: '0 40px 80px rgba(0,0,0,0.6)',
+          borderRadius: "16px",
+          overflow: "hidden",
+          border: "1px solid rgba(255,255,255,0.08)",
+          boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
         }}
       >
         {/* Modal header */}
         <div
           className="flex items-center justify-between gap-4 px-4 py-3"
-          style={{ background: 'var(--bg-surface)', borderBottom: '1px solid var(--border-subtle)' }}
+          style={{
+            background: "var(--bg-surface)",
+            borderBottom: "1px solid var(--border-subtle)",
+          }}
         >
           <div className="flex items-center gap-2 min-w-0">
             <span
               className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full shrink-0"
-              style={{ background: 'var(--accent-cyan-bg)', color: 'var(--accent-cyan)' }}
+              style={{
+                background: getCreatorConfig(video.creator).bg,
+                color: getCreatorConfig(video.creator).text,
+              }}
             >
-              @krishnaik06
+              {getCreatorConfig(video.creator).label}
             </span>
-            <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
+            <p
+              className="text-sm font-semibold truncate"
+              style={{ color: "var(--text-primary)" }}
+            >
               {video.title}
             </p>
           </div>
@@ -68,25 +113,31 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
             onClick={onClose}
             aria-label="Close video"
             className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg transition-colors hover:bg-white/10 no-min-h"
-            style={{ color: 'var(--text-muted)' }}
+            style={{ color: "var(--text-muted)" }}
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* YouTube Embed */}
-        <div style={{ position: 'relative', aspectRatio: '16/9', background: '#000' }}>
+        <div
+          style={{
+            position: "relative",
+            aspectRatio: "16/9",
+            background: "#000",
+          }}
+        >
           <iframe
             src={getYTEmbed(video.id, video.playlistId)}
             title={video.title}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             style={{
-              position: 'absolute',
+              position: "absolute",
               inset: 0,
-              width: '100%',
-              height: '100%',
-              border: 'none',
+              width: "100%",
+              height: "100%",
+              border: "none",
             }}
           />
         </div>
@@ -94,7 +145,10 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
         {/* Footer */}
         <div
           className="flex items-center justify-between px-4 py-2"
-          style={{ background: 'var(--bg-surface)', borderTop: '1px solid var(--border-subtle)' }}
+          style={{
+            background: "var(--bg-surface)",
+            borderTop: "1px solid var(--border-subtle)",
+          }}
         >
           <div className="flex items-center gap-4">
             {video.playlistId && (
@@ -103,7 +157,7 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-xs font-semibold transition-colors hover:opacity-80 no-min-h"
-                style={{ color: 'var(--text-muted)' }}
+                style={{ color: "var(--text-muted)" }}
               >
                 <Video className="w-3 h-3" />
                 View Full Playlist
@@ -115,7 +169,7 @@ const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-xs font-semibold transition-colors hover:opacity-80 no-min-h"
-            style={{ color: 'var(--accent-cyan)' }}
+            style={{ color: "var(--accent-cyan)" }}
           >
             <ExternalLink className="w-3 h-3" />
             Watch on YouTube
@@ -146,21 +200,21 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onClick }) => {
       aria-label={`Watch: ${video.title}`}
       className="group text-left w-full rounded-xl overflow-hidden transition-all duration-200 no-min-h"
       style={{
-        background: 'var(--bg-surface)',
-        border: `1px solid ${hovered ? 'var(--accent-cyan)' : 'var(--border-subtle)'}`,
-        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
+        background: "var(--bg-surface)",
+        border: `1px solid ${hovered ? "var(--accent-cyan)" : "var(--border-subtle)"}`,
+        transform: hovered ? "translateY(-3px)" : "translateY(0)",
         boxShadow: hovered
-          ? '0 12px 32px rgba(0,229,255,0.08)'
-          : '0 2px 8px rgba(0,0,0,0.1)',
+          ? "0 12px 32px rgba(0,229,255,0.08)"
+          : "0 2px 8px rgba(0,0,0,0.1)",
       }}
     >
       {/* Thumbnail */}
       <div
         style={{
-          position: 'relative',
-          aspectRatio: '16/9',
-          overflow: 'hidden',
-          background: 'var(--bg-elevated)',
+          position: "relative",
+          aspectRatio: "16/9",
+          overflow: "hidden",
+          background: "var(--bg-elevated)",
         }}
       >
         {!imgError ? (
@@ -171,84 +225,90 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onClick }) => {
             onError={() => setImgError(true)}
             loading="lazy"
             style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              display: 'block',
-              transition: 'transform 0.3s ease',
-              transform: hovered ? 'scale(1.05)' : 'scale(1)',
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+              transition: "transform 0.3s ease",
+              transform: hovered ? "scale(1.05)" : "scale(1)",
             }}
           />
         ) : (
           <div
             className="w-full h-full flex items-center justify-center"
-            style={{ background: 'var(--bg-elevated)' }}
+            style={{ background: "var(--bg-elevated)" }}
           >
-            <Video className="w-10 h-10" style={{ color: 'var(--text-muted)' }} />
+            <Video
+              className="w-10 h-10"
+              style={{ color: "var(--text-muted)" }}
+            />
           </div>
         )}
 
         {/* Play overlay */}
         <div
           style={{
-            position: 'absolute',
+            position: "absolute",
             inset: 0,
-            background: 'rgba(0,0,0,0.45)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            background: "rgba(0,0,0,0.45)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             opacity: hovered ? 1 : 0,
-            transition: 'opacity 0.2s ease',
+            transition: "opacity 0.2s ease",
           }}
         >
           <div
             style={{
-              width: '44px',
-              height: '44px',
-              borderRadius: '50%',
-              background: 'var(--accent-cyan)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 0 20px rgba(0,229,255,0.4)',
+              width: "44px",
+              height: "44px",
+              borderRadius: "50%",
+              background: "var(--accent-cyan)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 0 20px rgba(0,229,255,0.4)",
             }}
           >
-            <Play className="w-5 h-5 fill-current" style={{ color: '#000', marginLeft: '2px' }} />
+            <Play
+              className="w-5 h-5 fill-current"
+              style={{ color: "#000", marginLeft: "2px" }}
+            />
           </div>
         </div>
 
-        {/* @krishnaik06 badge */}
+        {/* Dynamic creator badge */}
         <div
           style={{
-            position: 'absolute',
-            top: '6px',
-            right: '6px',
-            background: 'rgba(0,0,0,0.78)',
-            color: '#fff',
-            fontSize: '9px',
+            position: "absolute",
+            top: "6px",
+            right: "6px",
+            background: "rgba(0,0,0,0.78)",
+            color: getCreatorConfig(video.creator).text,
+            fontSize: "9px",
             fontWeight: 700,
-            padding: '2px 7px',
-            borderRadius: '4px',
-            letterSpacing: '0.02em',
+            padding: "2px 7px",
+            borderRadius: "4px",
+            letterSpacing: "0.02em",
           }}
         >
-          @krishnaik06
+          {getCreatorConfig(video.creator).label}
         </div>
 
         {/* Duration badge (if available) */}
         {video.duration && (
           <div
             style={{
-              position: 'absolute',
-              bottom: '6px',
-              right: '6px',
-              background: 'rgba(0,0,0,0.78)',
-              color: '#fff',
-              fontSize: '10px',
+              position: "absolute",
+              bottom: "6px",
+              right: "6px",
+              background: "rgba(0,0,0,0.78)",
+              color: "#fff",
+              fontSize: "10px",
               fontWeight: 700,
-              padding: '2px 6px',
-              borderRadius: '4px',
-              fontFamily: 'var(--font-jetbrains, monospace)',
+              padding: "2px 6px",
+              borderRadius: "4px",
+              fontFamily: "var(--font-jetbrains, monospace)",
             }}
           >
             {video.duration}
@@ -257,18 +317,18 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onClick }) => {
       </div>
 
       {/* Title area — fixed height keeps all cards aligned */}
-      <div style={{ padding: '10px 12px 12px', minHeight: '52px' }}>
+      <div style={{ padding: "10px 12px 12px", minHeight: "52px" }}>
         <p
           style={{
-            fontSize: '12px',
+            fontSize: "12px",
             fontWeight: 600,
             lineHeight: 1.5,
-            color: hovered ? 'var(--accent-cyan)' : 'var(--text-primary)',
-            display: '-webkit-box',
+            color: hovered ? "var(--accent-cyan)" : "var(--text-primary)",
+            display: "-webkit-box",
             WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            transition: 'color 0.15s',
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            transition: "color 0.15s",
             margin: 0,
           }}
         >
@@ -289,7 +349,7 @@ interface VideoTileGridProps {
 
 const VideoTileGrid: React.FC<VideoTileGridProps> = ({
   videos,
-  title = 'Video Lessons by Krish Naik',
+  title = "Video Lessons by Krish Naik",
 }) => {
   const [activeVideo, setActiveVideo] = useState<VideoLesson | null>(null);
 
@@ -319,20 +379,20 @@ const VideoTileGrid: React.FC<VideoTileGridProps> = ({
       {title && (
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            marginBottom: '1rem',
-            paddingBottom: '0.875rem',
-            borderBottom: '1px solid var(--border-subtle)',
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            marginBottom: "1rem",
+            paddingBottom: "0.875rem",
+            borderBottom: "1px solid var(--border-subtle)",
           }}
         >
-          <span style={{ fontSize: '16px' }}>🎬</span>
+          <span style={{ fontSize: "16px" }}>🎬</span>
           <h3
             style={{
-              fontSize: '14px',
+              fontSize: "14px",
               fontWeight: 700,
-              color: 'var(--text-primary)',
+              color: "var(--text-primary)",
               margin: 0,
             }}
           >
@@ -340,11 +400,11 @@ const VideoTileGrid: React.FC<VideoTileGridProps> = ({
           </h3>
           <span
             style={{
-              padding: '2px 8px',
-              borderRadius: '999px',
-              background: 'var(--accent-cyan-bg)',
-              color: 'var(--accent-cyan)',
-              fontSize: '10px',
+              padding: "2px 8px",
+              borderRadius: "999px",
+              background: "var(--accent-cyan-bg)",
+              color: "var(--accent-cyan)",
+              fontSize: "10px",
               fontWeight: 700,
             }}
           >
@@ -354,36 +414,36 @@ const VideoTileGrid: React.FC<VideoTileGridProps> = ({
       )}
 
       {/* ── Section groups ─────────────────────────────────────────────── */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
         {sectionKeys.map((sectionName) => (
           <div key={sectionName}>
             {/* Section sub-label (only when multiple sub-sections exist) */}
             {isMultiSection && (
               <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  marginBottom: '10px',
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  marginBottom: "10px",
                 }}
               >
                 <span
                   style={{
-                    width: '20px',
-                    height: '1px',
-                    background: 'var(--border-subtle)',
-                    display: 'inline-block',
+                    width: "20px",
+                    height: "1px",
+                    background: "var(--border-subtle)",
+                    display: "inline-block",
                     flexShrink: 0,
                   }}
                 />
                 <span
                   style={{
-                    fontSize: '10px',
+                    fontSize: "10px",
                     fontWeight: 700,
-                    color: 'var(--text-muted)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.08em',
-                    whiteSpace: 'nowrap',
+                    color: "var(--text-muted)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   {sectionName}
@@ -391,9 +451,9 @@ const VideoTileGrid: React.FC<VideoTileGridProps> = ({
                 <span
                   style={{
                     flex: 1,
-                    height: '1px',
-                    background: 'var(--border-subtle)',
-                    display: 'inline-block',
+                    height: "1px",
+                    background: "var(--border-subtle)",
+                    display: "inline-block",
                   }}
                 />
               </div>
@@ -402,9 +462,9 @@ const VideoTileGrid: React.FC<VideoTileGridProps> = ({
             {/* Tile grid — responsive auto-fill */}
             <div
               style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-                gap: '14px',
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+                gap: "14px",
               }}
             >
               {sections[sectionName].map((video) => (
@@ -420,9 +480,7 @@ const VideoTileGrid: React.FC<VideoTileGridProps> = ({
       </div>
 
       {/* ── Modal ────────────────────────────────────────────────────────── */}
-      {activeVideo && (
-        <VideoModal video={activeVideo} onClose={handleClose} />
-      )}
+      {activeVideo && <VideoModal video={activeVideo} onClose={handleClose} />}
     </div>
   );
 };

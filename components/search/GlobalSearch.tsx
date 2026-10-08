@@ -43,7 +43,7 @@ export function GlobalSearch() {
       className="fixed inset-0 z-[200] flex items-start justify-center pt-[15vh] bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
       onClick={(e) => { if (e.target === e.currentTarget) closeSearch(); }}
     >
-      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden mx-4 animate-in slide-in-from-top-4 duration-200">
+      <div className="relative w-full max-w-2xl bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] rounded-2xl shadow-2xl overflow-hidden mx-4 animate-in slide-in-from-top-4 duration-200 font-patrick">
         <Command
           className="flex flex-col h-full"
           filter={(value, search) =>
@@ -51,16 +51,16 @@ export function GlobalSearch() {
           }
         >
           {/* Search Input */}
-          <div className="flex items-center px-4 border-b border-slate-800">
-            <Search className="w-5 h-5 text-slate-400 mr-3 flex-shrink-0" />
+          <div className="flex items-center px-4 border-b-2 border-[var(--canvas-border)] bg-[var(--canvas)]">
+            <Search className="w-5 h-5 text-[var(--ink-3)] mr-3 flex-shrink-0" />
             <Command.Input
               autoFocus
               placeholder="Search subjects, topics, questions…"
-              className="w-full py-4 bg-transparent outline-none text-slate-100 placeholder:text-slate-500 text-sm"
+              className="w-full py-4 bg-transparent outline-none text-[var(--ink)] placeholder:text-[var(--ink-3)] text-base font-patrick"
             />
             <button
               onClick={closeSearch}
-              className="p-1.5 hover:bg-slate-800 rounded-md text-slate-400 transition-colors flex-shrink-0"
+              className="p-1.5 hover:bg-black/10 dark:hover:bg-white/10 rounded-xl text-[var(--ink-3)] transition-colors flex-shrink-0"
               aria-label="Close search"
             >
               <X className="w-4 h-4" />
@@ -69,7 +69,7 @@ export function GlobalSearch() {
 
           {/* Results */}
           <Command.List className="max-h-[60vh] overflow-y-auto p-2">
-            <Command.Empty className="py-10 text-center text-slate-500 text-sm">
+            <Command.Empty className="py-10 text-center text-[var(--ink-3)] text-sm font-bold">
               No results found.
             </Command.Empty>
 
@@ -77,7 +77,7 @@ export function GlobalSearch() {
             {subjects.length > 0 && (
               <Command.Group
                 heading={
-                  <span className="px-2 py-1 text-[10px] font-bold text-teal-500 uppercase tracking-widest">
+                  <span className="px-3 py-1 text-[11px] font-bold text-[var(--green)] uppercase tracking-widest">
                     Subjects
                   </span>
                 }
@@ -87,14 +87,14 @@ export function GlobalSearch() {
                     key={item.id}
                     value={item.title}
                     onSelect={() => onSelect(item)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer aria-selected:bg-slate-800 text-slate-300 aria-selected:text-white transition-colors group"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer aria-selected:bg-[var(--yellow)] aria-selected:text-[#111111] text-[var(--ink)] transition-colors group"
                   >
-                    <div className="p-2 rounded-md bg-slate-800 group-aria-selected:bg-teal-500/20 transition-colors flex-shrink-0">
-                      <Book className="w-4 h-4 text-teal-500" />
+                    <div className="p-2 rounded-xl bg-[var(--green-tint)] group-aria-selected:bg-black/10 border border-[var(--green)]/30 transition-colors flex-shrink-0">
+                      <Book className="w-4 h-4 text-[var(--green)] group-aria-selected:text-[#111111]" />
                     </div>
                     <div>
-                      <div className="font-medium text-sm">{item.title}</div>
-                      <div className="text-xs text-slate-500 line-clamp-1">{item.description}</div>
+                      <div className="font-bold text-sm">{item.title}</div>
+                      <div className="text-xs text-[var(--ink-3)] group-aria-selected:text-[#222222] line-clamp-1">{item.description}</div>
                     </div>
                   </Command.Item>
                 ))}
@@ -104,7 +104,7 @@ export function GlobalSearch() {
             {topics.length > 0 && (
               <Command.Group
                 heading={
-                  <span className="px-2 py-1 text-[10px] font-bold text-amber-500 uppercase tracking-widest">
+                  <span className="px-3 py-1 text-[11px] font-bold text-[var(--orange)] uppercase tracking-widest">
                     Topics
                   </span>
                 }
@@ -114,14 +114,14 @@ export function GlobalSearch() {
                     key={item.id}
                     value={`${item.title} ${item.subjectName}`}
                     onSelect={() => onSelect(item)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer aria-selected:bg-slate-800 text-slate-300 aria-selected:text-white transition-colors group"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer aria-selected:bg-[var(--yellow)] aria-selected:text-[#111111] text-[var(--ink)] transition-colors group"
                   >
-                    <div className="p-2 rounded-md bg-slate-800 group-aria-selected:bg-amber-500/20 transition-colors flex-shrink-0">
-                      <FileText className="w-4 h-4 text-amber-500" />
+                    <div className="p-2 rounded-xl bg-[var(--orange-tint)] group-aria-selected:bg-black/10 border border-[var(--orange)]/30 transition-colors flex-shrink-0">
+                      <FileText className="w-4 h-4 text-[var(--orange)] group-aria-selected:text-[#111111]" />
                     </div>
                     <div>
-                      <div className="font-medium text-sm">{item.title}</div>
-                      <div className="text-xs text-slate-500">{item.subjectName}</div>
+                      <div className="font-bold text-sm">{item.title}</div>
+                      <div className="text-xs text-[var(--ink-3)] group-aria-selected:text-[#222222]">{item.subjectName}</div>
                     </div>
                   </Command.Item>
                 ))}
@@ -131,7 +131,7 @@ export function GlobalSearch() {
             {questions.length > 0 && (
               <Command.Group
                 heading={
-                  <span className="px-2 py-1 text-[10px] font-bold text-blue-500 uppercase tracking-widest">
+                  <span className="px-3 py-1 text-[11px] font-bold text-[var(--blue)] uppercase tracking-widest">
                     Interview Questions
                   </span>
                 }
@@ -141,14 +141,14 @@ export function GlobalSearch() {
                     key={item.id}
                     value={`${item.title} ${item.topicName}`}
                     onSelect={() => onSelect(item)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer aria-selected:bg-slate-800 text-slate-300 aria-selected:text-white transition-colors group"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer aria-selected:bg-[var(--yellow)] aria-selected:text-[#111111] text-[var(--ink)] transition-colors group"
                   >
-                    <div className="p-2 rounded-md bg-slate-800 group-aria-selected:bg-blue-500/20 transition-colors flex-shrink-0">
-                      <HelpCircle className="w-4 h-4 text-blue-500" />
+                    <div className="p-2 rounded-xl bg-[var(--blue-tint)] group-aria-selected:bg-black/10 border border-[var(--blue)]/30 transition-colors flex-shrink-0">
+                      <HelpCircle className="w-4 h-4 text-[var(--blue)] group-aria-selected:text-[#111111]" />
                     </div>
                     <div>
-                      <div className="font-medium text-sm line-clamp-1">{item.title}</div>
-                      <div className="text-xs text-slate-500">{item.subjectName} · {item.topicName}</div>
+                      <div className="font-bold text-sm line-clamp-1">{item.title}</div>
+                      <div className="text-xs text-[var(--ink-3)] group-aria-selected:text-[#222222]">{item.subjectName} · {item.topicName}</div>
                     </div>
                   </Command.Item>
                 ))}
@@ -157,19 +157,19 @@ export function GlobalSearch() {
           </Command.List>
 
           {/* Footer hints */}
-          <div className="p-3 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-500">
+          <div className="p-3 border-t-2 border-[var(--canvas-border)] bg-[var(--canvas)] flex items-center justify-between text-xs text-[var(--ink-3)] font-mono font-bold">
             <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">↑↓</kbd>
+              <span className="flex items-center gap-1.5">
+                <kbd className="px-1.5 py-0.5 rounded-md bg-[var(--canvas-sunken)] border border-[var(--canvas-border)] text-[var(--ink)]">↑↓</kbd>
                 Navigate
               </span>
-              <span className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">Enter</kbd>
+              <span className="flex items-center gap-1.5">
+                <kbd className="px-1.5 py-0.5 rounded-md bg-[var(--canvas-sunken)] border border-[var(--canvas-border)] text-[var(--ink)]">Enter</kbd>
                 Select
               </span>
             </div>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">Esc</kbd>
+            <span className="flex items-center gap-1.5">
+              <kbd className="px-1.5 py-0.5 rounded-md bg-[var(--canvas-sunken)] border border-[var(--canvas-border)] text-[var(--ink)]">Esc</kbd>
               Close
             </span>
           </div>

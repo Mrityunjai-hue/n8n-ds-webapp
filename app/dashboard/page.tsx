@@ -56,16 +56,16 @@ const subjectIconMap: Record<string, React.ComponentType<any>> = {
 
 // Map subject IDs to Tailwind Gradient Border/Text Colors
 const subjectColorMap: Record<string, { text: string; border: string; bg: string; stroke: string; gradient: string }> = {
-  sql: { text: 'text-blue-400', border: 'border-blue-500/20 hover:border-blue-500/50', bg: 'bg-blue-500/5', stroke: 'stroke-blue-500', gradient: 'from-blue-500 to-cyan-500' },
-  python: { text: 'text-yellow-400', border: 'border-yellow-500/20 hover:border-yellow-500/50', bg: 'bg-yellow-500/5', stroke: 'stroke-yellow-500', gradient: 'from-yellow-400 to-orange-500' },
-  bi: { text: 'text-amber-500', border: 'border-amber-500/20 hover:border-amber-500/50', bg: 'bg-amber-500/5', stroke: 'stroke-amber-500', gradient: 'from-yellow-500 to-amber-600' },
-  numpy: { text: 'text-cyan-400', border: 'border-cyan-500/20 hover:border-cyan-500/50', bg: 'bg-cyan-500/5', stroke: 'stroke-cyan-400', gradient: 'from-cyan-500 to-teal-500' },
-  pandas: { text: 'text-indigo-400', border: 'border-indigo-500/20 hover:border-indigo-500/50', bg: 'bg-indigo-500/5', stroke: 'stroke-indigo-400', gradient: 'from-indigo-500 to-blue-600' },
-  ml: { text: 'text-green-400', border: 'border-green-500/20 hover:border-green-500/50', bg: 'bg-green-500/5', stroke: 'stroke-green-400', gradient: 'from-green-500 to-emerald-500' },
-  visualization: { text: 'text-orange-400', border: 'border-orange-500/20 hover:border-orange-500/50', bg: 'bg-orange-500/5', stroke: 'stroke-orange-400', gradient: 'from-orange-500 to-red-500' },
-  dl: { text: 'text-purple-400', border: 'border-purple-500/20 hover:border-purple-500/50', bg: 'bg-purple-500/5', stroke: 'stroke-purple-400', gradient: 'from-purple-500 to-violet-600' },
-  genai: { text: 'text-pink-400', border: 'border-pink-500/20 hover:border-pink-500/50', bg: 'bg-pink-500/5', stroke: 'stroke-pink-400', gradient: 'from-pink-500 to-rose-500' },
-  agentic: { text: 'text-violet-400', border: 'border-violet-500/20 hover:border-violet-500/50', bg: 'bg-violet-500/5', stroke: 'stroke-violet-500', gradient: 'from-violet-600 to-indigo-600' },
+  sql: { text: 'text-blue-700 dark:text-blue-400', border: 'border-blue-500/30 hover:border-blue-500', bg: 'bg-blue-500/10', stroke: 'stroke-blue-600 dark:stroke-blue-500', gradient: 'from-blue-600 to-cyan-600' },
+  python: { text: 'text-amber-800 dark:text-yellow-400', border: 'border-amber-500/30 hover:border-amber-500', bg: 'bg-amber-500/10', stroke: 'stroke-amber-600 dark:stroke-yellow-500', gradient: 'from-yellow-500 to-orange-500' },
+  bi: { text: 'text-orange-800 dark:text-amber-500', border: 'border-orange-500/30 hover:border-orange-500', bg: 'bg-orange-500/10', stroke: 'stroke-orange-600 dark:stroke-amber-500', gradient: 'from-yellow-600 to-amber-600' },
+  numpy: { text: 'text-cyan-800 dark:text-cyan-400', border: 'border-cyan-500/30 hover:border-cyan-500', bg: 'bg-cyan-500/10', stroke: 'stroke-cyan-600 dark:stroke-cyan-400', gradient: 'from-cyan-600 to-teal-600' },
+  pandas: { text: 'text-indigo-800 dark:text-indigo-400', border: 'border-indigo-500/30 hover:border-indigo-500', bg: 'bg-indigo-500/10', stroke: 'stroke-indigo-600 dark:stroke-indigo-400', gradient: 'from-indigo-600 to-blue-600' },
+  ml: { text: 'text-emerald-800 dark:text-green-400', border: 'border-emerald-500/30 hover:border-emerald-500', bg: 'bg-emerald-500/10', stroke: 'stroke-emerald-600 dark:stroke-green-400', gradient: 'from-green-600 to-emerald-600' },
+  visualization: { text: 'text-orange-800 dark:text-orange-400', border: 'border-orange-500/30 hover:border-orange-500', bg: 'bg-orange-500/10', stroke: 'stroke-orange-600 dark:stroke-orange-400', gradient: 'from-orange-600 to-red-600' },
+  dl: { text: 'text-purple-800 dark:text-purple-400', border: 'border-purple-500/30 hover:border-purple-500', bg: 'bg-purple-500/10', stroke: 'stroke-purple-600 dark:stroke-purple-400', gradient: 'from-purple-600 to-violet-600' },
+  genai: { text: 'text-pink-800 dark:text-pink-400', border: 'border-pink-500/30 hover:border-pink-500', bg: 'bg-pink-500/10', stroke: 'stroke-pink-600 dark:stroke-pink-400', gradient: 'from-pink-600 to-rose-600' },
+  agentic: { text: 'text-violet-800 dark:text-violet-400', border: 'border-violet-500/30 hover:border-violet-500', bg: 'bg-violet-500/10', stroke: 'stroke-violet-600 dark:stroke-violet-500', gradient: 'from-violet-600 to-indigo-600' },
 };
 
 export default function DashboardPage() {
@@ -112,22 +112,22 @@ export default function DashboardPage() {
   }, [completedTopicsCount, streak, completedTopics, allSubjects, unlockAchievement]);
 
   if (authLoading) return (
-    <div className="flex h-[calc(100vh-80px)] items-center justify-center bg-[#030712]">
-      <div className="w-12 h-12 border-4 border-accent-teal/30 border-t-accent-teal rounded-full animate-spin" />
+    <div className="flex h-[calc(100vh-80px)] items-center justify-center doodle-canvas">
+      <div className="w-12 h-12 border-4 border-[var(--canvas-border)] border-t-[var(--blue)] rounded-full animate-spin" />
     </div>
   );
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#030712] flex items-center justify-center px-6">
-        <div className="max-w-md w-full bg-bg-surface/40 border border-border backdrop-blur-md rounded-2xl p-8 text-center space-y-6">
-          <div className="w-16 h-16 rounded-full bg-accent-teal/15 text-accent-teal flex items-center justify-center mx-auto">
+      <div className="min-h-screen doodle-canvas flex items-center justify-center px-6">
+        <div className="max-w-md w-full bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] rounded-2xl p-8 text-center space-y-6 doodle-card shadow-[var(--shadow-md)]">
+          <div className="w-16 h-16 rounded-full bg-[var(--blue-tint)] text-[var(--blue)] flex items-center justify-center mx-auto">
             <Lock className="w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-display font-bold text-text-primary">Access Restricted</h1>
-          <p className="text-text-secondary text-sm">Please sign in to access your personal AI learning command center.</p>
+          <h1 className="text-3xl font-display font-bold text-[var(--ink)]">Access Restricted</h1>
+          <p className="text-[var(--ink-2)] text-sm font-body">Please sign in to access your personal AI learning command center.</p>
           <Link href="/">
-            <Button className="w-full py-3">Return Home</Button>
+            <Button className="w-full py-3 bg-[var(--blue)] text-white hover:bg-[var(--blue-dim)]">Return Home</Button>
           </Link>
         </div>
       </div>
@@ -285,33 +285,30 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#030712] py-12 px-6 relative overflow-hidden">
-      {/* Decorative Grid Mesh */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
-
+    <div className="min-h-screen doodle-canvas py-12 px-6 relative overflow-hidden">
       <div className="max-w-7xl mx-auto space-y-12 relative z-10">
         
         {/* Command Center Header */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-border/60">
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[var(--canvas-border)]">
           <div className="flex items-center gap-6">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-accent-teal to-accent-purple p-[1px] shadow-xl shadow-accent-teal/5">
-              <div className="w-full h-full rounded-2xl bg-bg-surface flex items-center justify-center text-text-primary text-3xl font-display font-bold">
+            <div className="w-20 h-20 rounded-2xl bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] p-[2px] shadow-md flex items-center justify-center">
+              <div className="w-full h-full rounded-2xl bg-[var(--yellow)] flex items-center justify-center text-[#111111] text-3xl font-display font-bold">
                 {user.displayName?.[0] || 'S'}
               </div>
             </div>
             <div className="min-w-0 flex-1">
-              <h1 className="text-3xl lg:text-4xl font-display font-bold tracking-tight break-words">
-                {greeting}, <span className="text-accent-teal inline-block">{user.displayName?.split(' ')[0] || 'Student'}</span>!
+              <h1 className="text-3xl lg:text-4xl font-display font-bold text-[var(--ink)] break-words">
+                {greeting}, <span className="text-[var(--blue)] inline-block">{user.displayName?.split(' ')[0] || 'Student'}</span>!
               </h1>
-              <p className="text-text-secondary mt-1 break-words">Learning Operating System is online. Ready to build skills?</p>
+              <p className="text-[var(--ink-2)] mt-1 break-words font-body">Learning Operating System is online. Ready to build skills?</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="secondary" className="gap-2 border-border/40 hover:bg-bg-surface/50" onClick={() => signOut()}>
+            <Button variant="secondary" className="gap-2 border-[var(--canvas-border)] bg-[var(--canvas-raised)] text-[var(--ink)] hover:bg-[var(--canvas-sunken)]" onClick={() => signOut()}>
               <LogOut className="w-4 h-4" /> Sign Out
             </Button>
             <Button 
-              className="gap-2 bg-gradient-to-r from-accent-teal to-accent-purple border-none shadow-lg shadow-accent-teal/20 hover:opacity-90"
+              className="gap-2 bg-[var(--blue)] text-white hover:bg-[var(--blue-dim)] border-none shadow-[var(--shadow-sm)]"
               onClick={() => setIsSettingsOpen(true)}
             >
               <Settings className="w-4 h-4" /> Settings
@@ -320,22 +317,20 @@ export default function DashboardPage() {
         </header>
 
         {/* Dynamic Stats Grid */}
+        {/* Dynamic Stats Grid */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, i) => (
-            <Card key={i} className="p-6 flex flex-col justify-between group hover:border-accent-teal/40 transition-all duration-300 relative overflow-hidden bg-bg-surface/30 border-border/40 backdrop-blur-md">
-              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
-                <stat.icon className="w-20 h-20" />
-              </div>
+            <Card key={i} className="p-6 flex flex-col justify-between group hover:border-[var(--blue)] transition-all duration-300 relative overflow-hidden bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] doodle-card shadow-[var(--shadow-sm)]">
               <div className="flex items-center gap-4 mb-4">
                 <div className={`p-3 rounded-xl border ${stat.color} shrink-0`}>
                   <stat.icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">{stat.label}</div>
-                  <div className="text-2xl font-display font-bold mt-0.5">{stat.value}</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--ink-3)] font-mono">{stat.label}</div>
+                  <div className="text-2xl font-display font-bold text-[var(--ink)] mt-0.5">{stat.value}</div>
                 </div>
               </div>
-              <div className="text-xs text-text-secondary border-t border-border/20 pt-3">{stat.description}</div>
+              <div className="text-xs text-[var(--ink-3)] border-t border-[var(--canvas-border)] pt-3 font-body">{stat.description}</div>
             </Card>
           ))}
         </section>
@@ -348,35 +343,31 @@ export default function DashboardPage() {
             
             {/* Intelligent Recommender & Streak */}
             <section className="space-y-6">
-              <h2 className="text-2xl font-display font-bold flex items-center gap-3">
-                <Sparkles className="w-6 h-6 text-accent-amber" /> 
+              <h2 className="text-2xl font-display font-bold flex items-center gap-3 text-[var(--ink)]">
+                <Sparkles className="w-6 h-6 text-[var(--yellow)]" /> 
                 Next Learning Objective
               </h2>
               
               {recommendedTopic ? (
-                <div className="bg-gradient-to-br from-bg-surface/40 to-bg-surface/20 border border-border/60 backdrop-blur-md rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 group hover:border-accent-teal/40 transition-all duration-300 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                    <Database className="w-32 h-32" />
-                  </div>
-                  
+                <div className="bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 group hover:border-[var(--blue)] transition-all duration-300 relative overflow-hidden doodle-card shadow-[var(--shadow-md)]">
                   <div className="flex-grow z-10 text-center md:text-left space-y-4">
                     <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5">
                       <Badge variant="teal">Recommended Next</Badge>
-                      <span className="text-xs font-bold text-text-secondary uppercase tracking-wider">{recommendedSubject?.name}</span>
+                      <span className="text-xs font-bold text-[var(--ink-3)] uppercase tracking-wider font-mono">{recommendedSubject?.name}</span>
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold group-hover:text-accent-teal transition-colors duration-200 break-words">{recommendedTopic.title}</h3>
-                      <p className="text-text-secondary text-sm max-w-md mt-2 leading-relaxed break-words">{recommendedTopic.description}</p>
+                      <h3 className="text-2xl font-bold text-[var(--ink)] group-hover:text-[var(--blue)] transition-colors duration-200 break-words font-heading">{recommendedTopic.title}</h3>
+                      <p className="text-[var(--ink-2)] text-sm max-w-md mt-2 leading-relaxed break-words font-body">{recommendedTopic.description}</p>
                     </div>
                     <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
                       <Link href={`/learn/${recommendedSubject?.slug}/${recommendedTopic.slug}`}>
-                        <Button className="gap-2 px-8 bg-gradient-to-r from-accent-teal to-accent-purple border-none shadow-lg shadow-accent-teal/20">
+                        <Button className="gap-2 px-8 bg-[var(--blue)] text-white hover:bg-[var(--blue-dim)] border-none shadow-[var(--shadow-sm)] font-mono">
                           Start Lesson <ArrowRight className="w-4 h-4" />
                         </Button>
                       </Link>
                       {lastTopic && (
                         <Link href={`/learn/${lastTopic.subjectSlug}/${lastTopic.topicSlug}`}>
-                          <Button variant="secondary" className="gap-2 border-border/40 hover:bg-bg-surface/50">
+                          <Button variant="secondary" className="gap-2 border-[var(--canvas-border)] bg-[var(--canvas-sunken)] text-[var(--ink)] hover:bg-[var(--canvas)] font-mono">
                             Resume: {lastTopic.topicTitle.length > 18 ? lastTopic.topicTitle.substring(0, 15) + '...' : lastTopic.topicTitle}
                           </Button>
                         </Link>
@@ -385,9 +376,9 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Active Streak Tracker Panel */}
-                  <div className="w-full md:w-56 space-y-4 z-10 bg-bg-surface/40 p-5 rounded-2xl border border-border/40">
+                  <div className="w-full md:w-56 space-y-4 z-10 bg-[var(--canvas-sunken)] p-5 rounded-2xl border-2 border-[var(--canvas-border)]">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">7-Day Streak Grid</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--ink-3)] font-mono">7-Day Streak</span>
                       <Flame className="w-4 h-4 text-orange-500 fill-current" />
                     </div>
                     
@@ -402,22 +393,22 @@ export default function DashboardPage() {
                             <div 
                               className={`w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-bold border transition-all duration-300
                                 ${active 
-                                  ? 'bg-gradient-to-br from-accent-teal to-accent-purple text-[#030712] border-transparent shadow-md shadow-accent-teal/10' 
+                                  ? 'bg-[var(--yellow)] text-[#111111] border-black/20 font-extrabold shadow-sm' 
                                   : isToday 
-                                    ? 'bg-bg-surface/60 border-accent-teal/30 text-accent-teal animate-pulse' 
-                                    : 'bg-bg-surface/20 border-border/20 text-text-secondary/40'
+                                    ? 'bg-[var(--canvas-raised)] border-[var(--blue)] text-[var(--blue)] animate-pulse' 
+                                    : 'bg-[var(--canvas-raised)] border-[var(--canvas-border)] text-[var(--ink-4)]'
                                 }
                               `}
                               title={`${date.toLocaleDateString()}: ${active ? 'Active' : 'Inactive'}`}
                             >
                               {dayLabel}
                             </div>
-                            <span className="text-[9px] font-mono text-text-secondary/50">{date.getDate()}</span>
+                            <span className="text-[9px] font-mono text-[var(--ink-3)]">{date.getDate()}</span>
                           </div>
                         );
                       })}
                     </div>
-                    <div className="text-[10px] text-text-secondary/70 leading-relaxed text-center">
+                    <div className="text-[10px] text-[var(--ink-3)] leading-relaxed text-center font-body">
                       {streak > 0 
                         ? `You are on a ${streak}-day streak! Keep checking in.` 
                         : 'Study a topic today to start your streak.'}
@@ -425,20 +416,20 @@ export default function DashboardPage() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-bg-surface/30 border border-border/60 border-dashed backdrop-blur-md rounded-2xl p-12 text-center space-y-6">
-                  <div className="w-16 h-16 rounded-full bg-accent-teal/15 text-accent-teal flex items-center justify-center mx-auto">
+                <div className="bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] border-dashed rounded-2xl p-12 text-center space-y-6 doodle-card">
+                  <div className="w-16 h-16 rounded-full bg-[var(--green-tint)] text-[var(--green)] flex items-center justify-center mx-auto">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-2xl font-bold text-text-primary">Curriculum Mastered!</h3>
-                    <p className="text-text-secondary text-sm max-w-md mx-auto">You have completed all topics. Prepare for interviews, build projects, or review concepts.</p>
+                    <h3 className="text-2xl font-bold text-[var(--ink)] font-heading">Curriculum Mastered!</h3>
+                    <p className="text-[var(--ink-2)] text-sm max-w-md mx-auto font-body">You have completed all topics. Prepare for interviews, build projects, or review concepts.</p>
                   </div>
                   <div className="flex justify-center gap-4">
                     <Link href="/interview">
-                      <Button className="gap-2">Interview Hub <ArrowRight className="w-4 h-4" /></Button>
+                      <Button className="gap-2 bg-[var(--blue)] text-white hover:bg-[var(--blue-dim)]">Interview Hub <ArrowRight className="w-4 h-4" /></Button>
                     </Link>
                     <Link href="/projects">
-                      <Button variant="secondary" className="gap-2">Project Lab</Button>
+                      <Button variant="secondary" className="gap-2 border-[var(--canvas-border)] bg-[var(--canvas-sunken)] text-[var(--ink)]">Project Lab</Button>
                     </Link>
                   </div>
                 </div>
@@ -447,7 +438,7 @@ export default function DashboardPage() {
 
             {/* Subject Mastery List (All 10 Subjects) */}
             <section className="space-y-6">
-              <h2 className="text-2xl font-display font-bold">Curriculum Progression</h2>
+              <h2 className="text-2xl font-display font-bold text-[var(--ink)]">Curriculum Progression</h2>
               <div className="grid sm:grid-cols-2 gap-4">
                 {allSubjects.map((subject) => {
                   const subjectTopics = subject.topics || [];
@@ -455,24 +446,24 @@ export default function DashboardPage() {
                   const subjectPercent = subjectTopics.length > 0 ? Math.round((subjectCompleted / subjectTopics.length) * 100) : 0;
                   
                   const colors = subjectColorMap[subject.id] || { 
-                    text: 'text-text-secondary', 
-                    border: 'border-border/40 hover:border-border', 
-                    bg: 'bg-bg-surface/10', 
-                    stroke: 'stroke-text-secondary', 
-                    gradient: 'from-gray-500 to-slate-600' 
+                    text: 'text-[var(--ink-2)]', 
+                    border: 'border-[var(--canvas-border)] hover:border-[var(--blue)]', 
+                    bg: 'bg-[var(--canvas-sunken)]', 
+                    stroke: 'stroke-[var(--blue)]', 
+                    gradient: 'from-blue-600 to-indigo-600' 
                   };
                   const Icon = subjectIconMap[subject.id] || BookOpen;
 
                   return (
                     <Link key={subject.id} href={`/learn/${subject.slug}`} className="block">
-                      <Card className={`p-5 flex items-center justify-between group transition-all duration-300 cursor-pointer bg-bg-surface/30 backdrop-blur-sm border ${colors.border}`}>
+                      <Card className={`p-5 flex items-center justify-between group transition-all duration-300 cursor-pointer bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] doodle-card hover:border-[var(--blue)]`}>
                         <div className="flex items-center gap-4">
-                          <div className={`p-3 rounded-xl border border-transparent transition-all duration-300 ${colors.text} ${colors.bg} group-hover:scale-105`}>
+                          <div className={`p-3 rounded-xl border border-[var(--canvas-border)] transition-all duration-300 ${colors.text} ${colors.bg} group-hover:scale-105`}>
                             <Icon className="w-6 h-6" />
                           </div>
                           <div>
-                            <h4 className="font-bold text-text-primary text-sm group-hover:text-accent-teal transition-colors duration-200">{subject.name}</h4>
-                            <div className="flex items-center gap-2 text-xs text-text-secondary mt-1 font-mono">
+                            <h4 className="font-bold text-[var(--ink)] text-sm group-hover:text-[var(--blue)] transition-colors duration-200 font-heading">{subject.name}</h4>
+                            <div className="flex items-center gap-2 text-xs text-[var(--ink-3)] mt-1 font-mono">
                               <span>{subjectCompleted} / {subjectTopics.length} Topics</span>
                             </div>
                           </div>

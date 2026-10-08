@@ -62,18 +62,18 @@ function FilterChip({
   onClick: () => void;
 }) {
   const colorMap: Record<string, string> = {
-    teal:   active ? 'bg-teal-500/20 border-teal-500 text-teal-400'   : 'border-border text-text-secondary hover:border-teal-500/50',
-    amber:  active ? 'bg-amber-500/20 border-amber-500 text-amber-400' : 'border-border text-text-secondary hover:border-amber-500/50',
-    red:    active ? 'bg-red-500/20 border-red-500 text-red-400'       : 'border-border text-text-secondary hover:border-red-500/50',
-    blue:   active ? 'bg-blue-500/20 border-blue-500 text-blue-400'   : 'border-border text-text-secondary hover:border-blue-500/50',
-    purple: active ? 'bg-purple-500/20 border-purple-500 text-purple-400' : 'border-border text-text-secondary hover:border-purple-500/50',
-    gray:   active ? 'bg-slate-600/40 border-slate-500 text-slate-200' : 'border-border text-text-secondary hover:border-slate-500/50',
+    teal:   active ? 'bg-emerald-500/20 border-emerald-600 text-emerald-950 dark:text-emerald-300 font-bold'   : 'border-[var(--canvas-border)] text-[var(--ink-2)] hover:border-emerald-600',
+    amber:  active ? 'bg-amber-500/20 border-amber-600 text-amber-950 dark:text-amber-300 font-bold' : 'border-[var(--canvas-border)] text-[var(--ink-2)] hover:border-amber-600',
+    red:    active ? 'bg-rose-500/20 border-rose-600 text-rose-950 dark:text-rose-300 font-bold'       : 'border-[var(--canvas-border)] text-[var(--ink-2)] hover:border-rose-600',
+    blue:   active ? 'bg-blue-500/20 border-blue-600 text-blue-950 dark:text-blue-300 font-bold'   : 'border-[var(--canvas-border)] text-[var(--ink-2)] hover:border-blue-600',
+    purple: active ? 'bg-purple-500/20 border-purple-600 text-purple-950 dark:text-purple-300 font-bold' : 'border-[var(--canvas-border)] text-[var(--ink-2)] hover:border-purple-600',
+    gray:   active ? 'bg-[var(--canvas-sunken)] border-[var(--ink-3)] text-[var(--ink)] font-bold' : 'border-[var(--canvas-border)] text-[var(--ink-2)] hover:border-[var(--ink-3)]',
   };
 
   return (
     <button
       onClick={onClick}
-      className={`px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${colorMap[color]}`}
+      className={`px-3 py-1.5 rounded-full border text-xs font-mono font-bold transition-all ${colorMap[color]}`}
     >
       {label}
     </button>
@@ -134,29 +134,28 @@ export default function InterviewPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen doodle-canvas">
       {/* ── Hero Header ──────────────────────────────────────────── */}
-      <div className="relative overflow-hidden border-b border-border bg-bg-secondary">
-        <div className="absolute inset-0 bg-gradient-to-br from-accent-teal/5 via-transparent to-transparent pointer-events-none" />
-        <div className="max-w-6xl mx-auto px-6 py-16">
+      <div className="relative overflow-hidden border-b border-[var(--canvas-border)] bg-[var(--canvas-raised)]">
+        <div className="max-w-6xl mx-auto px-6 py-14">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 rounded-xl bg-accent-teal/10 border border-accent-teal/20">
-              <BrainCircuit className="w-6 h-6 text-accent-teal" />
+            <div className="p-3 rounded-xl bg-[var(--blue-tint)] border border-[var(--canvas-border)] text-[var(--blue)]">
+              <BrainCircuit className="w-6 h-6" />
             </div>
-            <span className="text-xs font-bold uppercase tracking-widest text-accent-teal">
+            <span className="text-xs font-bold uppercase tracking-widest text-[var(--blue)] font-mono">
               Interview Prep
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-text-primary mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[var(--ink)] mb-4 leading-tight font-heading">
             Interview Question Bank
           </h1>
-          <p className="text-text-secondary text-lg max-w-2xl mb-6">
+          <p className="text-[var(--ink-2)] text-base sm:text-lg max-w-2xl mb-6 font-body">
             {ALL_QUESTIONS.length} curated questions spanning SQL, Python, ML, Deep Learning, Generative AI, and Agentic AI — all in one place. Filter, study, ace the interview.
           </p>
 
           <button
             onClick={() => window.location.href = '/interview/mock'}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-accent-teal to-accent-blue text-bg-primary font-bold rounded-xl shadow-lg shadow-accent-teal/20 hover:opacity-90 transition-opacity mb-10"
+            className="flex items-center gap-2 px-6 py-3 bg-[var(--blue)] text-white font-bold rounded-xl shadow-[var(--shadow-sm)] hover:bg-[var(--blue-dim)] transition-colors mb-8 font-mono"
           >
             <BrainCircuit className="w-5 h-5" />
             Start Mock Interview
@@ -164,19 +163,19 @@ export default function InterviewPage() {
 
           {/* Search bar */}
           <div className="relative max-w-xl">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-3)]" />
             <input
               id="interview-search"
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search questions, topics, or subjects…"
-              className="w-full pl-11 pr-4 py-3.5 bg-bg-elevated border border-border rounded-xl text-text-primary placeholder:text-text-secondary/60 outline-none focus:border-accent-teal transition-colors text-sm"
+              className="w-full pl-11 pr-4 py-3.5 bg-[var(--canvas-sunken)] border-2 border-[var(--canvas-border)] rounded-xl text-[var(--ink)] placeholder:text-[var(--ink-3)] outline-none focus:border-[var(--blue)] transition-colors text-sm font-body"
             />
             {search && (
               <button
                 onClick={() => setSearch('')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--ink-3)] hover:text-[var(--ink)]"
               >
                 <X className="w-4 h-4" />
               </button>

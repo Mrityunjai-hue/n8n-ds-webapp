@@ -24,17 +24,20 @@ export const TopicSidebar: React.FC<TopicSidebarProps> = ({
 
   return (
     <div className="flex flex-col h-full p-6">
-      <Link href="/roadmap" className="flex items-center gap-2 text-xs font-bold text-text-secondary hover:text-accent-teal transition-colors mb-8">
+      <Link href="/roadmap" className="flex items-center gap-2 text-xs font-bold transition-colors mb-8" style={{ color: 'var(--fg3)' }}
+        onMouseEnter={(e) => e.currentTarget.style.color = 'var(--lime)'}
+        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--fg3)'}
+      >
         <ChevronLeft className="w-4 h-4" />
         Back to Roadmap
       </Link>
 
       <div className="mb-8">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-4">{subjectName}</h2>
+        <h2 className="text-xs font-bold uppercase tracking-widest mb-4 font-mono" style={{ color: 'var(--fg3)' }}>{subjectName}</h2>
         <div className="space-y-2">
           <div className="flex justify-between text-[10px] font-bold uppercase">
-            <span>Progress</span>
-            <span className="text-accent-teal">{currentProgress}%</span>
+            <span style={{ color: 'var(--fg3)' }}>Progress</span>
+            <span style={{ color: 'var(--lime)' }}>{currentProgress}%</span>
           </div>
           <ProgressBar progress={currentProgress} />
         </div>
@@ -49,15 +52,30 @@ export const TopicSidebar: React.FC<TopicSidebarProps> = ({
             <Link
               key={topic.id}
               href={`/learn/${subjectSlug}/${topic.slug}`}
-              className={`
-                flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all group
-                ${isActive ? 'bg-accent-teal/10 text-accent-teal font-bold' : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'}
-              `}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all group"
+              style={{
+                backgroundColor: isActive ? 'var(--lime-tint)' : 'transparent',
+                color: isActive ? 'var(--lime)' : isCompleted ? 'var(--success)' : 'var(--fg3)',
+                fontWeight: isActive ? 500 : 400,
+                border: isActive ? '1px solid var(--lime-border)' : '1px solid transparent',
+              }}
+              onMouseEnter={(e) => { 
+                if (!isActive) { 
+                  e.currentTarget.style.backgroundColor = 'var(--canvas-raised)'; 
+                  e.currentTarget.style.color = 'var(--ink-2)'; 
+                }
+              }}
+              onMouseLeave={(e) => { 
+                if (!isActive) { 
+                  e.currentTarget.style.backgroundColor = 'transparent'; 
+                  e.currentTarget.style.color = isCompleted ? 'var(--success)' : 'var(--ink-3)'; 
+                }
+              }}
             >
               {isCompleted ? (
-                <CheckCircle2 className="w-4 h-4 text-accent-teal" />
+                <CheckCircle2 className="w-4 h-4" style={{ color: isActive ? 'var(--lime)' : 'var(--success)' }} />
               ) : (
-                <Circle className={`w-4 h-4 ${isActive ? 'text-accent-teal' : 'text-border group-hover:text-text-secondary'}`} />
+                <Circle className="w-4 h-4" style={{ color: isActive ? 'var(--lime)' : 'var(--fg4)' }} />
               )}
               <span className="truncate">{topic.title}</span>
             </Link>

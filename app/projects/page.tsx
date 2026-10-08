@@ -224,21 +224,21 @@ const CodeBlock = ({ code }: { code: string }) => {
   const { isCopied, copy } = useCopyToClipboard();
 
   return (
-    <div className="relative group rounded-xl overflow-hidden bg-[#0d1117] border border-border/40 font-mono text-[13px] leading-relaxed">
-      <div className="flex items-center justify-between px-4 py-2 bg-[#161b22] border-b border-border/20">
+    <div className="relative group rounded-xl overflow-hidden bg-[var(--canvas-sunken)] dark:bg-[#12082a] border-2 border-[var(--canvas-border)] font-mono text-[13px] leading-relaxed doodle-border">
+      <div className="flex items-center justify-between px-4 py-2 bg-[var(--canvas-raised)] border-b border-[var(--canvas-border)]">
         <div className="flex gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/50" />
-          <div className="w-2.5 h-2.5 rounded-full bg-amber-500/20 border border-amber-500/50" />
-          <div className="w-2.5 h-2.5 rounded-full bg-green-500/20 border border-green-500/50" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[var(--red)] border border-black/10" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[var(--yellow)] border border-black/10" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[var(--green)] border border-black/10" />
         </div>
         <button
           onClick={() => copy(code)}
-          className="flex items-center gap-1.5 text-[10px] uppercase font-bold text-text-muted hover:text-text-primary transition-colors"
+          className="flex items-center gap-1.5 text-[10px] uppercase font-bold text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors cursor-pointer"
         >
-          {isCopied ? <><Check className="w-3 h-3 text-green-400" /> Copied</> : <><Copy className="w-3 h-3" /> Copy</>}
+          {isCopied ? <><Check className="w-3 h-3 text-[var(--green)]" /> Copied</> : <><Copy className="w-3 h-3" /> Copy</>}
         </button>
       </div>
-      <div className="p-4 overflow-x-auto text-gray-300 whitespace-pre">
+      <div className="p-4 overflow-x-auto text-[var(--ink)] whitespace-pre font-mono">
         {code}
       </div>
     </div>
@@ -263,20 +263,17 @@ export default function ProjectsPage() {
   }, [activeFilter]);
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen pb-24 doodle-canvas">
       {/* ── Page Header ────────────────────────────────────────── */}
-      <section className="pt-32 pb-12 bg-bg-secondary border-b border-border/60 relative overflow-hidden">
-        {/* Subtle grid background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-        
+      <section className="pt-28 pb-12 bg-[var(--canvas-raised)] border-b border-[var(--canvas-border)] relative overflow-hidden">
         <div className="container mx-auto px-6 relative z-10">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-accent-teal/10 text-accent-teal flex items-center justify-center shadow-lg shadow-accent-teal/5">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-[var(--blue-tint)] text-[var(--blue)] border border-[var(--canvas-border)] flex items-center justify-center shadow-md">
               <FlaskConical className="w-6 h-6" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-display font-bold">Projects Lab</h1>
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-[var(--ink)]">Projects Lab</h1>
           </div>
-          <p className="text-text-secondary max-w-3xl text-base md:text-lg leading-relaxed">
+          <p className="text-[var(--ink-2)] max-w-3xl text-base md:text-lg leading-relaxed font-body">
             Industry-grade projects modelled on real problems solved at companies like Flipkart, Apollo Hospitals, Jio, and Swiggy. Each project tells you what to build, where to build it, which free tools to use, and exactly how to do it.
           </p>
         </div>
@@ -285,21 +282,21 @@ export default function ProjectsPage() {
       {/* ── Stats Row ──────────────────────────────────────────── */}
       <section className="container mx-auto px-6 py-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-bg-surface rounded-2xl p-6 text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-text-muted mb-2">Total Projects</div>
-            <div className="text-4xl font-display font-bold text-text-primary">8</div>
+          <div className="bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] rounded-2xl p-6 text-center doodle-card shadow-[var(--shadow-sm)]">
+            <div className="text-xs font-bold uppercase tracking-wider text-[var(--ink-3)] font-mono mb-2">Total Projects</div>
+            <div className="text-4xl font-display font-bold text-[var(--ink)]">8</div>
           </div>
-          <div className="bg-bg-surface rounded-2xl p-6 text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-text-muted mb-2">Domains Covered</div>
-            <div className="text-4xl font-display font-bold text-accent-teal">6</div>
+          <div className="bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] rounded-2xl p-6 text-center doodle-card shadow-[var(--shadow-sm)]">
+            <div className="text-xs font-bold uppercase tracking-wider text-[var(--ink-3)] font-mono mb-2">Domains Covered</div>
+            <div className="text-4xl font-display font-bold text-[var(--green)]">6</div>
           </div>
-          <div className="bg-bg-surface rounded-2xl p-6 text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-text-muted mb-2">Skills Taught</div>
-            <div className="text-4xl font-display font-bold text-accent-purple">18+</div>
+          <div className="bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] rounded-2xl p-6 text-center doodle-card shadow-[var(--shadow-sm)]">
+            <div className="text-xs font-bold uppercase tracking-wider text-[var(--ink-3)] font-mono mb-2">Skills Taught</div>
+            <div className="text-4xl font-display font-bold text-[var(--blue)]">18+</div>
           </div>
-          <div className="bg-bg-surface rounded-2xl p-6 text-center">
-            <div className="text-xs font-bold uppercase tracking-wider text-text-muted mb-2">Avg. Duration</div>
-            <div className="text-4xl font-display font-bold text-accent-amber text-lg mt-3">3–5 Days</div>
+          <div className="bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] rounded-2xl p-6 text-center doodle-card shadow-[var(--shadow-sm)]">
+            <div className="text-xs font-bold uppercase tracking-wider text-[var(--ink-3)] font-mono mb-2">Avg. Duration</div>
+            <div className="text-3xl font-display font-bold text-[var(--orange)] mt-1">3–5 Days</div>
           </div>
         </div>
       </section>
@@ -311,10 +308,10 @@ export default function ProjectsPage() {
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
-              className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 border
+              className={`px-4 py-2 rounded-full text-xs font-mono font-bold transition-all duration-200 border
                 ${activeFilter === filter 
-                  ? 'bg-accent-teal border-accent-teal text-[#030712] shadow-md shadow-accent-teal/20' 
-                  : 'bg-bg-surface border-border text-text-secondary hover:border-text-secondary/50 hover:text-text-primary'
+                  ? 'bg-[var(--yellow)] border-black/20 text-[#111111] shadow-sm' 
+                  : 'bg-[var(--canvas-raised)] border-[var(--canvas-border)] text-[var(--ink-2)] hover:border-[var(--blue)] hover:text-[var(--ink)]'
                 }
               `}
             >
@@ -331,13 +328,13 @@ export default function ProjectsPage() {
             <div 
               key={project.id}
               onClick={() => setSelectedProject(project)}
-              className={`group cursor-pointer bg-bg-surface rounded-2xl p-6 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-accent-teal/5 relative overflow-hidden border
-                ${project.featured ? 'border-accent-teal/80 shadow-lg shadow-accent-teal/5' : 'border-border/60 hover:border-border'}
+              className={`group cursor-pointer bg-[var(--canvas-raised)] rounded-2xl p-6 flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl relative overflow-hidden border-2 border-[var(--canvas-border)] hover:border-[var(--blue)] doodle-card shadow-[var(--shadow-sm)]
+                ${project.featured ? 'border-[var(--blue)]' : ''}
               `}
             >
               {/* Featured Badge */}
               {project.featured && (
-                <div className="absolute top-0 right-0 bg-accent-teal text-[#030712] text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-bl-xl z-10">
+                <div className="absolute top-0 right-0 bg-[var(--yellow)] text-[#111111] text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-bl-xl z-10 font-mono">
                   Featured
                 </div>
               )}
@@ -348,49 +345,56 @@ export default function ProjectsPage() {
                   {project.icon}
                 </div>
                 <div className="flex flex-col gap-1 items-start">
-                  <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-bg-primary border border-border/50 ${project.difficulty === 'beginner' ? 'text-green-500' : project.difficulty === 'advanced' ? 'text-purple-500' : 'text-amber-500'}`}>
+                  <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider font-mono border
+                    ${project.difficulty === 'beginner' 
+                      ? 'text-emerald-800 dark:text-green-400 bg-emerald-500/15 border-emerald-600/30' 
+                      : project.difficulty === 'advanced' 
+                        ? 'text-purple-800 dark:text-purple-400 bg-purple-500/15 border-purple-600/30' 
+                        : 'text-amber-900 dark:text-amber-400 bg-amber-500/15 border-amber-600/30'
+                    }`}
+                  >
                     {project.difficulty}
                   </span>
-                  <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-bg-primary border border-border/50 text-text-secondary">
+                  <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider font-mono bg-[var(--canvas-sunken)] border border-[var(--canvas-border)] text-[var(--ink-2)]">
                     {project.domain}
                   </span>
                 </div>
               </div>
 
               {/* Title & Tagline */}
-              <h3 className="text-xl font-bold text-text-primary group-hover:text-accent-teal transition-colors mb-2 line-clamp-2">
+              <h3 className="text-xl font-bold text-[var(--ink)] group-hover:text-[var(--blue)] transition-colors mb-2 line-clamp-2 font-heading">
                 {project.title}
               </h3>
-              <p className="text-sm text-text-secondary line-clamp-2 flex-grow mb-5">
+              <p className="text-sm text-[var(--ink-2)] line-clamp-2 flex-grow mb-5 font-body">
                 {project.tagline}
               </p>
 
               {/* Skill Tags */}
               <div className="flex flex-wrap gap-1.5 mb-6">
                 {project.skills.slice(0, 5).map((skill, idx) => (
-                  <span key={idx} className="px-2 py-1 bg-bg-primary border border-border/40 rounded text-[10px] text-text-muted font-medium">
+                  <span key={idx} className="px-2 py-1 bg-[var(--canvas-sunken)] border border-[var(--canvas-border)] rounded text-[10px] text-[var(--ink-2)] font-mono font-medium">
                     {skill}
                   </span>
                 ))}
                 {project.skills.length > 5 && (
-                  <span className="px-2 py-1 bg-bg-primary border border-border/40 rounded text-[10px] text-text-muted font-bold">
+                  <span className="px-2 py-1 bg-[var(--canvas-sunken)] border border-[var(--canvas-border)] rounded text-[10px] text-[var(--ink-3)] font-mono font-bold">
                     +{project.skills.length - 5}
                   </span>
                 )}
               </div>
 
               {/* Bottom Meta Row */}
-              <div className="flex items-center justify-between pt-4 border-t border-border/40 mt-auto">
+              <div className="flex items-center justify-between pt-4 border-t border-[var(--canvas-border)] mt-auto font-mono">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-text-muted" title="Estimated Duration">
+                  <div className="flex items-center gap-1 text-[11px] font-bold text-[var(--ink-3)]" title="Estimated Duration">
                     <Clock className="w-3.5 h-3.5" /> {project.duration}
                   </div>
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-text-muted" title="Implementation Steps">
+                  <div className="flex items-center gap-1 text-[11px] font-bold text-[var(--ink-3)]" title="Implementation Steps">
                     <ListChecks className="w-3.5 h-3.5" /> {project.steps.length} Steps
                   </div>
                 </div>
                 
-                <div className="text-xs font-bold text-accent-teal flex items-center gap-1 group-hover:gap-2 transition-all">
+                <div className="text-xs font-bold text-[var(--blue)] flex items-center gap-1 group-hover:gap-2 transition-all">
                   View guide <ArrowRight className="w-3.5 h-3.5" />
                 </div>
               </div>
@@ -399,7 +403,7 @@ export default function ProjectsPage() {
           ))}
 
           {filteredProjects.length === 0 && (
-            <div className="col-span-full py-20 text-center text-text-secondary">
+            <div className="col-span-full py-20 text-center text-[var(--ink-3)] font-body">
               No projects found for this filter. Try selecting "All Projects".
             </div>
           )}
