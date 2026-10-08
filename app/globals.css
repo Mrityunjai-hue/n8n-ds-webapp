@@ -252,7 +252,6 @@
     word-break: break-word;
     overflow-wrap: break-word;
     @apply antialiased;
-    transition: background-color 0.25s ease, color 0.25s ease;
   }
 
   img, svg, video, canvas, audio, iframe, embed, object {
@@ -265,11 +264,9 @@
     font-family: var(--font-heading);
     letter-spacing: -0.012em;
     color: var(--ink);
-    transition: color 0.2s ease;
   }
 
   .crayon-wax, .crayon-heading {
-    filter: url(#crayon-roughness);
     font-family: var(--font-heading) !important;
   }
 
@@ -279,7 +276,6 @@
       0.8px 0.8px 0 rgba(45, 107, 228, 0.40),
       -0.5px -0.4px 0 rgba(45, 107, 228, 0.20),
       0.4px -0.5px 0 rgba(45, 107, 228, 0.15) !important;
-    filter: url(#crayon-roughness);
   }
 
   .crayon-yellow {
@@ -288,7 +284,6 @@
       0.8px 0.8px 0 rgba(247, 201, 72, 0.6),
       -0.5px -0.4px 0 rgba(247, 201, 72, 0.3),
       0.4px -0.5px 0 rgba(247, 201, 72, 0.2) !important;
-    filter: url(#crayon-roughness);
   }
   .dark .crayon-yellow {
     color: var(--yellow) !important;
@@ -301,7 +296,6 @@
     text-shadow:
       0.8px 0.8px 0 rgba(230, 57, 70, 0.40),
       -0.5px -0.4px 0 rgba(230, 57, 70, 0.20) !important;
-    filter: url(#crayon-roughness);
   }
 
   .crayon-green {
@@ -309,7 +303,6 @@
     text-shadow:
       0.8px 0.8px 0 rgba(45, 198, 83, 0.40),
       -0.5px -0.4px 0 rgba(45, 198, 83, 0.20) !important;
-    filter: url(#crayon-roughness);
   }
 
   .crayon-orange {
@@ -317,7 +310,6 @@
     text-shadow:
       0.8px 0.8px 0 rgba(244, 132, 95, 0.40),
       -0.5px -0.4px 0 rgba(244, 132, 95, 0.20) !important;
-    filter: url(#crayon-roughness);
   }
 
   /* Real highlighter mark background */

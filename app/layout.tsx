@@ -71,7 +71,7 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="light"
           enableSystem={false}
-          disableTransitionOnChange={false}
+          disableTransitionOnChange={true}
         >
           <SplashScreenWrapper>
             <a
@@ -97,48 +97,6 @@ export default function RootLayout({
             <ButtonAnimations />
           </SplashScreenWrapper>
         </ThemeProvider>
-
-        {/* Global SVG Filters for Authentic Crayon on Paper Texture & Hand-Drawn Strokes */}
-        <svg
-          aria-hidden="true"
-          className="fixed pointer-events-none -top-[9999px] -left-[9999px] w-0 h-0"
-        >
-          <defs>
-            {/* Crayon Wax Displacement & Grain */}
-            <filter id="crayon-roughness" x="-10%" y="-10%" width="120%" height="120%">
-              <feTurbulence
-                type="fractalNoise"
-                baseFrequency="0.045 0.08"
-                numOctaves="3"
-                result="noise"
-              />
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="noise"
-                scale="1.8"
-                xChannelSelector="R"
-                yChannelSelector="G"
-              />
-            </filter>
-
-            {/* Subtle Pencil Graphite Jitter */}
-            <filter id="pencil-jitter" x="-5%" y="-5%" width="110%" height="110%">
-              <feTurbulence
-                type="turbulence"
-                baseFrequency="0.03"
-                numOctaves="2"
-                result="turbulence"
-              />
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="turbulence"
-                scale="1.1"
-                xChannelSelector="R"
-                yChannelSelector="G"
-              />
-            </filter>
-          </defs>
-        </svg>
       </body>
     </html>
   );

@@ -147,13 +147,23 @@ export const Navbar = () => {
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               )}
+
+              {/* Hamburger Button for Tablet screens (< lg) */}
+              <button
+                onClick={() => setIsMobileOpen(true)}
+                className="lg:hidden w-8 h-8 rounded-full bg-[var(--canvas)] hover:bg-[var(--canvas-sunken)] border border-[var(--canvas-border)] flex items-center justify-center text-[var(--ink)] active:scale-95 ml-0.5 cursor-pointer shadow-xs"
+                aria-label="Open navigation drawer"
+                title="Open menu"
+              >
+                <Menu className="w-4 h-4" />
+              </button>
             </div>
 
             {/* Mobile Header Controls (< 640px) */}
             <div className="sm:hidden flex items-center gap-1 p-1 rounded-full border-2 border-[var(--canvas-border)] bg-[var(--canvas-raised)]/95 backdrop-blur-md shadow-sm">
               <button
                 onClick={openSearch}
-                className="w-8 h-8 rounded-full bg-[var(--canvas-sunken)] flex items-center justify-center text-[var(--ink-2)]"
+                className="w-8 h-8 rounded-full bg-[var(--canvas-sunken)] hover:bg-[var(--canvas)] flex items-center justify-center text-[var(--ink-2)] cursor-pointer"
                 aria-label="Search"
               >
                 <Search className="w-3.5 h-3.5" />
@@ -163,8 +173,9 @@ export const Navbar = () => {
 
               <button
                 onClick={() => setIsMobileOpen(true)}
-                className="w-8 h-8 rounded-full bg-[var(--canvas)] border border-[var(--canvas-border)] flex items-center justify-center text-[var(--ink)] active:scale-95"
+                className="w-8 h-8 rounded-full bg-[var(--canvas)] hover:bg-[var(--canvas-sunken)] border border-[var(--canvas-border)] flex items-center justify-center text-[var(--ink)] active:scale-95 cursor-pointer"
                 aria-label="Open mobile menu"
+                title="Open menu"
               >
                 <Menu className="w-4 h-4" />
               </button>
