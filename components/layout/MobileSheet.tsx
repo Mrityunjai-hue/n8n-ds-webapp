@@ -64,43 +64,44 @@ export const MobileSheet: React.FC<MobileSheetProps> = ({
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-            className="relative w-full max-w-xl mx-auto h-[85dvh] max-h-[85dvh] flex flex-col rounded-t-[28px] border-t-3 border-x-2 border-[var(--canvas-border)] bg-[var(--canvas)] shadow-2xl overflow-hidden doodle-canvas select-none"
+            transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+            className="relative w-full max-w-lg mx-auto max-h-[82dvh] h-[82dvh] flex flex-col rounded-t-[28px] border-t-3 border-x-2 border-[var(--canvas-border)] bg-[var(--canvas)] shadow-2xl overflow-hidden doodle-canvas select-none"
             style={{
+              marginTop: 'max(1.5rem, env(safe-area-inset-top, 24px))',
               paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))',
             }}
           >
-            {/* 1. FIXED TOP HEADER: NEVER SCROLLS AWAY (Close button is always visible & accessible) */}
-            <div className="flex-shrink-0 px-5 pt-3 pb-3 border-b-2 border-[var(--canvas-border)] bg-[var(--canvas)] flex flex-col gap-2 z-20">
-              {/* Drag Handle */}
-              <div className="w-12 h-1.5 rounded-full bg-[var(--canvas-border)] mx-auto opacity-70" />
+            {/* 1. FIXED TOP HEADER: NEVER SCROLLS AWAY (Close button is always visible, centered & accessible) */}
+            <div className="flex-shrink-0 px-5 pt-3.5 pb-3 border-b-2 border-[var(--canvas-border)] bg-[var(--canvas)] flex flex-col gap-2.5 z-30">
+              {/* Drag Handle Indicator */}
+              <div className="w-12 h-1.5 rounded-full bg-[var(--canvas-border)] mx-auto opacity-70 cursor-grab" />
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-[var(--yellow-tint)] border-2 border-[var(--canvas-border)] flex items-center justify-center text-[var(--blue)] shadow-xs">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-9 h-9 min-w-[36px] min-h-[36px] rounded-xl bg-[var(--yellow-tint)] border-2 border-[var(--canvas-border)] flex items-center justify-center text-[var(--blue)] shadow-xs shrink-0">
                     <Compass className="w-4 h-4" />
                   </div>
-                  <div>
-                    <div className="text-sm font-bold font-mono text-[var(--ink)] flex items-center gap-1.5">
+                  <div className="min-w-0">
+                    <div className="text-sm font-bold font-mono text-[var(--ink)] flex items-center gap-1.5 truncate">
                       <span>404 Found</span>
-                      <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[var(--blue)] text-white">
+                      <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[var(--blue)] text-white shrink-0">
                         STUDY HUB
                       </span>
                     </div>
-                    <div className="text-[11px] text-[var(--ink-3)] font-mono">
+                    <div className="text-[11px] text-[var(--ink-3)] font-mono truncate">
                       Data Science &amp; AI Practice Platform
                     </div>
                   </div>
                 </div>
 
-                {/* Fixed, Prominent, Highly-Accessible Close Button */}
+                {/* Fixed, Prominent, Safe-Zone Close Button */}
                 <button
                   onClick={onClose}
-                  className="w-9 h-9 min-w-[36px] min-h-[36px] rounded-full border-2 border-[var(--canvas-border)] bg-[var(--canvas-raised)] hover:bg-[var(--canvas-sunken)] active:scale-90 flex items-center justify-center text-[var(--ink)] shadow-xs transition-transform cursor-pointer"
+                  className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full border-2 border-[var(--canvas-border)] bg-[var(--canvas-raised)] hover:bg-[var(--canvas-sunken)] active:scale-90 flex items-center justify-center text-[var(--ink)] shadow-xs transition-transform cursor-pointer shrink-0"
                   aria-label="Close navigation"
                   title="Close navigation"
                 >
-                  <X className="w-4 h-4 text-[var(--ink)]" />
+                  <X className="w-5 h-5 text-[var(--ink)] stroke-[2.5]" />
                 </button>
               </div>
             </div>

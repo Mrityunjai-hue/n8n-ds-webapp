@@ -259,6 +259,18 @@
     height: auto;
   }
 
+  /* ── MOBILE SMOOTH SCROLLING & CONTENT CONTAINMENT ── */
+  .section-contain {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 650px;
+  }
+
+  @media (max-width: 768px) {
+    .section-contain {
+      contain: layout style;
+    }
+  }
+
   /* ── GLOBAL TYPOGRAPHY ENFORCEMENT ── */
   h1, h2, h3, h4, h5, h6, .font-heading, .font-display {
     font-family: var(--font-heading);

@@ -91,17 +91,23 @@ export const HeroSection = () => {
     return () => clearTimeout(timer);
   }, [displayText, isDeleting, wordIdx]);
 
-  // Particle network physics canvas
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Particle network physics canvas with viewport intersection observer
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // Skip heavy canvas loop on small mobile viewports
+    if (window.innerWidth < 640) return;
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animationFrameId: number | null = null;
+    let isVisible = true;
     let particles: Particle[] = [];
-    const particleCount = 80;
+    const particleCount = Math.min(Math.floor(window.innerWidth / 35), 45);
 
     class Particle {
       x: number;
@@ -112,16 +118,15 @@ export const HeroSection = () => {
       color: string;
 
       constructor() {
-        this.x = Math.random() * canvas!.width;
-        this.y = Math.random() * canvas!.height;
+        this.x = Math.random() * (canvas?.width || 800);
+        this.y = Math.random() * (canvas?.height || 600);
         this.size = Math.random() * 2 + 0.6;
-        this.speedX = Math.random() * 0.4 - 0.2;
-        this.speedY = Math.random() * 0.4 - 0.2;
-        // Color code based on new palette
+        this.speedX = Math.random() * 0.3 - 0.15;
+        this.speedY = Math.random() * 0.3 - 0.15;
         const colors = [
-          'rgba(200, 241, 53, 0.4)',  // Lime
-          'rgba(0, 255, 224, 0.3)',   // Acid cyan
-          'rgba(255, 184, 48, 0.3)'   // Warning amber
+          'rgba(29, 91, 206, 0.35)',   // Blue
+          'rgba(245, 191, 56, 0.35)',  // Yellow
+          'rgba(27, 138, 62, 0.35)',   // Green
         ];
         this.color = colors[Math.floor(Math.random() * colors.length)];
       }
@@ -146,8 +151,9 @@ export const HeroSection = () => {
     }
 
     const init = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = 750;
+      if (!canvas) return;
+      canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
+      canvas.height = canvas.parentElement?.clientHeight || 650;
       particles = [];
       for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
@@ -155,19 +161,21 @@ export const HeroSection = () => {
     };
 
     const animate = () => {
+      if (!isVisible) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
       for (let i = 0; i < particles.length; i++) {
         particles[i].update();
         particles[i].draw();
 
-        for (let j = i; j < particles.length; j++) {
+        for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 140) {
+          if (distance < 110) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(200, 241, 53, ${0.08 - distance / 1800})`;
+            ctx.strokeStyle = `rgba(29, 91, 206, ${0.1 - distance / 1200})`;
             ctx.lineWidth = 0.5;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -182,14 +190,38 @@ export const HeroSection = () => {
     init();
     animate();
 
+    // Pause animation when scrolled away to prevent CPU thrashing
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const nowVisible = entry.isIntersecting;
+        if (nowVisible && !isVisible) {
+          isVisible = true;
+          animate();
+        } else if (!nowVisible && isVisible) {
+          isVisible = false;
+          if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        }
+      },
+      { threshold: 0.05 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
     const handleResize = () => {
+      if (window.innerWidth < 640) {
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        return;
+      }
       init();
     };
 
     window.addEventListener('resize', handleResize);
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
       window.removeEventListener('resize', handleResize);
     };
   }, []);
@@ -206,7 +238,7 @@ export const HeroSection = () => {
   const simulation = CODE_SIMULATIONS[activeCodeLang];
 
   return (
-    <section className="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24">
+    <section ref={sectionRef} className="relative overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24">
       {/* Background Animated Gradient Highlight */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full filter blur-[120px] pointer-events-none opacity-40" style={{ backgroundColor: 'var(--yellow-tint)' }} />
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full filter blur-[120px] pointer-events-none opacity-30" style={{ backgroundColor: 'var(--blue-tint)' }} />

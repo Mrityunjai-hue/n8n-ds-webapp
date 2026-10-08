@@ -105,7 +105,7 @@ export default function Home() {
       </div>
       
       {/* 3. The Visual Roadmap section */}
-      <section className="py-16 overflow-hidden relative">
+      <section className="py-16 overflow-hidden relative section-contain">
         <div className="container mx-auto px-6 text-center mb-14">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-mono font-medium mb-4" style={{ backgroundColor: 'var(--yellow-tint)', borderColor: 'var(--canvas-border)', color: 'var(--ink)' }}>
             <Sparkles className="w-3.5 h-3.5 text-[var(--yellow)]" />
@@ -126,7 +126,7 @@ export default function Home() {
       </div>
 
       {/* 4. Subject Cards Grid */}
-      <section className="py-16 container mx-auto px-6">
+      <section className="py-16 container mx-auto px-6 section-contain">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div className="max-w-2xl text-left">
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)', color: 'var(--ink)' }}>
@@ -150,7 +150,7 @@ export default function Home() {
       </section>
 
       {/* 5. How It Works Section */}
-      <section className="py-20 border-b relative" style={{ borderColor: 'var(--canvas-border)', backgroundColor: 'var(--canvas-raised)' }}>
+      <section className="py-20 border-b relative section-contain" style={{ borderColor: 'var(--canvas-border)', backgroundColor: 'var(--canvas-raised)' }}>
         <div className="container mx-auto px-6">
           <div className="text-center mb-14">
             <h2 className="text-4xl sm:text-5xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)', color: 'var(--ink)' }}>
@@ -185,7 +185,7 @@ export default function Home() {
       </section>
 
       {/* 6. Interview Questions Teaser Section */}
-      <section className="py-20 border-b relative" style={{ borderColor: 'var(--canvas-border)' }}>
+      <section className="py-20 border-b relative section-contain" style={{ borderColor: 'var(--canvas-border)' }}>
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-14">
             <h2 className="text-4xl sm:text-5xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)', color: 'var(--ink)' }}>
@@ -256,7 +256,7 @@ export default function Home() {
       </section>
 
       {/* 7. Testimonials/Social Proof */}
-      <section className="py-20 border-b" style={{ borderColor: 'var(--canvas-border)', backgroundColor: 'var(--canvas-raised)' }}>
+      <section className="py-20 border-b section-contain" style={{ borderColor: 'var(--canvas-border)', backgroundColor: 'var(--canvas-raised)' }}>
         <div className="container mx-auto px-6">
           <div className="text-center mb-14">
             <h2 className="text-4xl sm:text-5xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)', color: 'var(--ink)' }}>
@@ -292,7 +292,7 @@ export default function Home() {
       </section>
 
       {/* 8. CTA Section */}
-      <section className="py-20 relative overflow-hidden" style={{ backgroundColor: 'var(--canvas)' }}>
+      <section className="py-20 relative overflow-hidden section-contain" style={{ backgroundColor: 'var(--canvas)' }}>
         <div className="container mx-auto px-6 max-w-3xl text-center relative z-10 space-y-6">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight" style={{ fontFamily: 'var(--font-heading)', color: 'var(--ink)' }}>
             Start Solving with <br />

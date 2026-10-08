@@ -99,8 +99,12 @@ export default function StickyNoteModal({
   return (
     <AnimatePresence>
       <div
-        className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
-        style={{ perspective: '1600px' }}
+        className="fixed inset-0 z-[150] flex items-start sm:items-center justify-center p-3 sm:p-6 overflow-y-auto"
+        style={{
+          perspective: '1600px',
+          paddingTop: 'max(2.5rem, env(safe-area-inset-top, 36px))',
+          paddingBottom: 'max(2rem, env(safe-area-inset-bottom, 28px))',
+        }}
       >
         {/* Soft Ambient Backdrop */}
         <motion.div
@@ -116,34 +120,33 @@ export default function StickyNoteModal({
         <motion.div
           initial={{
             opacity: 0,
-            y: -220,
-            scale: 0.82,
-            rotateX: 30,
-            rotateY: -16,
-            rotateZ: -10,
+            y: -120,
+            scale: 0.88,
+            rotateX: 20,
+            rotateY: -10,
+            rotateZ: -6,
           }}
           animate={{
             opacity: 1,
-            y: [ -220, 14, -4, 0 ],
-            scale: [ 0.82, 1.015, 0.995, 1 ],
-            rotateX: [ 30, -4, 1.5, 0 ],
-            rotateY: [ -16, 3, -1, 0 ],
-            rotateZ: [ -10, 2.5, -1.5, -0.8 ],
+            y: 0,
+            scale: 1,
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: -0.8,
           }}
           exit={{
             opacity: 0,
-            y: 100,
-            scale: 0.8,
-            rotateX: -18,
-            rotateZ: 6,
+            y: 80,
+            scale: 0.85,
+            rotateX: -12,
+            rotateZ: 4,
             transition: { duration: 0.2, ease: 'easeIn' },
           }}
           transition={{
-            duration: 0.65,
-            times: [0, 0.58, 0.82, 1],
+            duration: 0.45,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className={`relative w-full max-w-[440px] p-6 sm:p-7 select-none text-left z-10 rounded-[3px] transition-shadow duration-300 ${className}`}
+          className={`relative w-full max-w-[440px] my-auto p-6 sm:p-7 select-none text-left z-10 rounded-[3px] transition-shadow duration-300 shrink-0 ${className}`}
           style={{
             transformOrigin: 'top center',
             backgroundColor: colorMap.paperBg,
@@ -209,11 +212,11 @@ export default function StickyNoteModal({
           {/* ── MINIMAL PAPER CLOSE (x) BUTTON ── */}
           <button
             onClick={onClose}
-            className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-black/10 hover:bg-black/20 text-[#111827] flex items-center justify-center transition-all hover:scale-110 hover:rotate-90 cursor-pointer z-30 shadow-sm"
+            className="absolute top-3 right-3 sm:top-3.5 sm:right-3.5 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/15 hover:bg-black/25 text-[#111827] flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer z-30 shadow-xs border border-black/10"
             aria-label="Close Note"
             title="Close Note"
           >
-            <X className="w-4 h-4 stroke-[2.5]" />
+            <X className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.5]" />
           </button>
 
           {/* Header Section */}

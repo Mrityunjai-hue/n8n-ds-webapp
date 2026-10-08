@@ -44,6 +44,8 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
+    const isMobile = width < 640;
+
     const handleResize = () => {
       if (!canvas) return;
       width = canvas.width = window.innerWidth;
@@ -51,8 +53,8 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     };
     window.addEventListener('resize', handleResize);
 
-    // Node swarm for generative graph
-    const nodeCount = Math.min(Math.floor((width * height) / 22000), 50);
+    // Node swarm for generative graph - lightweight on mobile
+    const nodeCount = isMobile ? 16 : Math.min(Math.floor((width * height) / 24000), 40);
     const nodes = Array.from({ length: nodeCount }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
@@ -69,7 +71,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       ctx.clearRect(0, 0, width, height);
       t += 0.02;
 
-      // ── 1. Draw Subtle Drafting Concentric Circles in Center ──
+      // ── 1. Draw Drafting Concentric Circles in Center ──
       const cx = width / 2;
       const cy = height / 2;
       const baseR = Math.min(width, height) * 0.28;
@@ -79,7 +81,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       ctx.lineWidth = 1;
       ctx.setLineDash([4, 6]);
 
-      for (let r = baseR * 0.5; r <= baseR * 1.6; r += baseR * 0.3) {
+      for (let r = baseR * 0.5; r <= baseR * 1.6; r += baseR * 0.4) {
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, Math.PI * 2);
         ctx.stroke();
@@ -110,13 +112,15 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         if (n.x < 0 || n.x > width) n.vx *= -1;
         if (n.y < 0 || n.y > height) n.vy *= -1;
 
-        // Mouse gravity pull
-        const dxM = mousePos.x - n.x;
-        const dyM = mousePos.y - n.y;
-        const distM = Math.sqrt(dxM * dxM + dyM * dyM);
-        if (distM < 160 && distM > 0) {
-          n.x += (dxM / distM) * 0.8;
-          n.y += (dyM / distM) * 0.8;
+        // Mouse gravity pull (desktop only)
+        if (!isMobile) {
+          const dxM = mousePos.x - n.x;
+          const dyM = mousePos.y - n.y;
+          const distM = Math.sqrt(dxM * dxM + dyM * dyM);
+          if (distM < 160 && distM > 0) {
+            n.x += (dxM / distM) * 0.8;
+            n.y += (dyM / distM) * 0.8;
+          }
         }
 
         // Draw connections
@@ -126,19 +130,19 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           const dy = n.y - n2.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 130) {
-            const alpha = (1 - dist / 130) * 0.22;
+          if (dist < 120) {
+            const alpha = (1 - dist / 120) * 0.2;
             ctx.beginPath();
             ctx.strokeStyle = `rgba(29, 91, 206, ${alpha})`;
-            ctx.lineWidth = 0.9;
+            ctx.lineWidth = 0.8;
             ctx.moveTo(n.x, n.y);
             ctx.lineTo(n2.x, n2.y);
             ctx.stroke();
           }
         }
 
-        // Draw node dot with pulsing halo
-        const currentR = n.radius + Math.sin(n.pulse) * 0.8;
+        // Draw node dot
+        const currentR = n.radius + Math.sin(n.pulse) * 0.7;
         ctx.beginPath();
         ctx.arc(n.x, n.y, currentR, 0, Math.PI * 2);
         ctx.fillStyle = n.color;
@@ -158,17 +162,18 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
   // Progression & Timer
   useEffect(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
       const t = setTimeout(() => {
         setIsExiting(true);
-        setTimeout(() => onComplete?.(), 300);
-      }, 400);
+        setTimeout(() => onComplete?.(), 100);
+      }, 200);
       return () => clearTimeout(t);
     }
 
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
     const startTime = performance.now();
-    const duration = 2200; // 2.2s smooth load
+    const duration = isMobile ? 800 : 1200; // Snappy fast 800ms load on mobile, 1.2s on desktop
 
     const animFrame = (now: number) => {
       const elapsed = now - startTime;
@@ -192,8 +197,8 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           setIsExiting(true);
           setTimeout(() => {
             onComplete?.();
-          }, 400);
-        }, 250);
+          }, 200);
+        }, 150);
       }
     };
 

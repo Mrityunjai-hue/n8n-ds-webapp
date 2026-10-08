@@ -40,10 +40,10 @@ export function GlobalSearch() {
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-start justify-center pt-[15vh] bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-[200] flex items-start justify-center pt-[max(1.5rem,env(safe-area-inset-top,24px))] sm:pt-[10vh] px-3 sm:px-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
       onClick={(e) => { if (e.target === e.currentTarget) closeSearch(); }}
     >
-      <div className="relative w-full max-w-2xl bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] rounded-2xl shadow-2xl overflow-hidden mx-4 animate-in slide-in-from-top-4 duration-200 font-patrick">
+      <div className="relative w-full max-w-2xl bg-[var(--canvas-raised)] border-2 border-[var(--canvas-border)] rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-top-4 duration-200 font-patrick">
         <Command
           className="flex flex-col h-full"
           filter={(value, search) =>
@@ -60,10 +60,10 @@ export function GlobalSearch() {
             />
             <button
               onClick={closeSearch}
-              className="p-1.5 hover:bg-black/10 dark:hover:bg-white/10 rounded-xl text-[var(--ink-3)] transition-colors flex-shrink-0"
+              className="w-8 h-8 rounded-full border border-[var(--canvas-border)] bg-[var(--canvas-raised)] hover:bg-[var(--canvas-sunken)] active:scale-90 text-[var(--ink)] flex items-center justify-center transition-all flex-shrink-0 cursor-pointer shadow-xs ml-2"
               aria-label="Close search"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4 text-[var(--ink)] stroke-[2.5]" />
             </button>
           </div>
 
